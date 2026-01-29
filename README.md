@@ -12,7 +12,7 @@ Masked Components provides **polymorphic**, **theme-ready**, and **highly custom
 👉 **CLI Install Command:**
 
 ```bash
-npx rnt-next new-project
+npx masked-components
 ```
 
 ---
@@ -47,7 +47,7 @@ It focuses on:
 Install Masked Components in seconds using the CLI:
 
 ```bash
-npx rnt-next new-project
+npx masked-components
 ```
 
 This command will:
