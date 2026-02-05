@@ -6,6 +6,7 @@ export type BaseProps<T> = {
   name?: string
   value?: T
   onChange?: (value: T) => void
+  radius?: number
 
   id?: string
   className?: string
@@ -63,8 +64,10 @@ export type InputVariantMap = {
 
   currency: BaseProps<string> & {
     currencyConfig?: {
+      locale?: string
+      currency?: string
       symbol?: string
-      decimalScale?: number
+      symbolPosition?: 'prefix' | 'suffix'
     }
   }
 }

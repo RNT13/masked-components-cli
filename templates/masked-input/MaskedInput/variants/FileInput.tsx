@@ -66,13 +66,13 @@ export function FileInput(props: Props) {
   }, [])
 
   return (
-    <MaskedInputContainer $variant="file">
+    <MaskedInputContainer $variant="file" $radius={props.radius}>
       <input ref={inputRef} type="file" hidden multiple={props.multiple} onChange={e => handleFiles(e.target.files)} />
 
       {props.label && (
-        <InputLabel>
+        <InputLabel htmlFor={props.id}>
           {props.icon && props.icon}
-          {props.label && <label>{props.label}</label>}
+          <span>{props.label}</span>
         </InputLabel>
       )}
 

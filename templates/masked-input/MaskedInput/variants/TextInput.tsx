@@ -9,23 +9,26 @@ export function TextInput(props: Props) {
   const hasError = props.touched && props.error
 
   return (
-    <MaskedInputContainer $variant="default">
+    <MaskedInputContainer $variant="default" $radius={props.radius} data-error={hasError}>
       {props.label && (
-        <InputLabel>
+        <InputLabel htmlFor={props.id}>
           {props.icon && props.icon}
-          {props.label && <label>{props.label}</label>}
+          <span>{props.label}</span>
         </InputLabel>
       )}
 
       <input
+        id={props.id}
         type={props.type ?? 'text'}
         value={props.value ?? ''}
         onChange={e => props.onChange?.(e.target.value)}
-        className={hasError ? 'error' : ''}
         placeholder={props.placeholder}
+        className={hasError ? 'error' : ''}
+        aria-invalid={hasError ? 'true' : undefined}
+        aria-describedby={hasError ? `${props.id}-error` : undefined}
       />
 
-      {hasError && <ErrorDiv>{props.error}</ErrorDiv>}
+      {hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
     </MaskedInputContainer>
   )
 }

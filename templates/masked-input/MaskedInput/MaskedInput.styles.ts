@@ -1,11 +1,18 @@
+import { transitions } from '@/styles/animations'
 import { theme } from '@/styles/theme'
 import styled from 'styled-components'
+
+type props = {
+  $variant?: string
+  $hasToggle?: boolean
+  $radius?: number
+}
 
 /* ============================================================
  * CONTAINER
  * ============================================================ */
 
-export const MaskedInputContainer = styled.div<{ $variant?: string; $hasToggle?: boolean }>`
+export const MaskedInputContainer = styled.div<props>`
   position: relative;
   width: 100%;
   display: flex;
@@ -14,22 +21,20 @@ export const MaskedInputContainer = styled.div<{ $variant?: string; $hasToggle?:
 
   input,
   textarea,
-  select {
+  select,
+  button {
     width: 100%;
     padding: 12px;
-    border-radius: 18px;
+    border-radius: ${({ $radius }) => ($radius ? `${$radius}px` : '18px')};
     border: 2px solid ${theme.colors.baseBlue.light20};
     font-size: 1rem;
     line-height: 1.4;
-    color: ${theme.colors.baseBlue.light40};
+    color: ${theme.colors.baseBlue.light30};
     background-color: ${theme.colors.baseBlue.light02};
     z-index: 2;
     text-align: left;
 
-    transition:
-      border-color 0.2s ease,
-      background-color 0.2s ease,
-      box-shadow 0.2s ease;
+    ${transitions.slow}
 
     ${({ $hasToggle }) => $hasToggle && `padding-right: 44px;`}
 
@@ -68,19 +73,19 @@ export const MaskedInputContainer = styled.div<{ $variant?: string; $hasToggle?:
     &.error {
       border-color: ${theme.colors.baseRed.base};
       background-color: ${theme.colors.baseRed.light02};
-      color: ${theme.colors.baseRed.light30};
+      color: ${theme.colors.baseRed.light20};
 
       &:focus {
         box-shadow: 0 0 0 3px ${theme.colors.baseRed.light20};
       }
+
+      &.error::placeholder {
+        color: ${theme.colors.baseRed.light20};
+      }
     }
 
     &::placeholder {
-      color: ${theme.colors.baseBlack.light50};
-    }
-
-    &.error::placeholder {
-      color: ${theme.colors.baseRed.light50};
+      color: ${theme.colors.baseBlue.light40};
     }
   }
 
@@ -124,7 +129,7 @@ export const SearchIcon = styled.div`
 export const PasswordToggle = styled.div`
   position: absolute;
   right: 12px;
-  top: 40px;
+  top: 43px;
   background: none;
   border: none;
   cursor: pointer;
@@ -247,10 +252,10 @@ export const SelectDropdown = styled.div`
   border-radius: 14px;
   overflow: hidden;
   background: ${theme.colors.baseBlue.base};
-  z-index: 2;
+  z-index: 5;
 `
 
-export const SelectOption = styled.button`
+export const SelectOption = styled.div`
   width: 100%;
   padding: 8px;
   border-radius: 14px;
@@ -288,6 +293,6 @@ export const CurrencyWrapper = styled.div`
   }
 
   input {
-    padding-left: 48px;
+    padding-left: 44px;
   }
 `

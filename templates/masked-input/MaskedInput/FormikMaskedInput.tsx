@@ -1,5 +1,6 @@
 'use client'
 
+import { FormikCurrencyInput } from './formikVariants/FormikCurrencyInput'
 import { FormikFileInput } from './formikVariants/FormikFileInput'
 import { FormikMaskedTextInput } from './formikVariants/FormikMaskedTextInput'
 import { FormikPasswordInput } from './formikVariants/FormikPasswordInput'
@@ -33,6 +34,9 @@ export function FormikMInput(props: Props) {
 
     case 'search':
       return <FormikSearchInput {...props} />
+
+    case 'currency':
+      return <FormikCurrencyInput {...props} />
 
     default:
       return null

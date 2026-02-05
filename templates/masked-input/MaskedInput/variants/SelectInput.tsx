@@ -27,11 +27,11 @@ export function SelectInput(props: props) {
   }, [])
 
   return (
-    <MaskedInputContainer $variant="select" ref={containerRef}>
+    <MaskedInputContainer $variant="select" ref={containerRef} $radius={props.radius} data-error={hasError}>
       {props.label && (
         <InputLabel>
-          {props.icon}
-          <label>{props.label}</label>
+          {props.icon && props.icon}
+          <span>{props.label}</span>
         </InputLabel>
       )}
 
@@ -47,12 +47,13 @@ export function SelectInput(props: props) {
           {props.options.map(option => (
             <SelectOption
               key={option.value}
-              type="button"
               className={`${option.value === props.value ? 'selected' : ''}`}
               onClick={() => {
                 props.onChange?.(option.value)
                 setOpen(false)
               }}
+              aria-invalid={hasError ? 'true' : undefined}
+              aria-describedby={hasError ? `${props.id}-error` : undefined}
             >
               {option.label}
             </SelectOption>
@@ -60,7 +61,7 @@ export function SelectInput(props: props) {
         </SelectDropdown>
       )}
 
-      {props.showError && hasError && <ErrorDiv>{props.error}</ErrorDiv>}
+      {props.showError && hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
     </MaskedInputContainer>
   )
 }

@@ -16,11 +16,11 @@ export function SearchInput(props: Props) {
   }
 
   return (
-    <MaskedInputContainer $variant="search">
+    <MaskedInputContainer $variant="search" $radius={props.radius} data-error={hasError}>
       {props.label && (
-        <InputLabel>
+        <InputLabel htmlFor={props.id}>
           {props.icon && props.icon}
-          {props.label && <label>{props.label}</label>}
+          <span>{props.label}</span>
         </InputLabel>
       )}
 
@@ -29,6 +29,7 @@ export function SearchInput(props: Props) {
       </SearchIcon>
 
       <input
+        id={props.id}
         type="search"
         value={props.value ?? ''}
         onChange={e => props.onChange?.(e.target.value)}
@@ -36,9 +37,11 @@ export function SearchInput(props: Props) {
         placeholder={props.placeholder}
         className={hasError ? 'error' : ''}
         style={{ paddingLeft: 40 }}
+        aria-invalid={hasError ? 'true' : undefined}
+        aria-describedby={hasError ? `${props.id}-error` : undefined}
       />
 
-      {props.showError && hasError && <ErrorDiv>{props.error}</ErrorDiv>}
+      {props.showError && hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
     </MaskedInputContainer>
   )
 }
