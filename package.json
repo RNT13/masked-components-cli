@@ -1,5 +1,5 @@
 {
-  "name": "masked-components",
+  "name": "masked-components-cli",
   "version": "1.5.0",
   "type": "module",
   "files": [
@@ -7,7 +7,7 @@
     "templates"
   ],
   "bin": {
-    "masked-components": "./dist/cli.js"
+    "masked-components-cli": "./dist/cli.js"
   },
   "description": "Masked Components",
   "scripts": {
