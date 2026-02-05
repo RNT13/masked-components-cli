@@ -1,6 +1,6 @@
 {
   "name": "masked-components-cli",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "type": "module",
   "files": [
     "dist",
@@ -9,7 +9,7 @@
   "bin": {
     "masked-components-cli": "./dist/cli.js"
   },
-  "description": "Masked Components",
+  "description": "A modern, type-safe and flexible component system for **Next.js + React**, designed to boost developer experience and speed up UI creation using a simple **CLI installer**.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup src/cli.ts --format esm --platform node --target es2020",
