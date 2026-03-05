@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
+import { useInView } from "../../hooks/useInView";
 import { AnimationType, Props, registry } from "./MAnimation.types";
-import { useInView } from "./hooks/useInView";
 
 const Container = styled.div<{
   $type: AnimationType;

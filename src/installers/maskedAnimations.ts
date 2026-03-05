@@ -14,7 +14,12 @@ export async function installMaskedAnimations() {
 
   await copyTemplate({
     templateDir: "masked-animations",
-    targetDir: paths.animationsDir,
+    targetDir: paths.stylesDir,
+  });
+
+  await copyTemplate({
+    templateDir: "hooks",
+    targetDir: paths.hooksDir,
   });
 
   console.log("✅ Componentes instalados com sucesso!");

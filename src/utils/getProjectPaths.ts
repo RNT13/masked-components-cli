@@ -11,8 +11,10 @@ export function getProjectPaths() {
   return {
     framework,
     srcDir: base,
-    componentsDir: `${base}/components`,
-    animationsDir: `${base}/animations`,
+    componentsDir: `${base}/components/ui`,
+    animationsDir: `${base}/styles/`,
     stylesDir: `${base}/styles`,
+    utilsDir: `${base}/utils`,
+    hooksDir: `${base}/hooks`,
   };
 }
