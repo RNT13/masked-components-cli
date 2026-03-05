@@ -1,5 +1,5 @@
 import { getProjectPaths } from "@/utils/getProjectPaths.js";
-import { injectAnimationEngine } from "@/utils/injectAnimationEngine.js";
+import { injectAnimationProvider } from "@/utils/injectAnimationProvider.js";
 import { installDeps } from "@/utils/installDeps.js";
 import { copyTemplate } from "../utils/copyTemplate.js";
 
@@ -10,7 +10,7 @@ export async function installMaskedAnimations() {
   console.log("Framework detectado:", paths.framework);
 
   await installDeps(["styled-components"]);
-  await injectAnimationEngine();
+  await injectAnimationProvider();
 
   await copyTemplate({
     templateDir: "masked-animations",
@@ -21,6 +21,4 @@ export async function installMaskedAnimations() {
     templateDir: "hooks",
     targetDir: paths.hooksDir,
   });
-
-  console.log("✅ Componentes instalados com sucesso!");
 }

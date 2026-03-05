@@ -18,7 +18,7 @@ import {
   slideImpactRight,
   slideImpactUp,
   zoomFromDeep,
-} from "./animations/keyframes";
+} from "./keyframes";
 
 const revealHelper = (animation: ReturnType<typeof css>) => css`
   opacity: 1;

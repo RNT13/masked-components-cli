@@ -1,4 +1,8 @@
-export function registerAnimationProperties() {
+"use client";
+
+import { ReactNode, useEffect } from "react";
+
+function registerAnimationProperties() {
   if (typeof window === "undefined") return;
 
   if ("registerProperty" in CSS) {
@@ -20,4 +24,12 @@ export function registerAnimationProperties() {
       // evita erro se já estiver registrado
     }
   }
+}
+
+export function AnimationProvider({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    registerAnimationProperties();
+  }, []);
+
+  return children;
 }

@@ -1,5 +1,5 @@
-import { DefaultTheme } from "styled-components";
-import { colorHSLVariants } from "../utils/colorUtils";
+import { colorHSLVariants } from "@/utils/colorUtils";
+import { MaskedThemeTypes } from "./types/MaskedTheme.types";
 
 export const media = {
   pc: "@media (max-width: 1024px)",
@@ -15,7 +15,7 @@ export const baseRed = colorHSLVariants(0, 100, 50);
 export const baseCyan = colorHSLVariants(180, 150, 50);
 export const baseYellow = colorHSLVariants(60, 100, 50);
 
-export const theme: DefaultTheme = {
+export const maskedTheme: MaskedThemeTypes = {
   colors: {
     baseGlass,
     baseBlack,
@@ -209,7 +209,8 @@ export const pastelTheme = {
   },
 };
 
-export const themeConfig = {
+export const maskedThemeConfig = {
+  maskedTheme: maskedTheme,
   light: lightTheme,
   dark: darkTheme,
   neon: neonTheme,

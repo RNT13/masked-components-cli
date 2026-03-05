@@ -14,6 +14,4 @@ export async function installMaskedCards() {
     templateDir: "masked-cards",
     targetDir: paths.componentsDir,
   });
-
-  console.log("✅ Componentes instalados com sucesso!");
 }

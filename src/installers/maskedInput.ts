@@ -14,6 +14,4 @@ export async function installMaskedInput() {
     templateDir: "masked-input",
     targetDir: paths.componentsDir,
   });
-
-  console.log("✅ Componentes instalados com sucesso!");
 }

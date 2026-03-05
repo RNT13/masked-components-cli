@@ -19,6 +19,4 @@ export async function installMaskedThemes() {
     templateDir: "color-utils",
     targetDir: paths.utilsDir,
   });
-
-  console.log("✅ Componentes instalados com sucesso!");
 }

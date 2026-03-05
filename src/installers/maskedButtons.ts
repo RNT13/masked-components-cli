@@ -14,6 +14,4 @@ export async function installMaskedButtons() {
     templateDir: "masked-buttons",
     targetDir: paths.componentsDir,
   });
-
-  console.log("✅ Componentes instalados com sucesso!");
 }
