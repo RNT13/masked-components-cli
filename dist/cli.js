@@ -75,7 +75,7 @@ async function injectAnimationProvider() {
     console.log("\u2714 AnimationProvider j\xE1 instalado.");
     return;
   }
-  const importLine = `import { AnimationProvider } from "@/MaskedAnimations/AnimationProvider";
+  const importLine = `import { AnimationProvider } from '@/styles/MaskedAnimations/AnimationProvider';
 `;
   if (content.includes("'use client'") || content.includes('"use client"')) {
     content = content.replace(

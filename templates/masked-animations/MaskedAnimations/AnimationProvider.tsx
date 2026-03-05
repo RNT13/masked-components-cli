@@ -31,5 +31,5 @@ export function AnimationProvider({ children }: { children: ReactNode }) {
     registerAnimationProperties();
   }, []);
 
-  return children;
+  return <>{children}</>;
 }

@@ -16,7 +16,7 @@ export async function injectAnimationProvider() {
     return;
   }
 
-  const importLine = `import { AnimationProvider } from "@/MaskedAnimations/AnimationProvider";\n`;
+  const importLine = `import { AnimationProvider } from '@/styles/MaskedAnimations/AnimationProvider';\n`;
 
   // verifica se tem 'use client'
   if (content.includes("'use client'") || content.includes('"use client"')) {
