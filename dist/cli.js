@@ -44,50 +44,56 @@ function getProjectPaths() {
   };
 }
 
-// src/utils/injectAnimationEngine.ts
+// src/utils/injectAnimationProvider.ts
 import fs4 from "fs-extra";
 
-// src/utils/findNextLayout.ts
+// src/utils/findNextProviders.ts
 import fs3 from "fs";
-import path2 from "path";
-function findNextLayout() {
+function findProviders() {
   const possiblePaths = [
-    "src/app/layout.tsx",
-    "src/app/layout.jsx",
-    "app/layout.tsx",
-    "app/layout.jsx"
+    "src/components/providers.tsx",
+    "components/providers.tsx",
+    "src/providers.tsx"
   ];
   for (const p of possiblePaths) {
-    const full = path2.join(process.cwd(), p);
-    if (fs3.existsSync(full)) {
-      return full;
+    if (fs3.existsSync(p)) {
+      return p;
     }
   }
   return null;
 }
 
-// src/utils/injectAnimationEngine.ts
-async function injectAnimationEngine() {
-  const layoutPath = findNextLayout();
-  if (!layoutPath) {
-    console.log("\u26A0\uFE0F layout.tsx do Next n\xE3o encontrado.");
+// src/utils/injectAnimationProvider.ts
+async function injectAnimationProvider() {
+  const providersPath = findProviders();
+  if (!providersPath) {
+    console.log("\u26A0\uFE0F Providers n\xE3o encontrado.");
     return;
   }
-  let content = await fs4.readFile(layoutPath, "utf-8");
-  if (content.includes("useAnimationEngine")) {
-    console.log("\u2714 useAnimationEngine j\xE1 instalado.");
+  let content = await fs4.readFile(providersPath, "utf-8");
+  if (content.includes("AnimationProvider")) {
+    console.log("\u2714 AnimationProvider j\xE1 instalado.");
     return;
   }
-  content = `import { useAnimationEngine } from "@/animations/useAnimationEngine";
-` + content;
+  const importLine = `import { AnimationProvider } from "@/MaskedAnimations/AnimationProvider";
+`;
+  if (content.includes("'use client'") || content.includes('"use client"')) {
+    content = content.replace(
+      /['"]use client['"]\s*/,
+      (match) => `${match}
+${importLine}`
+    );
+  } else {
+    content = importLine + content;
+  }
   content = content.replace(
-    /export default function [^{]+{/,
-    (match) => `${match}
-  useAnimationEngine();
-`
+    /\{children\}/,
+    `<AnimationProvider>
+      {children}
+    </AnimationProvider>`
   );
-  await fs4.writeFile(layoutPath, content);
-  console.log("\u2728 useAnimationEngine adicionado ao layout.");
+  await fs4.writeFile(providersPath, content);
+  console.log("\u2728 AnimationProvider instalado com sucesso.");
 }
 
 // src/utils/installDeps.ts
@@ -100,25 +106,25 @@ async function installDeps(deps) {
 
 // src/utils/copyTemplate.ts
 import fs5 from "fs-extra";
-import path3 from "path";
+import path2 from "path";
 import { fileURLToPath } from "url";
 async function copyTemplate({ templateDir, targetDir }) {
   const packageFile = fileURLToPath(import.meta.url);
-  const packageDir = path3.dirname(packageFile);
+  const packageDir = path2.dirname(packageFile);
   let currentDir = packageDir;
   let source = null;
-  while (currentDir !== path3.dirname(currentDir)) {
-    const possible = path3.join(currentDir, "templates", templateDir);
+  while (currentDir !== path2.dirname(currentDir)) {
+    const possible = path2.join(currentDir, "templates", templateDir);
     if (fs5.existsSync(possible)) {
       source = possible;
       break;
     }
-    currentDir = path3.dirname(currentDir);
+    currentDir = path2.dirname(currentDir);
   }
   if (!source) {
     throw new Error(`Template n\xE3o encontrado: ${templateDir}`);
   }
-  const target = path3.resolve(process.cwd(), targetDir);
+  const target = path2.resolve(process.cwd(), targetDir);
   await fs5.ensureDir(target);
   await fs5.copy(source, target, {
     overwrite: false,
@@ -132,7 +138,7 @@ async function installMaskedAnimations() {
   console.log("\u{1F680} Instalando Masked Animations...");
   console.log("Framework detectado:", paths.framework);
   await installDeps(["styled-components"]);
-  await injectAnimationEngine();
+  await injectAnimationProvider();
   await copyTemplate({
     templateDir: "masked-animations",
     targetDir: paths.stylesDir
@@ -141,7 +147,6 @@ async function installMaskedAnimations() {
     templateDir: "hooks",
     targetDir: paths.hooksDir
   });
-  console.log("\u2705 Componentes instalados com sucesso!");
 }
 
 // src/installers/maskedButtons.ts
@@ -154,7 +159,6 @@ async function installMaskedButtons() {
     templateDir: "masked-buttons",
     targetDir: paths.componentsDir
   });
-  console.log("\u2705 Componentes instalados com sucesso!");
 }
 
 // src/installers/maskedCards.ts
@@ -167,7 +171,6 @@ async function installMaskedCards() {
     templateDir: "masked-cards",
     targetDir: paths.componentsDir
   });
-  console.log("\u2705 Componentes instalados com sucesso!");
 }
 
 // src/installers/maskedInput.ts
@@ -180,7 +183,6 @@ async function installMaskedInput() {
     templateDir: "masked-input",
     targetDir: paths.componentsDir
   });
-  console.log("\u2705 Componentes instalados com sucesso!");
 }
 
 // src/installers/maskedThemes.ts
@@ -197,7 +199,6 @@ async function installMaskedThemes() {
     templateDir: "color-utils",
     targetDir: paths.utilsDir
   });
-  console.log("\u2705 Componentes instalados com sucesso!");
 }
 
 // src/prompts/selectComponents.ts

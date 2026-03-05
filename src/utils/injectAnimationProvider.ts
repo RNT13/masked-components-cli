@@ -16,10 +16,18 @@ export async function injectAnimationProvider() {
     return;
   }
 
-  // adiciona import
-  content =
-    `import { AnimationProvider } from "@/providers/AnimationProvider"\n` +
-    content;
+  const importLine = `import { AnimationProvider } from "@/MaskedAnimations/AnimationProvider";\n`;
+
+  // verifica se tem 'use client'
+  if (content.includes("'use client'") || content.includes('"use client"')) {
+    content = content.replace(
+      /['"]use client['"]\s*/,
+      (match) => `${match}\n${importLine}`,
+    );
+  } else {
+    // se não tiver, adiciona no topo
+    content = importLine + content;
+  }
 
   // envolve children
   content = content.replace(
