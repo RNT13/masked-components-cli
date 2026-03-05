@@ -1,18 +1,18 @@
 import { getProjectPaths } from "@/utils/getProjectPaths.js";
-import { installDeps } from "@/utils/installDeps.js";
 import { copyTemplate } from "../utils/copyTemplate.js";
+import { installDeps } from "../utils/installDeps.js";
 
-export async function installMaskedButtons() {
+export async function installMaskedThemes() {
   const paths = getProjectPaths();
 
-  console.log("📦 Instalando Masked Buttons...");
+  console.log("📦 Instalando Masked Themes...");
   console.log("Framework detectado:", paths.framework);
 
   await installDeps([]);
 
   await copyTemplate({
-    templateDir: "masked-buttons",
-    targetDir: paths.componentsDir,
+    templateDir: "masked-themes",
+    targetDir: paths.stylesDir,
   });
 
   console.log("✅ Componentes instalados com sucesso!");

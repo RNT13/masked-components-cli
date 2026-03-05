@@ -1,13 +1,19 @@
+import { getProjectPaths } from "@/utils/getProjectPaths.js";
 import { installDeps } from "@/utils/installDeps.js";
 import { copyTemplate } from "../utils/copyTemplate.js";
 
 export async function installMaskedCards() {
-  console.log("📦 Instalando Masked Cards...");
+  const paths = getProjectPaths();
 
-  await installDeps(["react-input-mask"]);
+  console.log("📦 Instalando Masked Cards...");
+  console.log("Framework detectado:", paths.framework);
+
+  await installDeps([]);
 
   await copyTemplate({
     templateDir: "masked-cards",
-    targetDir: "src/components/ui",
+    targetDir: paths.componentsDir,
   });
+
+  console.log("✅ Componentes instalados com sucesso!");
 }

@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
+import { installMaskedAnimations } from "./installers/maskedAnimations.js";
 import { installMaskedButtons } from "./installers/maskedButtons.js";
 import { installMaskedCards } from "./installers/maskedCards.js";
 import { installMaskedInput } from "./installers/maskedInput.js";
+import { installMaskedThemes } from "./installers/maskedThemes.js";
 import { selectComponents } from "./prompts/selectComponents.js";
 
 async function main() {
@@ -23,6 +25,14 @@ async function main() {
 
   if (components.includes("masked-buttons")) {
     await installMaskedButtons();
+  }
+
+  if (components.includes("masked-animations")) {
+    await installMaskedAnimations();
+  }
+
+  if (components.includes("masked-themes")) {
+    await installMaskedThemes();
   }
 
   console.log("✅ Componentes instalados com sucesso!");

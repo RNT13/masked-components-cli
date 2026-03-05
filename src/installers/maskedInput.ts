@@ -1,13 +1,19 @@
+import { getProjectPaths } from "@/utils/getProjectPaths.js";
 import { copyTemplate } from "../utils/copyTemplate.js";
 import { installDeps } from "../utils/installDeps.js";
 
 export async function installMaskedInput() {
-  console.log("📦 Instalando Masked Input...");
+  const paths = getProjectPaths();
 
-  await installDeps(["react-input-mask"]);
+  console.log("📦 Instalando Masked Input...");
+  console.log("Framework detectado:", paths.framework);
+
+  await installDeps([]);
 
   await copyTemplate({
     templateDir: "masked-input",
-    targetDir: "src/components/ui",
+    targetDir: paths.componentsDir,
   });
+
+  console.log("✅ Componentes instalados com sucesso!");
 }
