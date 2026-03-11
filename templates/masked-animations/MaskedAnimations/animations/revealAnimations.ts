@@ -1,4 +1,4 @@
-import { css } from "styled-components";
+import { css } from 'styled-components'
 import {
   blurIn,
   fadeInLeft,
@@ -17,13 +17,16 @@ import {
   slideImpactLeft,
   slideImpactRight,
   slideImpactUp,
-  zoomFromDeep,
-} from "./keyframes";
+  zoomFromDeep
+} from './keyframes'
 
 const revealHelper = (animation: ReturnType<typeof css>) => css`
   opacity: 1;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
   ${animation}
-`;
+`
 
 export const revealAnimations = {
   fadeInUp: revealHelper(css`
@@ -47,8 +50,7 @@ export const revealAnimations = {
   `),
 
   slideBounceRight: revealHelper(css`
-    animation: ${slideBounceRight} 0.9s cubic-bezier(0.22, 1.4, 0.36, 1)
-      forwards;
+    animation: ${slideBounceRight} 0.9s cubic-bezier(0.22, 1.4, 0.36, 1) forwards;
   `),
 
   slideBounceLeft: revealHelper(css`
@@ -97,5 +99,5 @@ export const revealAnimations = {
 
   flipY: revealHelper(css`
     animation: ${rotateFullY} 2s ease forwards;
-  `),
-};
+  `)
+}

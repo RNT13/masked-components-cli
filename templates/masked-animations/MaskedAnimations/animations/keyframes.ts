@@ -1,8 +1,30 @@
-import { keyframes } from "styled-components";
+import { keyframes } from 'styled-components'
 
 export const spin = keyframes`
     to { transform: rotate(360deg); }
-`;
+`
+
+export const starFlash = keyframes`
+  0%,70% {
+    opacity:0;
+    transform:translate(50%,-50%) scale(.2);
+  }
+
+  74% {
+    opacity:1;
+    transform:translate(50%,-50%) scale(1);
+  }
+
+  78% {
+    opacity:1;
+    transform:translate(50%,-50%) scale(1.2);
+  }
+
+  82%,100% {
+    opacity:0;
+    transform:translate(50%,-50%) scale(.3);
+  }
+`
 
 export const pulseGlow = keyframes`
   0% {
@@ -19,7 +41,7 @@ export const pulseGlow = keyframes`
     transform: scale(0.95);
     opacity: 0.4;
   }
-`;
+`
 
 export const rocketTrajectory = keyframes`
   /* Surge do canto inferior esquerdo */
@@ -57,7 +79,7 @@ export const rocketTrajectory = keyframes`
     transform: translate(100px, -100px) scale(2) rotate(18deg);
     opacity: 1;
   }
-`;
+`
 
 export const lightningStrikeMove = keyframes`
   /* Começa fora da tela */
@@ -105,7 +127,7 @@ export const lightningStrikeMove = keyframes`
     opacity: 0;
     transform: translate(150px, -150px) scale(0.8);
   }
-`;
+`
 
 export const rotateFullX = keyframes`
   0% {
@@ -115,7 +137,7 @@ export const rotateFullX = keyframes`
   100% {
     transform: rotateX(360deg);
   }
-`;
+`
 
 export const rotateFullY = keyframes`
   0% {
@@ -125,13 +147,13 @@ export const rotateFullY = keyframes`
   100% {
     transform: rotateY(360deg);
   }
-`;
+`
 
 export const pulse = keyframes`
   0% { opacity: 0.6; }
   50% { opacity: 1; }
   100% { opacity: 0.6; }
-`;
+`
 
 export const rotateGoldAngle = keyframes`
   from {
@@ -140,7 +162,7 @@ export const rotateGoldAngle = keyframes`
   to {
     --gold-angle: 360deg;
   }
-`;
+`
 
 export const rotateSilverAngle = keyframes`
   from {
@@ -149,7 +171,7 @@ export const rotateSilverAngle = keyframes`
   to {
     --silver-angle: 360deg;
   }
-`;
+`
 
 export const bounce = keyframes`
   0% {
@@ -180,7 +202,7 @@ export const bounce = keyframes`
   100% {
     transform: translateY(0) scaleY(1);
   }
-`;
+`
 
 export const float = keyframes`
   0% {
@@ -194,7 +216,7 @@ export const float = keyframes`
   100% {
     transform: translateY(0px);
   }
-`;
+`
 
 export const jumpRotate = keyframes`
   0% { transform: rotate(0deg); }
@@ -202,12 +224,12 @@ export const jumpRotate = keyframes`
   50% { transform: rotate(-12deg); }
   75% { transform: rotate(6deg); }
   100% { transform: rotate(0deg); }
-`;
+`
 
 export const shimmer = keyframes`
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
-`;
+`
 
 export const glowDiagonalLoop = keyframes`
   0% {
@@ -225,44 +247,44 @@ export const glowDiagonalLoop = keyframes`
     transform: translate(120%, 120%) rotate(45deg) scale(0.9);
     opacity: 0;
   }
-`;
+`
 
 export const shineLoop = keyframes`
   0% { transform: translateX(-120%); opacity: 0; }
   10% { opacity: 1; }
   30%,100% { transform: translateX(120%); opacity: 0; }
-`;
+`
 
 export const fadeInUp = keyframes`
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
-`;
+`
 
 export const fadeInLeft = keyframes`
   from { opacity: 0; transform: translateX(-16px); }
   to { opacity: 1; transform: translateX(0); }
-`;
+`
 
 export const fadeInRight = keyframes`
   from { opacity: 0; transform: translateX(16px); }
   to { opacity: 1; transform: translateX(0); }
-`;
+`
 
 export const fadeOutDown = keyframes`
   from { opacity: 0; transform: translateY(-16px); }
   to { opacity: 1; transform: translateY(0); }
-`;
+`
 
 export const fadeInUpRotate = keyframes`
   from { opacity: 0; transform: translateY(16px) rotate(10deg); }
   to { opacity: 1; transform: translateY(0) rotate(0); }
-`;
+`
 
 export const horizontalLine = keyframes`
   0% { width: 0%; }
   50% { width: 60%; }
   100% { width: 100%; }
-`;
+`
 
 export const shakeX = keyframes`
   0% { transform: translateX(0); }
@@ -273,7 +295,7 @@ export const shakeX = keyframes`
   75% { transform: translateX(-2px); }
   90% { transform: translateX(2px); }
   100% { transform: translateX(0); }
-`;
+`
 
 export const dots = keyframes`
   0% { content: ''; }
@@ -281,7 +303,7 @@ export const dots = keyframes`
   50% { content: '..'; }
   75% { content: '...'; }
   100% { content: ''; }
-`;
+`
 
 export const slideBounceRight = keyframes`
   0% {
@@ -301,7 +323,7 @@ export const slideBounceRight = keyframes`
   100% {
     transform: translateX(0);
   }
-`;
+`
 
 export const slideBounceLeft = keyframes`
   0% {
@@ -321,7 +343,7 @@ export const slideBounceLeft = keyframes`
   100% {
     transform: translateX(0);
   }
-`;
+`
 
 export const slideBounceUp = keyframes`
   0% {
@@ -341,7 +363,7 @@ export const slideBounceUp = keyframes`
   100% {
     transform: translateY(0);
   }
-`;
+`
 
 export const slideImpactRight = keyframes`
   0% {
@@ -369,7 +391,7 @@ export const slideImpactRight = keyframes`
   100% {
     transform: translateX(0) scaleX(1);
   }
-`;
+`
 
 export const slideImpactLeft = keyframes`
   0% {
@@ -397,7 +419,7 @@ export const slideImpactLeft = keyframes`
   100% {
     transform: translateX(0) scaleX(1);
   }
-`;
+`
 
 export const slideImpactUp = keyframes`
   0% {
@@ -425,7 +447,7 @@ export const slideImpactUp = keyframes`
   100% {
     transform: translateY(0) scaleY(1);
   }
-`;
+`
 
 export const blurIn = keyframes`
   0% {
@@ -439,7 +461,7 @@ export const blurIn = keyframes`
     filter: blur(0);
     transform: scale(1);
   }
-`;
+`
 
 export const popElastic = keyframes`
   0% {
@@ -459,7 +481,7 @@ export const popElastic = keyframes`
   100% {
     transform: scale(1);
   }
-`;
+`
 
 export const zoomFromDeep = keyframes`
   0% {
@@ -475,7 +497,7 @@ export const zoomFromDeep = keyframes`
   100% {
     transform: scale(1) translateY(0);
   }
-`;
+`
 
 export const rotateDrop = keyframes`
   0% {
@@ -491,7 +513,7 @@ export const rotateDrop = keyframes`
   100% {
     transform: translateY(0) rotate(0);
   }
-`;
+`
 
 export const magneticRise = keyframes`
   0% {
@@ -507,4 +529,4 @@ export const magneticRise = keyframes`
   100% {
     transform: translateY(0) scale(1);
   }
-`;
+`

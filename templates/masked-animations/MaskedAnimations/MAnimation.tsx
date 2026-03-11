@@ -1,15 +1,30 @@
-import styled, { css } from "styled-components";
-import { useInView } from "../../hooks/useInView";
-import { AnimationType, Props, registry } from "./MAnimation.types";
+"use client";
 
-const Container = styled.div<{
-  $type: AnimationType;
-  $animation: string;
-  $isOn?: boolean;
-  $active: boolean;
+import React from "react";
+import { css, styled, type RuleSet } from "styled-components";
+
+import { animationRegistry } from "./AnimationRegistry";
+import { useScrollTrigger } from "./animations/triggers/useScrollTrigger";
+import { MAnimationProps } from "./MAnimation.types";
+
+type ContainerProps = {
+  $animationCSS?: RuleSet<object>;
+  $delay?: number;
   $center?: boolean;
-}>`
+  $hidden?: boolean;
+  $hover?: RuleSet<object>;
+  $isOn?: boolean;
+};
+
+const Container = styled.div<ContainerProps>`
   width: 100%;
+
+  ${({ $hidden }) =>
+    $hidden &&
+    css`
+      opacity: 0;
+      pointer-events: none;
+    `}
 
   ${({ $center }) =>
     $center &&
@@ -19,45 +34,77 @@ const Container = styled.div<{
       align-items: center;
     `}
 
-  ${({ $type, $active }) =>
-    $type === "reveal" &&
+  ${({ $delay }) =>
+    $delay &&
     css`
-      opacity: ${$active ? 1 : 0};
+      animation-delay: ${$delay}s;
     `}
 
-    ${({ $type, $animation, $active }) => {
-    const group = registry[$type];
-    const animationCSS = group[$animation as keyof typeof group];
+  ${({ $hover }) =>
+    $hover &&
+    css`
+      &:hover > * {
+        ${$hover}
+      }
+    `}
 
-    if ($type === "reveal") {
-      return $active ? animationCSS : "";
-    }
-
-    if ($type === "controlled") {
-      return animationCSS;
-    }
-
-    return animationCSS;
-  }}
+  ${({ $animationCSS }) => $animationCSS}
 `;
 
-export function MAnimation<T extends AnimationType>({
+export function MAnimation({
   children,
-  type,
-  animation,
+  variant: animation,
+  trigger = "mount",
   isOn,
   center,
-}: Props<T>) {
-  const { ref, isVisible } = useInView<HTMLDivElement>();
+  delay,
+  threshold,
+  once,
+}: MAnimationProps) {
+  const scroll = useScrollTrigger(threshold, once);
+
+  const animationCSS = animationRegistry[animation];
+
+  let active = false;
+  let ref: React.Ref<HTMLDivElement> | undefined;
+  let hoverCSS: RuleSet<object> | undefined;
+
+  switch (trigger) {
+    case "mount":
+      active = true;
+      break;
+
+    case "scroll":
+      active = scroll.active;
+      ref = scroll.ref;
+      break;
+
+    case "hover":
+      hoverCSS = animationCSS;
+      break;
+
+    case "controlled":
+      active = Boolean(isOn);
+      break;
+
+    case "always":
+      active = true;
+      break;
+  }
+
+  const isStateAnimation = trigger === "controlled";
 
   return (
     <Container
-      ref={type === "reveal" ? ref : undefined}
-      $type={type}
-      $animation={animation as string}
-      $isOn={isOn}
-      $active={isVisible}
+      ref={ref}
       $center={center}
+      $delay={delay}
+      $hidden={!active && trigger === "scroll"}
+      $animationCSS={
+        isStateAnimation ? animationCSS : active ? animationCSS : undefined
+      }
+      $hover={hoverCSS}
+      $isOn={active}
     >
       {children}
     </Container>

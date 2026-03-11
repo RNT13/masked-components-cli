@@ -1,4 +1,4 @@
-import { css } from "styled-components";
+import { css } from 'styled-components'
 import {
   bounce,
   float,
@@ -15,8 +15,9 @@ import {
   shimmer,
   shineLoop,
   spin,
-} from "./keyframes";
-import { overlayBase } from "./transitions";
+  starFlash
+} from './keyframes'
+import { overlayBase } from './transitions'
 
 export const continuousAnimations = {
   spin: css`
@@ -46,15 +47,10 @@ export const continuousAnimations = {
     background: rgba(255,255,255,0.06);
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.15),
-        transparent
-      );
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
       transform: translateX(-100%);
       animation: ${shimmer} 1.4s ease-in-out infinite;
     }
@@ -63,17 +59,20 @@ export const continuousAnimations = {
   glow: css`
     ${overlayBase}
     &::before {
-      content: "";
+      content: '';
+
       position: absolute;
-      inset: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        120deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.6),
-        transparent 70%
-      );
+      top: -60%;
+      left: -60%;
+      width: 220%;
+      height: 220%;
+      border-radius: inherit;
+
+      background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.6), transparent 70%);
+
+      filter: blur(16px);
+      mix-blend-mode: screen;
+
       animation: ${glowDiagonalLoop} 1.2s ease-out forwards;
     }
   `,
@@ -82,7 +81,8 @@ export const continuousAnimations = {
     ${overlayBase}
 
     &::before {
-      content: "";
+      content: '';
+
       position: absolute;
       top: -60%;
       left: -60%;
@@ -112,7 +112,7 @@ export const continuousAnimations = {
     ${overlayBase}
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: -60%;
       left: -60%;
@@ -142,7 +142,7 @@ export const continuousAnimations = {
     ${overlayBase}
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: -60%;
       left: -60%;
@@ -171,17 +171,12 @@ export const continuousAnimations = {
   shineInfinite: css`
     ${overlayBase}
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       inset: -50%;
       width: 200%;
       height: 200%;
-      background: linear-gradient(
-        90deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.45),
-        transparent 70%
-      );
+      background: linear-gradient(90deg, transparent 30%, rgba(255, 255, 255, 0.45), transparent 70%);
       animation: ${shineLoop} 5s ease-in-out infinite;
     }
   `,
@@ -191,7 +186,7 @@ export const continuousAnimations = {
     isolation: isolate;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       inset: -2px;
       border-radius: inherit;
@@ -202,16 +197,22 @@ export const continuousAnimations = {
       background: conic-gradient(
         from var(--gold-angle),
         transparent 0deg,
-        transparent 280deg,
+        transparent 270deg,
 
-        rgba(255, 215, 0, 0.2) 295deg,
+        rgba(255, 215, 0, 0.15) 285deg,
+        rgba(255, 215, 0, 0.6) 295deg,
 
-        #ffd700 305deg,
+        #ffd700 302deg,
+
+        #ffffff 308deg,
         #ffffff 312deg,
-        #ffffff 318deg,
-        #ffd700 325deg,
+        #ffffff 316deg,
 
+        #ffd700 322deg,
+
+        rgba(255, 215, 0, 0.7) 330deg,
         rgba(255, 215, 0, 0.25) 340deg,
+
         transparent 360deg
       );
 
@@ -229,9 +230,38 @@ export const continuousAnimations = {
 
       pointer-events: none;
 
-      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8))
-        drop-shadow(0 0 18px rgba(255, 215, 0, 0.5))
-        drop-shadow(0 0 30px rgba(255, 215, 0, 0.25));
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 1)) drop-shadow(0 0 24px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 60px rgba(255, 215, 0, 0.6));
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+
+      width: 18px;
+      height: 18px;
+
+      top: 0;
+      right: 0;
+
+      transform: translate(50%, -50%);
+      pointer-events: none;
+
+      background:
+        radial-gradient(circle, #ffffff 0%, #ffd700 40%, transparent 70%), linear-gradient(#ffffff, #ffffff), linear-gradient(#ffffff, #ffffff);
+
+      background-size:
+        100% 100%,
+        2px 18px,
+        18px 2px;
+
+      background-position: center;
+      background-repeat: no-repeat;
+
+      filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 12px rgba(255, 215, 0, 0.6));
+
+      opacity: 0;
+
+      animation: ${starFlash} 6s linear infinite;
     }
   `,
 
@@ -240,7 +270,7 @@ export const continuousAnimations = {
     isolation: isolate;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       inset: -2px;
       border-radius: inherit;
@@ -278,8 +308,7 @@ export const continuousAnimations = {
 
       pointer-events: none;
 
-      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7))
-        drop-shadow(0 0 14px rgba(255, 255, 255, 0.4))
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.4))
         drop-shadow(0 0 24px rgba(255, 255, 255, 0.2));
     }
   `,
@@ -297,7 +326,7 @@ export const continuousAnimations = {
     z-index: 1;
 
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       inset: -8px;
       border-radius: inherit;
@@ -310,4 +339,8 @@ export const continuousAnimations = {
       animation: ${pulseGlow} 2.4s ease-in-out infinite;
     }
   `,
-};
+
+  rocketLaunch: css`
+    animation: ${rocketTrajectory} 4s cubic-bezier(0.22, 1.4, 0.36, 1);
+  `
+}

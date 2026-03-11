@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect } from "react"
 
 function registerAnimationProperties() {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") return
 
   if ("registerProperty" in CSS) {
     try {
@@ -12,14 +12,14 @@ function registerAnimationProperties() {
         syntax: "<angle>",
         inherits: false,
         initialValue: "0deg",
-      });
+      })
 
       CSS.registerProperty({
         name: "--silver-angle",
         syntax: "<angle>",
         inherits: false,
         initialValue: "0deg",
-      });
+      })
     } catch {
       // evita erro se já estiver registrado
     }
@@ -28,8 +28,8 @@ function registerAnimationProperties() {
 
 export function AnimationProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
-    registerAnimationProperties();
-  }, []);
+    registerAnimationProperties()
+  }, [])
 
-  return <>{children}</>;
+  return <>{children}</>
 }

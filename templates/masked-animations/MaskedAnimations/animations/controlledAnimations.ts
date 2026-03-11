@@ -1,54 +1,86 @@
-import { css } from "styled-components";
-import { rocketTrajectory } from "./keyframes";
-import { transitions } from "./transitions";
+import { css } from 'styled-components'
+import { transitions } from './transitions'
 
 export const controlledAnimations = {
   fadeInOut: css<{ $isOn?: boolean }>`
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
-    pointer-events: ${({ $isOn }) => ($isOn ? "auto" : "none")};
-    ${transitions.fast}
+    pointer-events: ${({ $isOn }) => ($isOn ? 'auto' : 'none')};
+    ${transitions.drawer}
   `,
 
   slideFromLeft: css<{ $isOn?: boolean }>`
-    transform: ${({ $isOn }) =>
-      $isOn ? "translateX(0)" : "translateX(-16px)"};
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
+    transform: ${({ $isOn }) => ($isOn ? 'translateX(0)' : 'translateX(-16px)')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
-    ${transitions.default}
+    ${transitions.drawer}
   `,
 
   slideFromRight: css<{ $isOn?: boolean }>`
-    transform: ${({ $isOn }) => ($isOn ? "translateX(0)" : "translateX(16px)")};
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
+    transform: ${({ $isOn }) => ($isOn ? 'translateX(0)' : 'translateX(16px)')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
-    ${transitions.default}
+    ${transitions.drawer}
   `,
 
   slideFromTop: css<{ $isOn?: boolean }>`
-    transform: ${({ $isOn }) =>
-      $isOn ? "translateY(0)" : "translateY(-16px)"};
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
+    transform: ${({ $isOn }) => ($isOn ? 'translateY(0)' : 'translateY(-16px)')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
-    ${transitions.fast}
+    ${transitions.drawer}
   `,
 
   slideFromBottom: css<{ $isOn?: boolean }>`
-    transform: ${({ $isOn }) => ($isOn ? "translateY(0)" : "translateY(16px)")};
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
+    transform: ${({ $isOn }) => ($isOn ? 'translateY(0)' : 'translateY(16px)')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
-    ${transitions.default}
+    ${transitions.drawer}
   `,
 
   zoomInOut: css<{ $isOn?: boolean }>`
-    transform: ${({ $isOn }) => ($isOn ? "scale(1)" : "scale(0.95)")};
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
+    transform: ${({ $isOn }) => ($isOn ? 'scale(1)' : 'scale(0.95)')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
-    ${transitions.fast}
+    ${transitions.drawer}
   `,
 
-  drawer: css<{ $isOn?: boolean; $maxHeight?: string }>`
+  drawer: css<{ $isOn?: boolean }>`
     overflow: hidden;
-    max-height: ${({ $isOn, $maxHeight }) =>
-      $isOn ? $maxHeight || "500px" : "0"};
-    transition: max-height 0.35s ease;
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
+    opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
+    transform: ${({ $isOn }) => ($isOn ? 'translateY(0)' : 'translateY(-6px)')};
+
+    ${transitions.drawer}
+
+    pointer-events: ${({ $isOn }) => ($isOn ? 'auto' : 'none')};
   `,
 
-  rocketLaunch: css`
-    animation: ${rocketTrajectory} 4s cubic-bezier(0.22, 1.4, 0.36, 1);
+  colapse: css<{ $isOn?: boolean }>`
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
+    transform: ${({ $isOn }) => ($isOn ? 'scaleY(1)' : 'scaleY(0)')};
+    opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
+
+    ${transitions.drawer}
   `,
-};
+
+  hideLeft: css<{ $isOn?: boolean }>`
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
+    transform: ${({ $isOn }) => ($isOn ? 'translateX(0)' : 'translateX(-50%) scale(0.5)')};
+    opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
+
+    ${transitions.drawer}
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 50%;
+      width: 50%;
+      height: 100%;
+      transform: ${({ $isOn }) => ($isOn ? 'translateX(0) scale(1)' : 'translateX(50%) scale(0.5)')};
+      opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
+      ${transitions.fast}
+    }
+  `
+}
