@@ -1,6 +1,7 @@
-import { continuousAnimations, transitions } from "@/styles/MAnimations";
-import styled, { css } from "styled-components";
-import { ButtonShape, ButtonSize, ButtonState } from "../MaskedButton.types";
+import { continuousAnimations } from '@/styles/MaskedAnimations/animations/continuousAnimations'
+import { transitions } from '@/styles/MaskedAnimations/animations/transitions'
+import styled, { css } from 'styled-components'
+import { ButtonShape, ButtonSize, ButtonState } from '../MaskedButton.types'
 
 /* =========================
    SIZE DO BOTÃO
@@ -18,8 +19,8 @@ const sizeStyles: Record<ButtonSize, ReturnType<typeof css>> = {
   lg: css`
     padding: 16px 20px;
     font-size: 18px;
-  `,
-};
+  `
+}
 
 /* =========================
    TAMANHO DO ÍCONE
@@ -37,8 +38,8 @@ const iconSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   lg: css`
     width: 24px;
     height: 24px;
-  `,
-};
+  `
+}
 
 /* =========================
    CIRCLE DINÂMICO
@@ -56,11 +57,11 @@ const circleSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   lg: css`
     width: 70px;
     height: 70px;
-  `,
-};
+  `
+}
 
-const getShapeStyles = ($shape?: ButtonShape, $size: ButtonSize = "md") => {
-  if ($shape === "circle") {
+const getShapeStyles = ($shape?: ButtonShape, $size: ButtonSize = 'md') => {
+  if ($shape === 'circle') {
     return css`
       ${circleSizes[$size]}
       border-radius: 50%;
@@ -71,19 +72,19 @@ const getShapeStyles = ($shape?: ButtonShape, $size: ButtonSize = "md") => {
       .btn-text {
         display: none;
       }
-    `;
+    `
   }
 
-  if ($shape === "square") {
+  if ($shape === 'square') {
     return css`
       border-radius: 6px;
-    `;
+    `
   }
 
   return css`
     border-radius: 18px;
-  `;
-};
+  `
+}
 
 /* =========================
    ESTADOS
@@ -94,21 +95,20 @@ const stateStyles: Record<ButtonState, ReturnType<typeof css>> = {
     cursor: not-allowed;
 
     svg {
-      ${continuousAnimations.spin}
+      ${continuousAnimations.continuousSpin}
       stroke-width: 2;
     }
   `,
   default: css``,
   disabled: css`
     cursor: not-allowed;
-    opacity: 0.5;
   `,
   error: css`
     &:hover {
-      ${continuousAnimations.shakeX}
+      ${continuousAnimations.continuousShakeX}
     }
-  `,
-};
+  `
+}
 
 /* =========================
    TOOLTIP
@@ -116,12 +116,12 @@ const stateStyles: Record<ButtonState, ReturnType<typeof css>> = {
 
 export const LabelDiv = styled.div`
   position: absolute;
-  bottom: calc(150% + 12px);
+  bottom: calc(155% - 5px);
   left: 50%;
   transform: translateX(-50%) translateY(4px);
 
   padding: 8px 12px;
-  background-color: ${({ theme }) => theme.colors.baseBlue.light};
+  background-color: ${({ theme }) => theme.colors.baseBlue.dark};
   color: white;
   border-radius: 6px;
   font-size: 12px;
@@ -134,16 +134,16 @@ export const LabelDiv = styled.div`
   ${transitions.delay}
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 87%;
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
     width: 8px;
     height: 8px;
-    background-color: ${({ theme }) => theme.colors.baseBlue.light};
+    background-color: ${({ theme }) => theme.colors.baseBlue.dark};
   }
-`;
+`
 
 /* =========================
    CONTENT
@@ -154,7 +154,13 @@ export const ButtonContent = styled.span<{ $state: ButtonState }>`
   display: flex;
   align-items: center;
   gap: 8px;
-`;
+
+  ${({ $state }) =>
+    $state === 'disabled' &&
+    css`
+      opacity: 0.5;
+    `}
+`
 
 /* =========================
    ICON WRAPPER
@@ -165,19 +171,19 @@ export const IconWrapper = styled.span<{ $size?: ButtonSize }>`
   align-items: center;
 
   svg {
-    ${({ $size = "md" }) => iconSizes[$size]}
+    ${({ $size = 'md' }) => iconSizes[$size]}
   }
-`;
+`
 
 /* =========================
    BOTÃO BASE
 ========================= */
 
 export const BaseButtonContainer = styled.button<{
-  $size?: ButtonSize;
-  $state?: ButtonState;
-  $fullWidth?: boolean;
-  $shape?: ButtonShape;
+  $size?: ButtonSize
+  $state?: ButtonState
+  $fullWidth?: boolean
+  $shape?: ButtonShape
 }>`
   display: inline-flex;
   align-items: center;
@@ -185,10 +191,11 @@ export const BaseButtonContainer = styled.button<{
   font-weight: 700;
   cursor: pointer;
   position: relative;
+  text-decoration: none;
 
-  ${({ $size = "md" }) => sizeStyles[$size]}
-  ${({ $fullWidth }) => $fullWidth && "width: 100%; justify-content: center;"}
-  ${({ $state = "default" }) => stateStyles[$state]}
+  ${({ $size = 'md' }) => sizeStyles[$size]}
+  ${({ $fullWidth }) => $fullWidth && 'width: 100%; justify-content: center;'}
+  ${({ $state = 'default' }) => stateStyles[$state]}
   ${({ $shape, $size }) => getShapeStyles($shape, $size)}
 
   ${transitions.fast}
@@ -205,4 +212,4 @@ export const BaseButtonContainer = styled.button<{
   &:active {
     transform: scale(0.97);
   }
-`;
+`

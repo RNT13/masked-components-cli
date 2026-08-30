@@ -1,4 +1,6 @@
+
 import { AnimationName } from './AnimationRegistry'
+import { MAnimationPosition } from './MaskedAnimation'
 
 export type TriggerType = 'scroll' | 'hover' | 'mount' | 'controlled' | 'always'
 
@@ -10,11 +12,15 @@ export type MAnimationProps = {
 
   isOn?: boolean
 
-  center?: boolean
+  position?: MAnimationPosition
 
   delay?: number
 
   once?: boolean
 
   threshold?: number
+
+  width?: string
+
+  as?: React.ElementType
 }

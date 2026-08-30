@@ -3,13 +3,16 @@
 import { ButtonVariantMap } from '../../MaskedButton.types'
 import { ToggleButtonContainer, ToggleWrapper } from './ToggleButton.styles'
 
-type Props = { variant: "toggle" } & ButtonVariantMap['toggle']
+type Props = {
+  $variant: 'toggle'
+} & ButtonVariantMap['toggle']
 
-export default function ToggleButton(props: Props) {
+export default function ToggleButton({ $position = 'center', $isActive = false, $toggleLabel, ...buttonProps }: Props) {
   return (
-    <ToggleWrapper>
-      {props.$toggleLabel}
-      <ToggleButtonContainer $isActive={props.$isActive} {...props} />
+    <ToggleWrapper $position={$position}>
+      <ToggleButtonContainer $isActive={$isActive} {...buttonProps} />
+
+      {$toggleLabel}
     </ToggleWrapper>
   )
 }

@@ -1,11 +1,14 @@
-import { transitions } from '@/styles/animations'
-import { theme } from '@/styles/theme'
-import styled from 'styled-components'
+import { transitions } from '@/styles/MaskedAnimations/animations/transitions'
+import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
+import styled, { css } from 'styled-components'
 
 type props = {
   $variant?: string
   $hasToggle?: boolean
   $radius?: number
+  $icon?: boolean
+  $open?: boolean
+  $required?: boolean
 }
 
 /* ============================================================
@@ -19,21 +22,22 @@ export const MaskedInputContainer = styled.div<props>`
   flex-direction: column;
   gap: 6px;
 
+  z-index: ${({ $open }) => ($open ? 999 : 1)};
+
   input,
   textarea,
   select,
-  button {
+  #masked-select-trigger,
+  #masked-time-trigger {
     width: 100%;
-    padding: 12px;
     border-radius: ${({ $radius }) => ($radius ? `${$radius}px` : '18px')};
-    border: 2px solid ${theme.colors.baseBlue.light20};
-    font-size: 1rem;
+    border: 2px solid ${maskedTheme.colors.baseBlue.light08};
+    font-size: ${maskedTheme.fontSize.md};
+    font-weight: 800;
     line-height: 1.4;
-    color: ${theme.colors.baseBlue.light30};
-    background-color: ${theme.colors.baseBlue.light02};
-    z-index: 2;
+    color: ${maskedTheme.colors.baseBlue.base};
+    background-color: ${maskedTheme.colors.baseBlue.light40};
     text-align: left;
-
     ${transitions.slow}
 
     ${({ $hasToggle }) => $hasToggle && `padding-right: 44px;`}
@@ -45,155 +49,65 @@ export const MaskedInputContainer = styled.div<props>`
       cursor: pointer;
     }
 
-    /* Hover */
     &:hover {
-      border-color: ${theme.colors.baseBlue.base};
+      border-color: ${maskedTheme.colors.baseBlue.base};
     }
 
-    /* Focus */
     &:focus {
       outline: none;
-      background-color: ${theme.colors.baseBlue.light04};
-      border-color: ${theme.colors.baseBlue.light};
-      box-shadow: 0px 0px 10px 2px ${theme.colors.baseBlue.light};
+      background-color: ${maskedTheme.colors.baseBlue.light04};
+      border-color: ${maskedTheme.colors.baseBlue.light};
+      box-shadow: 0px 0px 10px 2px ${maskedTheme.colors.baseBlue.light};
+      color: ${maskedTheme.colors.baseBlue.base};
 
       &::placeholder {
-        color: ${theme.colors.baseBlue.light40};
+        color: ${maskedTheme.colors.baseBlue.light};
       }
     }
 
-    /* Disabled */
     &:disabled {
-      background-color: ${theme.colors.baseBlue.light20};
+      background-color: ${maskedTheme.colors.baseBlue.light20};
       cursor: not-allowed;
       opacity: 0.7;
     }
 
-    /* Error */
     &.error {
-      border-color: ${theme.colors.baseRed.base};
-      background-color: ${theme.colors.baseRed.light02};
-      color: ${theme.colors.baseRed.light20};
+      border-color: ${maskedTheme.colors.baseRed.base};
+      background-color: ${maskedTheme.colors.baseRed.light02};
+      color: ${maskedTheme.colors.baseRed.light20};
 
       &:focus {
-        box-shadow: 0 0 0 3px ${theme.colors.baseRed.light20};
+        box-shadow: 0 0 0 3px ${maskedTheme.colors.baseRed.light20};
       }
 
-      &.error::placeholder {
-        color: ${theme.colors.baseRed.light20};
+      &::placeholder {
+        color: ${maskedTheme.colors.baseRed.light20};
       }
     }
 
     &::placeholder {
-      color: ${theme.colors.baseBlue.light40};
+      color: ${maskedTheme.colors.baseBlue.light08};
     }
   }
 
   input,
-  textarea,
-  select {
+  select,
+  #masked-select-trigger,
+  #masked-time-trigger {
     min-height: 44px;
-    padding: 0 12px;
+    padding: ${({ $icon }) => ($icon ? '0 12px' : '0 12px 0 44px')};
     line-height: 40px;
   }
 
   /* ===================== TEXTAREA ===================== */
 
   textarea {
+    padding: ${({ $icon }) => ($icon ? '12px' : '12px 12px 12px 44px')};
     min-height: 96px;
     width: 100%;
     resize: none;
     scrollbar-width: thin;
-    scrollbar-color: ${theme.colors.baseBlue.base} ${theme.colors.baseBlue.light20};
-  }
-`
-
-/* ============================================================
- * SEARCH ICON
- * ============================================================ */
-
-export const SearchIcon = styled.div`
-  position: absolute;
-  left: 12px;
-  top: 42px;
-  font-size: 1.3rem;
-  color: ${theme.colors.baseBlue.light30};
-  pointer-events: none;
-  z-index: 3;
-`
-
-/* ============================================================
- * PASSWORD TOGGLE
- * ============================================================ */
-
-export const PasswordToggle = styled.div`
-  position: absolute;
-  right: 12px;
-  top: 43px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 2;
-  color: ${theme.colors.baseBlue.light};
-
-  svg {
-    font-size: 1.5rem;
-  }
-`
-
-/* ============================================================
- * FILE PREVIEW
- * ============================================================ */
-
-export const PreviewImageDiv = styled.div`
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
-  gap: 10px;
-
-  img {
-    border-radius: 10px;
-    object-fit: cover;
-    border: 2px solid ${theme.colors.baseBlue.light20};
-    background: ${theme.colors.baseBlue.light02};
-  }
-`
-
-/* ============================================================
- * FILE BUTTON
- * ============================================================ */
-
-export const FileTrigger = styled.button`
-  width: 100%;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  border-radius: 16px;
-  border: 2px solid ${theme.colors.baseBlue.light20};
-  color: ${theme.colors.baseBlue.light40};
-  background-color: ${theme.colors.baseBlue.light02};
-  font-size: 0.95rem;
-  font-weight: 500;
-
-  cursor: pointer;
-
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease;
-
-  &:hover {
-    border-color: ${theme.colors.baseBlue.base};
-    background: ${theme.colors.baseBlue.light};
-  }
-
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px ${theme.colors.baseBlue.light20};
+    scrollbar-color: ${maskedTheme.colors.baseBlue.base} ${maskedTheme.colors.baseBlue.light20};
   }
 `
 
@@ -202,10 +116,10 @@ export const FileTrigger = styled.button`
  * ============================================================ */
 
 export const ErrorDiv = styled.div`
-  color: ${theme.colors.baseRed.light30};
+  color: ${maskedTheme.colors.baseRed.dark30};
   font-size: 0.85rem;
   font-weight: 500;
-  background-color: ${theme.colors.baseRed.light04};
+  background-color: ${maskedTheme.colors.baseRed.light20};
   padding: 6px 12px;
   border-radius: 10px;
 `
@@ -213,8 +127,10 @@ export const ErrorDiv = styled.div`
 /* ============================================================
  * LABEL
  * ============================================================ */
-export const InputLabel = styled.label`
-  color: ${theme.colors.baseBlue.light30};
+
+export const InputLabel = styled.label<props>`
+  width: 100%;
+  color: ${maskedTheme.colors.baseBlue.dark20};
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 6px;
@@ -225,74 +141,28 @@ export const InputLabel = styled.label`
   svg {
     font-size: 20px;
   }
+
+  ${({ $required }) =>
+    $required &&
+    css`
+      &::after {
+        content: '*';
+        color: ${maskedTheme.colors.baseRed.base};
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+    `}
 `
 
-/* ============================================================
- * SELECT
- * ============================================================ */
-export const SelectTrigger = styled.button`
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 16px;
-  color: ${theme.colors.baseBlue.light40};
-  background-color: ${theme.colors.baseBlue.light02};
-  border: 2px solid ${theme.colors.baseBlue.light20};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-`
-
-export const SelectDropdown = styled.div`
+export const InputIconWrapper = styled.div`
   position: absolute;
-  top: 100%;
-  padding: 4px 4px 0px 4px;
-  left: 0;
-  width: 100%;
-  border-radius: 14px;
-  overflow: hidden;
-  background: ${theme.colors.baseBlue.base};
-  z-index: 5;
-`
+  left: 12px;
+  top: 44px;
+  background: none;
+  border: none;
+  color: ${maskedTheme.colors.baseBlue.dark};
 
-export const SelectOption = styled.div`
-  width: 100%;
-  padding: 8px;
-  border-radius: 14px;
-  margin-bottom: 4px;
-  background: ${theme.colors.baseBlue.dark20};
-  color: ${theme.colors.baseBlue.light50};
-  border: 2px solid ${theme.colors.baseBlue.light20};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  font-weight: 800;
-
-  &:hover {
-    background: ${theme.colors.baseBlue.light20};
-    color: ${theme.colors.baseBlue.base};
-    border-color: ${theme.colors.baseBlue.dark20};
-  }
-`
-
-/* ============================================================
- * CURRENCY
- * ============================================================ */
-export const CurrencyWrapper = styled.div`
-  position: relative;
-
-  span {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-weight: 600;
-    color: ${theme.colors.baseBlue.light30};
-    pointer-events: none;
-  }
-
-  input {
-    padding-left: 44px;
+  svg {
+    font-size: 1.5rem;
   }
 `

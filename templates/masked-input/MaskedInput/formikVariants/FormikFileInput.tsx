@@ -2,7 +2,7 @@
 
 import { useField } from 'formik'
 import { InputVariantMap } from '../MaskedInput.types'
-import { FileInput } from '../variants/FileInput'
+import { FileInput } from '../variants/FileInput/FileInput'
 
 type Props = { name: string } & InputVariantMap['file']
 

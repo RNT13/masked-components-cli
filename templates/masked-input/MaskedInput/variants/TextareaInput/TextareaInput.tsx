@@ -1,0 +1,35 @@
+'use client'
+
+import { ErrorDiv, InputIconWrapper, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import { InputVariantMap } from '../../MaskedInput.types'
+
+type Props = { variant: 'textarea' } & InputVariantMap['textarea']
+
+export function TextareaInput(props: Props) {
+  const hasError = props.touched && props.error
+
+  return (
+    <MaskedInputContainer $variant="textarea" $radius={props.radius} data-error={hasError} $icon={!props.icon}>
+      {props.label && (
+        <InputLabel htmlFor={props.id} $required={props.required}>
+          <span>{props.label}</span>
+        </InputLabel>
+      )}
+
+      {props.icon && <InputIconWrapper>{props.icon}</InputIconWrapper>}
+
+      <textarea
+        id={props.id}
+        value={props.value ?? ''}
+        onChange={e => props.onChange?.(e.target.value)}
+        className={hasError ? 'error' : ''}
+        placeholder={props.placeholder}
+        aria-invalid={hasError ? 'true' : undefined}
+        aria-describedby={hasError ? `${props.id}-error` : undefined}
+        disabled={props.disabled}
+      />
+
+      {hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
+    </MaskedInputContainer>
+  )
+}

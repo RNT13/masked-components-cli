@@ -7,10 +7,10 @@ import GradientButton from './variants/Gradient/GradientButton'
 import LinkButton from './variants/Link/LinkButton'
 import NeonButton from './variants/Neon/NeonButton'
 import OutlineButton from './variants/Outline/OutlineButton'
-import TobbleButton from './variants/Toggle/ToggleButton'
+import ToggleButton from './variants/Toggle/ToggleButton'
 
-export function MButton(props: ButtonProps) {
-  switch (props.variant) {
+export function MaskedButton(props: ButtonProps) {
+  switch (props.$variant) {
     case 'default':
       return <DefaultButton {...props} />
 
@@ -30,7 +30,7 @@ export function MButton(props: ButtonProps) {
       return <NeonButton {...props} />
 
     case 'toggle':
-      return <TobbleButton {...props} />
+      return <ToggleButton {...props} />
 
     default:
       return null

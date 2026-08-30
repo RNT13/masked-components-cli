@@ -8,11 +8,12 @@ import { FormikSearchInput } from './formikVariants/FormikSearchInput'
 import { FormikSelectInput } from './formikVariants/FormikSelectInput'
 import { FormikTextareaInput } from './formikVariants/FormikTextareaInput'
 import { FormikTextInput } from './formikVariants/FormikTextInput'
+import { FormikTimeInput } from './formikVariants/FormikTimeInput'
 import { InputProps } from './MaskedInput.types'
 
 type Props = InputProps & { name: string }
 
-export function FormikMInput(props: Props) {
+export function FormikMaskedInput(props: Props) {
   switch (props.variant) {
     case 'default':
       return <FormikTextInput {...props} />
@@ -37,6 +38,9 @@ export function FormikMInput(props: Props) {
 
     case 'currency':
       return <FormikCurrencyInput {...props} />
+
+    case 'time':
+      return <FormikTimeInput {...props} />
 
     default:
       return null

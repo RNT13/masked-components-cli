@@ -6,12 +6,15 @@ export type ButtonState = 'default' | 'disabled' | 'loading' | 'error'
 
 export type ButtonShape = 'rounded' | 'circle' | 'square'
 
+export type ButtonPosition = 'left' | 'right' | 'center'
+
 export type BaseButtonProps = {
   size?: ButtonSize
   shapes?: ButtonShape
   state?: ButtonState
 
   fullWidth?: boolean
+  $position?: ButtonPosition
   label?: string
 
   leftIcon?: React.ReactNode
@@ -63,5 +66,5 @@ export type ButtonVariantMap = {
 /* ================= UNION AUTOMÁTICA ================= */
 
 export type ButtonProps = {
-  [K in keyof ButtonVariantMap]: { variant: K } & ButtonVariantMap[K]
+  [K in keyof ButtonVariantMap]: { $variant: K } & ButtonVariantMap[K]
 }[keyof ButtonVariantMap]

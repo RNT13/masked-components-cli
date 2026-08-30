@@ -1,10 +1,24 @@
 import { css, styled } from 'styled-components'
 import { BaseButton } from '../../Base/BaseButton'
+import { ButtonPosition } from '../../MaskedButton.types'
 
 type props = {
   $isActive?: boolean
   $isError?: boolean
+  $isDisabled?: boolean
+  $position?: ButtonPosition
 }
+
+const disabledStyles = css`
+  color: ${({ theme }) => theme.colors.baseBlack.light40};
+  background-color: transparent;
+
+  &:hover {
+    background-color: transparent;
+    color: ${({ theme }) => theme.colors.baseBlack.light20};
+    border-color: transparent;
+  }
+`
 
 const activeStyles = css`
   color: ${({ theme }) => theme.colors.baseBlue.light20};
@@ -36,6 +50,12 @@ const errorStyles = css`
   }
 `
 
+export const GhostButtonWrapper = styled.div<props>`
+  display: flex;
+  align-items: center;
+  justify-content: ${({ $position }) => $position};
+`
+
 export const GhostButtonContainer = styled(BaseButton)<props>`
   color: ${({ theme }) => theme.colors.baseBlue.base};
   background-color: transparent;
@@ -49,4 +69,5 @@ export const GhostButtonContainer = styled(BaseButton)<props>`
 
   ${({ $isActive }) => $isActive && activeStyles}
   ${({ $isError }) => $isError && errorStyles}
+  ${({ $isDisabled }) => $isDisabled && disabledStyles}
 `

@@ -3,7 +3,10 @@
 import { installMaskedAnimations } from "./installers/maskedAnimations.js";
 import { installMaskedButtons } from "./installers/maskedButtons.js";
 import { installMaskedCards } from "./installers/maskedCards.js";
+import { installMaskedDrawer } from "./installers/maskedDrawer.js";
 import { installMaskedInput } from "./installers/maskedInput.js";
+import { installMaskedPopup } from "./installers/maskedPopup.js";
+import { installMaskedSkeleton } from "./installers/maskedSkeleton.js";
 import { installMaskedThemes } from "./installers/maskedThemes.js";
 import { selectComponents } from "./prompts/selectComponents.js";
 
@@ -29,6 +32,18 @@ async function main() {
 
   if (components.includes("masked-animations")) {
     await installMaskedAnimations();
+  }
+
+  if (components.includes("masked-drawer")) {
+    await installMaskedDrawer();
+  }
+
+  if (components.includes("masked-popup")) {
+    await installMaskedPopup();
+  }
+
+  if (components.includes("masked-skeleton")) {
+    await installMaskedSkeleton();
   }
 
   if (components.includes("masked-themes")) {

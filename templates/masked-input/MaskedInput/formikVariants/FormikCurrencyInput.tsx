@@ -2,7 +2,7 @@
 
 import { useField } from 'formik'
 import { InputVariantMap } from '../MaskedInput.types'
-import { CurrencyInput } from '../variants/CurrencyInput'
+import { CurrencyInput } from '../variants/CurrencyInput/CurrencyInput'
 
 type Props = { name: string } & InputVariantMap['currency']
 

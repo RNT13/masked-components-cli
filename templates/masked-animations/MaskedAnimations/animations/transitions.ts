@@ -43,6 +43,19 @@ export const transitions = {
       opacity 0.2s ease,
       transform 0.2s ease;
     transition-delay: 0.5s;
+  `,
+  premium: css`
+    transition:
+      max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  `,
+
+  bounce: css`
+    transition:
+      max-height 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.15),
+      opacity 0.5s ease,
+      transform 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.15);
   `
 }
 

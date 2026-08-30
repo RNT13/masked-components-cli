@@ -2,7 +2,7 @@
 
 import { useField } from 'formik'
 import { InputVariantMap } from '../MaskedInput.types'
-import { TextareaInput } from '../variants/TextareaInput'
+import { TextareaInput } from '../variants/TextareaInput/TextareaInput'
 
 type Props = { name: string } & InputVariantMap['textarea']
 
