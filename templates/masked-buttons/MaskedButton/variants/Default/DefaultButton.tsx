@@ -10,7 +10,7 @@ export default function DefaultButton(props: Props) {
     <DefaultButtonWrapper $position={props.$position}>  
       <DefaultButtonContainer  
         {...props}  
-        $isActive={props.$isActive}  
+        data-testid="default-button"
         $isError={props.state === 'error'}  
         $isDisabled={props.state === 'disabled'}  
       />  

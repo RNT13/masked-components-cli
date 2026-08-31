@@ -18,7 +18,7 @@ export type ButtonClickEvent = MouseEvent<HTMLButtonElement | HTMLAnchorElement>
   
 export type BaseButtonProps = {  
   size?: ButtonSize  
-  /** grafia interna usada pelos styled-components */  
+  /** @deprecated grafia interna — use `shape` na API pública */  
   shapes?: ButtonShape  
   state?: ButtonState  
   
@@ -104,8 +104,6 @@ export type ButtonProps = BaseButtonProps & {
   /* ---- aliases depreciados (retrocompatibilidade) ---- */  
   /** @deprecated use `variant` */  
   $variant?: ButtonVariant  
-  /** @deprecated use `position` */  
-  $position?: ButtonPosition  
   /** @deprecated use `active` */  
   $isActive?: boolean  
   /** @deprecated use `toggleLabel` */  

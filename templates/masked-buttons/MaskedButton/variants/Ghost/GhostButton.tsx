@@ -10,7 +10,7 @@ export default function GhostButton(props: props) {
     <GhostButtonWrapper $position={props.$position}>
       <GhostButtonContainer 
         {...props} 
-        $isActive={props.$isActive} 
+        data-testid="ghost-button"
         $isError={props.state === 'error'} 
         $isDisabled={props.state === 'disabled'} 
       />

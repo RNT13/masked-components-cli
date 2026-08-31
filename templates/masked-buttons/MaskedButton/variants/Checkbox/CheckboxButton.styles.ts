@@ -1,9 +1,14 @@
 import { transitions } from '@/styles/MaskedAnimations/animations/transitions'  
-import { styled } from 'styled-components'  
+import { keyframes, styled } from 'styled-components'  
   
 type Props = {  
   $isChecked?: boolean  
+  $isLoading?: boolean  
 }  
+  
+const spin = keyframes`  
+  to { transform: rotate(360deg); }  
+`  
   
 export const CheckboxWrapper = styled.div<{  
   $position: 'left' | 'right' | 'center'  
@@ -41,6 +46,12 @@ export const CheckboxBox = styled.button<Props>`
     width: 14px;  
     height: 14px;  
     color: ${({ theme }) => theme.colors.baseBlue.light40};  
+  
+    ${({ $isLoading }) =>  
+      $isLoading &&  
+      `  
+      animation: ${spin} 0.8s linear infinite;  
+    `}  
   }  
   
   &:hover:not(:disabled) {  

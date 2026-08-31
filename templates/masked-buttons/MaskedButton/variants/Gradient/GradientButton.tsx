@@ -10,7 +10,7 @@ export default function GradientButton(props: props) {
     <GradientButtonWrapper $position={props.$position}>
       <GradientButtonContainer
         {...props} 
-        $isActive={props.$isActive} 
+        data-testid="gradient-button"
         $isError={props.state === 'error'} 
         $isDisabled={props.state === 'disabled'} 
       />

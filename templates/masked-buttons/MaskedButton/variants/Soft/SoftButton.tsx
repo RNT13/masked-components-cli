@@ -9,8 +9,8 @@ export default function SoftButton(props: Props) {
   return (  
     <SoftButtonWrapper $position={props.$position}>  
       <SoftButtonContainer  
-        {...props}  
-        $isActive={props.$isActive}  
+        {...props}   
+        data-testid="soft-button"
         $isError={props.state === 'error'}  
         $isDisabled={props.state === 'disabled'}  
       />  

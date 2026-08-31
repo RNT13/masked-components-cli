@@ -31,6 +31,7 @@ export default function ToggleButton({ $position = 'center', $isActive = false, 
         onClick={handleClick}  
         className={className}  
         $isActive={active}  
+        data-testid="toggle-button"
       />  
   
       {$toggleLabel && <ToggleLabel>{$toggleLabel}</ToggleLabel>}  

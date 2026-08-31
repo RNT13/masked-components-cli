@@ -10,7 +10,7 @@ export default function NeonButton(props: props) {
     <NeonButtonWrapper $position={props.$position}>
       <NeonButtonContainer 
         {...props} 
-        $isActive={props.$isActive} 
+        data-testid="neon-button"
         $isError={props.state === 'error'} 
         $isDisabled={props.state === 'disabled'} 
       />

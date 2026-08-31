@@ -11,7 +11,6 @@ export default function LinkButton(props: props) {
       <LinkButtonContainer
         {...props} 
         data-testid="link-button"
-        $isActive={props.$isActive} 
         $isError={props.state === 'error'} 
         $isDisabled={props.state === 'disabled'} 
       />

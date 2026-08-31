@@ -1,78 +1,106 @@
 'use client'  
   
-import CheckboxButton from './variants/Checkbox/CheckboxButton'  
+import type { ComponentProps } from 'react'  
+  
+import { ButtonProps, ButtonState } from './MaskedButton.types'  
 import DefaultButton from './variants/Default/DefaultButton'  
-import GhostButton from './variants/Ghost/GhostButton'  
-import GradientButton from './variants/Gradient/GradientButton'  
-import LinkButton from './variants/Link/LinkButton'  
-import NeonButton from './variants/Neon/NeonButton'  
 import OutlineButton from './variants/Outline/OutlineButton'  
-import SoftButton from './variants/Soft/SoftButton'  
+import GhostButton from './variants/Ghost/GhostButton'  
+import LinkButton from './variants/Link/LinkButton'  
+import GradientButton from './variants/Gradient/GradientButton'  
+import NeonButton from './variants/Neon/NeonButton'  
 import ToggleButton from './variants/Toggle/ToggleButton'  
-import { ButtonProps, ButtonVariant, ButtonVariantMap } from './MaskedButton.types'  
+import SoftButton from './variants/Soft/SoftButton'  
+import CheckboxButton from './variants/Checkbox/CheckboxButton'  
   
 export function MaskedButton(props: ButtonProps) {  
   const {  
-    // ---- API pública ----  
+    // API pública (sem $)  
     variant,  
     position,  
     active,  
     disabled,  
     shape,  
-    toggleLabel,  
-    checkboxLabel,  
-    // ---- aliases depreciados ----  
+    state,  
+  
+    // aliases depreciados (com $)  
     $variant,  
     $position,  
     $isActive,  
     $toggleLabel,  
     $checkboxLabel,  
-    // ---- já internos / compartilhados ----  
-    state,  
-    shapes,  
+  
+    // API pública de labels/handlers  
+    toggleLabel,  
+    checkboxLabel,  
+  
+    // props específicas de toggle/checkbox (não devem vazar p/ DOM das demais)  
+    onToggle,  
+    checked,  
+    defaultChecked,  
+    onCheckedChange,  
+  
     ...rest  
   } = props  
   
-  const resolvedVariant: ButtonVariant = variant ?? $variant ?? 'default'  
+  // 1) resolve a variante (público tem prioridade, cai no alias depreciado)  
+  const resolvedVariant = variant ?? $variant  
   
-  // mapeia os nomes públicos para os nomes internos que as variantes consomem  
+  // 2) resolve o estado (o atalho `disabled` vira state='disabled')  
+  const resolvedState: ButtonState = disabled ? 'disabled' : state ?? 'default'  
+  
+  // 3) props internas compartilhadas por TODAS as variantes de estilo.  
+  //    $variant já entra aqui — NÃO repetir como prop explícita nos cases.  
   const internal = {  
     ...rest,  
-    state: disabled ? 'disabled' : (state ?? 'default'),  
-    shapes: shape ?? shapes ?? 'rounded',  
+    $variant: resolvedVariant,  
+    state: resolvedState,  
+    shapes: shape ?? rest.shapes,  
     $position: position ?? $position ?? 'center',  
     $isActive: active ?? $isActive ?? false,  
-    $toggleLabel: toggleLabel ?? $toggleLabel,  
-    $checkboxLabel: checkboxLabel ?? $checkboxLabel,  
   }  
   
   switch (resolvedVariant) {  
     case 'default':  
-      return <DefaultButton $variant="default" {...(internal as ButtonVariantMap['default'])} />  
+      return <DefaultButton {...(internal as ComponentProps<typeof DefaultButton>)} />  
   
     case 'outline':  
-      return <OutlineButton $variant="outline" {...(internal as ButtonVariantMap['outline'])} />  
+      return <OutlineButton {...(internal as ComponentProps<typeof OutlineButton>)} />  
   
     case 'ghost':  
-      return <GhostButton $variant="ghost" {...(internal as ButtonVariantMap['ghost'])} />  
+      return <GhostButton {...(internal as ComponentProps<typeof GhostButton>)} />  
   
     case 'link':  
-      return <LinkButton $variant="link" {...(internal as ButtonVariantMap['link'])} />  
+      return <LinkButton {...(internal as ComponentProps<typeof LinkButton>)} />  
   
     case 'gradient':  
-      return <GradientButton $variant="gradient" {...(internal as ButtonVariantMap['gradient'])} />  
+      return <GradientButton {...(internal as ComponentProps<typeof GradientButton>)} />  
   
     case 'neon':  
-      return <NeonButton $variant="neon" {...(internal as ButtonVariantMap['neon'])} />  
+      return <NeonButton {...(internal as ComponentProps<typeof NeonButton>)} />  
   
     case 'soft':  
-      return <SoftButton $variant="soft" {...(internal as ButtonVariantMap['soft'])} />  
+      return <SoftButton {...(internal as ComponentProps<typeof SoftButton>)} />  
   
     case 'toggle':  
-      return <ToggleButton $variant="toggle" {...(internal as ButtonVariantMap['toggle'])} />  
+      return (  
+        <ToggleButton  
+          {...(internal as ComponentProps<typeof ToggleButton>)}  
+          $toggleLabel={toggleLabel ?? $toggleLabel}  
+          onToggle={onToggle}  
+        />  
+      )  
   
     case 'checkbox':  
-      return <CheckboxButton $variant="checkbox" {...(internal as ButtonVariantMap['checkbox'])} />  
+      return (  
+        <CheckboxButton  
+          {...(internal as ComponentProps<typeof CheckboxButton>)}  
+          $checkboxLabel={checkboxLabel ?? $checkboxLabel}  
+          checked={checked}  
+          defaultChecked={defaultChecked}  
+          onCheckedChange={onCheckedChange}  
+        />  
+      )  
   
     default:  
       return null  

@@ -10,7 +10,7 @@ export default function OutlineButton(props: Props) {
     <OutlineButtonWrapper $position={props.$position}>
       <OutlineButtonContainer 
         {...props} 
-        $isActive={props.$isActive} 
+        data-testid="outline-button"
         $isError={props.state === 'error'} 
         $isDisabled={props.state === 'disabled'} 
       />

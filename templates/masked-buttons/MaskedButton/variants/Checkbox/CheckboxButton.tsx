@@ -2,8 +2,9 @@
   
 import { MouseEvent, useState } from 'react'  
 import { FaCheck } from 'react-icons/fa6'  
+import { VscLoading } from 'react-icons/vsc'  
 import { ButtonVariantMap } from '../../MaskedButton.types'  
-import { CheckboxWrapper, CheckboxBox, CheckboxLabel } from './CheckboxButton.styles'
+import { CheckboxBox, CheckboxLabel, CheckboxWrapper } from './CheckboxButton.styles'  
   
 type Props = {  
   $variant: 'checkbox'  
@@ -23,7 +24,9 @@ export default function CheckboxButton({
   const isControlled = checked !== undefined  
   const [internal, setInternal] = useState(defaultChecked)  
   const isChecked = isControlled ? checked : internal  
-  const isDisabled = state === 'disabled' || state === 'loading'  
+  
+  const isLoading = state === 'loading'  
+  const isDisabled = state === 'disabled' || isLoading  
   
   function handleClick(event: MouseEvent<HTMLButtonElement>) {  
     if (isDisabled) return  
@@ -39,13 +42,15 @@ export default function CheckboxButton({
         type="button"  
         role="checkbox"  
         aria-checked={isChecked}  
+        aria-busy={isLoading || undefined}  
         aria-label={ariaLabel ?? $checkboxLabel}  
         disabled={isDisabled}  
         onClick={handleClick}  
         className={className}  
         $isChecked={isChecked}  
+        $isLoading={isLoading}  
       >  
-        {isChecked && <FaCheck />}  
+        {isLoading ? <VscLoading /> : isChecked && <FaCheck />}  
       </CheckboxBox>  
   
       {$checkboxLabel && <CheckboxLabel>{$checkboxLabel}</CheckboxLabel>}  
