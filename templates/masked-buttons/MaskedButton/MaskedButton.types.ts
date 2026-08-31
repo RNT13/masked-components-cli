@@ -69,7 +69,7 @@ export type ButtonVariantMap = {
     checked?: boolean  
     onCheckedChange?: (checked: boolean) => void  
     $checkboxLabel?: string  
-    defaultChecked: boolean
+    defaultChecked?: boolean  
   }  
 }  
   
@@ -96,7 +96,9 @@ export type ButtonProps = BaseButtonProps & {
   onToggle?: (active: boolean) => void  
   
   /* ---- checkbox ---- */  
+  checkboxLabel?: string  
   checked?: boolean  
+  defaultChecked?: boolean  
   onCheckedChange?: (checked: boolean) => void  
   
   /* ---- aliases depreciados (retrocompatibilidade) ---- */  
@@ -108,4 +110,6 @@ export type ButtonProps = BaseButtonProps & {
   $isActive?: boolean  
   /** @deprecated use `toggleLabel` */  
   $toggleLabel?: string  
+  /** @deprecated use `checkboxLabel` */  
+  $checkboxLabel?: string  
 }
