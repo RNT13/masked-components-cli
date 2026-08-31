@@ -1,5 +1,6 @@
 import { css } from 'styled-components'
 import { transitions } from './transitions'
+import { dotsLoop } from './keyframes'
 
 export const controlledAnimations = {
   controlledFadeInOut: css<{ $isOn?: boolean }>`
@@ -57,13 +58,13 @@ export const controlledAnimations = {
     ${transitions.drawer}
   `,
 
-  controlledColapse: css<{ $isOn?: boolean }>`
-    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
-    transform: ${({ $isOn }) => ($isOn ? 'scaleY(1)' : 'scaleY(0)')};
-    opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
-    pointer-events: ${({ $isOn }) => ($isOn ? 'auto' : 'none')};
-    ${transitions.drawer}
-  `,
+  controlledCollapse: css<{ $isOn?: boolean }>`  
+    max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};  
+    transform: ${({ $isOn }) => ($isOn ? 'scaleY(1)' : 'scaleY(0)')};  
+    opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};  
+    pointer-events: ${({ $isOn }) => ($isOn ? 'auto' : 'none')};  
+    ${transitions.drawer}  
+  `, 
 
   controlledHideLeft: css<{ $isOn?: boolean }>`
     max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
@@ -190,5 +191,12 @@ export const controlledAnimations = {
     pointer-events: ${({ $isOn }) => ($isOn ? 'auto' : 'none')};
 
     ${transitions.premium}
-  `
+  `,
+
+  continuousDots: css`  
+    &::after {  
+      content: '';  
+      animation: ${dotsLoop} 1.4s steps(1, end) infinite;  
+    }  
+  `,
 }
