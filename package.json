@@ -11,7 +11,7 @@
   },
   "description": "A modern, type-safe and flexible component system for **Next.js + React**, designed to boost developer experience and speed up UI creation using a simple **CLI installer**.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
     "build": "tsup src/cli.ts --format esm --platform node --target es2020",
     "prepublishOnly": "npm run build"
   },
@@ -28,7 +28,8 @@
     "@types/prompts": "^2.4.9",
     "@types/react": "^19.2.7",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.0"
   },
   "peerDependencies": {
     "execa": "^9.6.1",

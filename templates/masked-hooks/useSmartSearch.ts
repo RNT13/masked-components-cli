@@ -1,7 +1,7 @@
 'use client'  
   
 import { useCallback, useMemo, useState } from 'react'  
-import { normalizeText } from '../masked-utils/stringUtils'
+import { normalizeText } from '../masked-utils/string'
   
 export type DateFilterKey = 'all' | 'today' | 'upcoming' | 'past'  
 export type SortDirection = 'asc' | 'desc'  
