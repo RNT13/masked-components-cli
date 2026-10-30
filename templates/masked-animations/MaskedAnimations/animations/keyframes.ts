@@ -351,3 +351,26 @@ export const flipInY = keyframes`
   60% { opacity: 1; transform: perspective(800px) rotateY(12deg); }  
   100% { opacity: 1; transform: perspective(800px) rotateY(0); }  
 `
+
+/* ===========================================================  
+   ALIASES DEPRECIADOS (remover na próxima major — E.20/E.21)  
+=========================================================== */  
+  
+/**  
+ * @deprecated use `dotsLoop`.  
+ * Alias de compatibilidade do nome antigo do Zandry.  
+ */  
+export const dots = dotsLoop  
+  
+/**  
+ * @deprecated use `shineLoop`.  
+ * O `shimmer` antigo do Zandry (translateX -100% → 100%) foi  
+ * substituído pelo `shineLoop` (mesma trajetória, com fade de opacidade).  
+ */  
+export const shimmer = shineLoop  
+  
+/**  
+ * @deprecated use `fadeInDown`.  
+ * O nome antigo era enganoso: a animação é de entrada (fade-in de cima).  
+ */  
+export const fadeOutDown = fadeInDown
