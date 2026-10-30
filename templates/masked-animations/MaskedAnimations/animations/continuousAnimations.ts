@@ -1,6 +1,7 @@
 import { css } from 'styled-components'
 import {
   bounce,
+  dotsLoop,
   float,
   glowDiagonalLoop,
   horizontalLine,
@@ -386,5 +387,12 @@ export const continuousAnimations = {
 
   continuousRocketLaunch: css`
     animation: ${rocketTrajectory} 4s cubic-bezier(0.22, 1.4, 0.36, 1);
-  `
+  `,
+
+  continuousDots: css`  
+    &::after {  
+      content: '';  
+      animation: ${dotsLoop} 1.4s steps(1, end) infinite;  
+    }  
+  `,
 }
