@@ -1,7 +1,13 @@
 export * from "./calendar";
+export * from "./color";
 export * from "./currency";
-export * from "./dateTime";
+export * from "./date";
 export * from "./duration";
+export * from "./error";
+export * from "./name";
+export { getFirstName, getInitials } from "./name";
 export * from "./number";
+export { getPercentage } from "./number";
 export * from "./string";
 export * from "./time";
+export * from "./weekday";
