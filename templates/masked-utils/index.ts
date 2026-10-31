@@ -11,3 +11,4 @@ export { getPercentage } from "./number";
 export * from "./string";
 export * from "./time";
 export * from "./weekday";
+export * from "./locale";

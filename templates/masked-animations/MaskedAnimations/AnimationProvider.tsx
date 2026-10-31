@@ -1,31 +1,13 @@
 'use client'
 
 import { ReactNode, useEffect } from 'react'
+import { registerAnimationProperties } from './registerAnimationProperties'
 
-function registerAnimationProperties() {
-  if (typeof window === 'undefined') return
-
-  if ('registerProperty' in CSS) {
-    try {
-      CSS.registerProperty({
-        name: '--gold-angle',
-        syntax: '<angle>',
-        inherits: false,
-        initialValue: '0deg'
-      })
-
-      CSS.registerProperty({
-        name: '--silver-angle',
-        syntax: '<angle>',
-        inherits: false,
-        initialValue: '0deg'
-      })
-    } catch {
-      // evita erro se já estiver registrado
-    }
-  }
-}
-
+/**
+ * OPCIONAL. O registro das propriedades CSS agora acontece sozinho quando o
+ * MaskedAnimation é importado, então este provider não é mais necessário.
+ * Foi mantido para não quebrar projetos que já o usam.
+ */
 export function AnimationProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     registerAnimationProperties()

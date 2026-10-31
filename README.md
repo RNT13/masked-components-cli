@@ -1,189 +1,111 @@
-# ✨ Masked Components CLI
+# Masked Components CLI
 
-A modern, type-safe and flexible component system for **Next.js + React**, designed to boost developer experience and speed up UI creation using a simple **CLI installer**.
-
-Masked Components provides **polymorphic**, **theme-ready**, and **highly customizable** UI components with first-class **TypeScript support**.
-
----
-
-## 🚀 Live Demo
-
-👉 **Website:** https://masked-components.vercel.app/
-👉 **CLI Install Command:**
+Copy-in React + TypeScript components. The CLI **copies the source code into your project** (like shadcn/ui):
+you own the files, you can edit anything, and there is no runtime dependency on this package.
 
 ```bash
-npx masked-components
+npx masked-components-cli
 ```
 
----
+Pick the components you want; the CLI figures out what else they need, installs the missing npm
+packages with **your** package manager (npm, pnpm, yarn or bun) and copies the files.
 
-## 📦 What is Masked Components?
+## What it needs from your project
 
-Masked Components is a UI component library combined with a CLI that allows you to **install and scaffold pre-configured components** directly into your project.
+- A `package.json` at the project root (run the CLI there, or use `--cwd`).
+- React and **TypeScript** (the templates are `.ts` / `.tsx`).
+- Works in Next.js, Vite, Remix and CRA. Imports are rewritten to relative paths when your project has no `@/` alias.
+- Exception: the `file` input variant uses `next/image` and only works in Next.js for now (the CLI warns you).
 
-It focuses on:
-
-- Developer Experience (DX)
-- Clean and scalable architecture
-- Modern UI patterns
-- Performance and tree-shaking
-
----
-
-## 🧱 Tech Stack
-
-- **Next.js** – Optimized routing, SSR and App Router ready
-- **React** – Component-based architecture
-- **TypeScript** – Strong typing and intelligent autocomplete
-- **Styled Components** – Theme-driven and dynamic styling
-- **React Icons** – Flexible icon support
-- **IMask** – Advanced input masking
-- **CLI (Node.js)** – Simple and fast installation
-
----
-
-## ⚡ Installation
-
-Install Masked Components in seconds using the CLI:
+## Usage
 
 ```bash
-npx masked-components
+npx masked-components-cli                          # interactive
+npx masked-components-cli masked-buttons masked-cards
+npx masked-components-cli --all
+npx masked-components-cli --list
+npx masked-components-cli masked-input --dry-run   # show what would happen, write nothing
 ```
 
-This command will:
+| Option | What it does |
+| --- | --- |
+| `-l, --list` | List components |
+| `-y, --yes` | Don't ask anything |
+| `-f, --force` | Overwrite files that exist **and differ** (otherwise they are kept and reported) |
+| `--dry-run` | Print the plan and the file report without writing |
+| `--no-install` | Copy files only, don't touch `package.json` |
+| `--pm <npm\|pnpm\|yarn\|bun>` | Force a package manager (default: from `packageManager`, lockfile or `npm_config_user_agent`) |
+| `--alias <auto\|keep\|relative>` | How to treat `@/…` imports (default `auto`: keep it only if your tsconfig maps `@/*` to the right folder) |
+| `--cwd <dir>` | Run in another folder |
 
-- Create a new Next.js project
-- Configure TypeScript
-- Install dependencies
-- Add Masked Components structure
+Running it again is safe: identical files are reported as unchanged, and files you edited are never overwritten without `--force`.
 
----
+## What gets installed, and where
 
-## 🧩 Components Overview
+| Component | Needs | npm packages |
+| --- | --- | --- |
+| `masked-themes` | – | styled-components |
+| `masked-animations` | – | styled-components |
+| `masked-skeleton` | – | styled-components |
+| `masked-buttons` | animations, themes | styled-components, react-icons |
+| `masked-cards` | themes | styled-components |
+| `masked-drawer` | themes | styled-components |
+| `masked-popup` | – | styled-components |
+| `masked-input` | animations, themes | styled-components, react-icons, react-hot-toast |
+| `masked-input-formik` | input | formik |
+| `masked-utils` | – | – |
+| `masked-hooks` | – | – |
+| `masked-hooks-next` (Next.js only) | – | – |
 
-### 🔘 MaskedButton
+Default destinations (with a `src` folder; without it, drop the `src/`):
 
-Highly customizable buttons with multiple variants, states, sizes, shapes, icons, and behaviors.
+```
+src/components/ui/   components
+src/styles/          themes, animations
+src/utils/           color helpers; masked-utils/ (own sub-folder, never collides with your files)
+src/hooks/           hooks
+```
 
-#### Variants
+Change them in `masked.config.json` at the project root (paths must stay inside the project):
 
-- `default`
-- `outline`
-- `ghost`
-- `gradient`
-- `neon`
-- `link`
-- `toggle`
+```json
+{ "paths": { "components": "src/ui", "styles": "src/theme", "utils": "src/lib", "hooks": "src/hooks" } }
+```
 
-#### States
+## Using the theme
 
-- `default`
-- `loading`
-- `disabled`
-- `error`
-- `active`
-
-#### Features
-
-- Left & right icons
-- Loading spinner
-- Tooltip label
-- Full width support
-- Polymorphic (`button` or `a`)
-- Toggle mode
-
-#### Basic Example
+Buttons read the styled-components `theme`, so wrap your app once:
 
 ```tsx
-<MaskedButton variant="default" size="sm" leftIcon={<FaCode />}>
-  Default Button
-</MaskedButton>
+import { ThemeProvider } from "styled-components";
+import { maskedTheme } from "@/styles/MaskedThemes/MaskedThemes";
+
+<ThemeProvider theme={maskedTheme}>{children}</ThemeProvider>
 ```
 
----
+Animations need no provider: the CSS properties for the premium borders are registered automatically.
 
-### ⌨️ MaskedInput
+## Updating
 
-Powerful input system with intelligent masks and real-time formatting.
+Run the CLI again with `--dry-run` to see what changed in the templates, then:
 
-#### Input Variants
+- keep your edits: run it without `--force` (changed files are listed as "kept");
+- take the new version of a file: delete it or use `--force`.
 
-- `default`
-- `textarea`
-- `masked`
-- `password`
-- `select`
-- `file`
-- `search`
-- `currency`
+If you installed an older version, loose files in `src/utils/` (e.g. `date.ts`, `index.ts`) are now installed under `src/utils/masked-utils/`; remove the old copies and update imports.
 
-#### Features
+## Development
 
-- Automatic masking
-- Controlled & uncontrolled support
-- Icons
-- Validation-ready
-- Cloudinary file upload support
-- Currency formatting
-
-#### Example
-
-```tsx
-<MInput
-  variant="masked"
-  label="Phone"
-  mask="(00) 0000-0000"
-  placeholder="Phone number"
-  value={value}
-  onChange={setValue}
-/>
+```bash
+npm install
+npm run typecheck
+npm test        # unit tests + templates × registry integrity check
+npm run build
 ```
 
----
+`src/registry.ts` is the single source of truth (which template folder goes where, what each component requires, which npm packages it needs).
+`src/tests/cli/templates-integrity.test.ts` fails if a template imports something the registry doesn't cover, so a missing dependency can't ship.
 
-## ✨ Key Features
+## License
 
-- ✅ TypeScript Native
-- ✅ Polymorphic Components
-- ✅ Responsive by default
-- ✅ Tree-shaking support
-- ✅ Zero unnecessary dependencies
-- ✅ Theme-ready styles
-- ✅ Modern animations
-- ✅ Accessibility-friendly
-- ✅ Optimized performance
-
----
-
-## 🧪 Playground
-
-The website provides a full interactive playground where you can:
-
-- Test all button variants
-- Change states dynamically
-- Try input masks in real time
-- Preview sizes, shapes and icons
-
----
-
-## 🛣️ Roadmap
-
-- 🃏 Masked Cards (Coming Soon)
-- 🎞️ Masked Animations (Coming Soon)
-- 📚 Extended documentation
-- 🧩 More components
-
----
-
-## 👤 Author
-
-Created with 💙 by **Renato Minoita**
-
-- 💼 LinkedIn: https://www.linkedin.com/in/renato-minoita/
-- 🧑‍💻 GitHub: https://github.com/RNT13
-
----
-
-## 📄 License
-
-MIT License © 2026
+MIT © Renato Minoita

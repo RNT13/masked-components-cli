@@ -6,6 +6,7 @@ import { css, styled, type RuleSet } from 'styled-components'
 import { animationRegistry } from './AnimationRegistry'
 import { useScrollTrigger } from './animations/triggers/useScrollTrigger'
 import { MAnimationProps } from './MaskedAnimation.types'
+import './registerAnimationProperties'
 
 export type MAnimationPosition = 'left' | 'center' | 'right' | 'top' | 'bottom'
 

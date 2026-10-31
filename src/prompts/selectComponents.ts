@@ -1,23 +1,57 @@
-import prompts from "prompts";  
-  
-export async function selectComponents(): Promise<string[]> {  
-  const response = await prompts({  
-    type: "multiselect",  
-    name: "components",  
-    message: "Quais componentes deseja instalar?",  
-    choices: [  
-      { title: "Masked Input", value: "masked-input" },  
-      { title: "Masked Cards", value: "masked-cards" },  
-      { title: "Masked Buttons", value: "masked-buttons" },  
-      { title: "Masked Animations", value: "masked-animations" },  
-      { title: "Masked Drawer", value: "masked-drawer" },  
-      { title: "Masked Popup", value: "masked-popup" },  
-      { title: "Masked Skeleton", value: "masked-skeleton" },  
-      { title: "Masked Themes", value: "masked-themes" },  
-      { title: "Masked Hooks", value: "masked-hooks" },
-      { title: "Masked Utils", value: "masked-utils" },
-    ],  
-  });  
-  
-  return response.components ?? [];  
+import prompts from "prompts";
+import type { ComponentEntry } from "../registry";
+import type { Framework } from "../types";
+
+/** Escolha interativa; devolve [] se o usuário cancelar. */
+export async function selectComponents(
+  entries: ComponentEntry[],
+  framework: Framework,
+): Promise<string[]> {
+  const choices = entries
+    .filter(
+      (entry) => !entry.frameworks || entry.frameworks.includes(framework),
+    )
+    .map((entry) => ({
+      title: entry.label,
+      value: entry.id,
+      description: entry.description,
+    }));
+
+  let cancelled = false;
+  const answer = await prompts(
+    {
+      type: "multiselect",
+      name: "ids",
+      message: "Quais componentes deseja instalar?",
+      hint: "espaço seleciona · enter confirma",
+      instructions: false,
+      min: 1,
+      choices,
+    },
+    {
+      onCancel: () => {
+        cancelled = true;
+        return false;
+      },
+    },
+  );
+
+  return cancelled ? [] : ((answer.ids as string[] | undefined) ?? []);
+}
+
+export async function confirm(
+  message: string,
+  initial = true,
+): Promise<boolean> {
+  let cancelled = false;
+  const answer = await prompts(
+    { type: "confirm", name: "ok", message, initial },
+    {
+      onCancel: () => {
+        cancelled = true;
+        return false;
+      },
+    },
+  );
+  return !cancelled && Boolean(answer.ok);
 }

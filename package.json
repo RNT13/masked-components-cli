@@ -2,43 +2,48 @@
   "name": "masked-components-cli",
   "version": "1.7.0",
   "type": "module",
+  "description": "Instala componentes React + TypeScript (copy-in) direto no seu projeto: botões, inputs, cards, drawer, popup, skeleton, temas, animações, hooks e utils.",
+  "bin": {
+    "masked-components-cli": "./dist/cli.js",
+    "masked-components": "./dist/cli.js"
+  },
   "files": [
     "dist",
-    "templates"
+    "templates",
+    "README.md"
   ],
-  "bin": {
-    "masked-components-cli": "./dist/cli.js"
+  "engines": {
+    "node": ">=18.19"
   },
-  "description": "A modern, type-safe and flexible component system for **Next.js + React**, designed to boost developer experience and speed up UI creation using a simple **CLI installer**.",
   "scripts": {
+    "build": "tsup src/cli.ts --format esm --platform node --target es2020 --clean",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "build": "tsup src/cli.ts --format esm --platform node --target es2020",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
   },
   "keywords": [
     "masked",
-    "components"
+    "components",
+    "react",
+    "typescript",
+    "cli",
+    "styled-components",
+    "copy-paste",
+    "ui"
   ],
   "license": "MIT",
   "author": "RNT",
-  "main": "index.js",
+  "dependencies": {
+    "execa": "^9.6.1",
+    "fs-extra": "^11.3.3",
+    "prompts": "^2.4.2"
+  },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^25.0.3",
     "@types/prompts": "^2.4.9",
-    "@types/react": "^19.2.7",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^2.1.0"
-  },
-  "peerDependencies": {
-    "execa": "^9.6.1",
-    "fs-extra": "^11.3.3",
-    "prompts": "^2.4.2",
-    "react-icons": "^5.5.0",
-    "react-input-mask": "^2.0.4"
-  },
-  "dependencies": {
-    "styled-components": "^6.3.11"
   }
 }
