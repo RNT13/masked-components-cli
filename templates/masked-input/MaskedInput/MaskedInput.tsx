@@ -13,7 +13,9 @@ import { TextareaInput } from './variants/TextareaInput/TextareaInput'
 import { TextInput } from './variants/TextInput/TextInput'
 import { TimeInput } from './variants/TimeInput/TimeInput'
 
-export function MaskedInput<T = any>(props: SearchInputProps<T> & { variant: 'search' }): JSX.Element
+export function MaskedInput<T = any>(
+  props: SearchInputProps<T> & { variant: 'search' }
+): JSX.Element
 export function MaskedInput(props: InputProps): JSX.Element
 export function MaskedInput(props: InputProps) {
   switch (props.variant) {

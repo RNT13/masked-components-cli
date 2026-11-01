@@ -13,6 +13,14 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts", "vitest.config.ts"],
-  "exclude": ["node_modules", "dist", "templates"]
+  "include": ["src/**/*.ts", "vitest.config.ts", "./**/*.ts", "./**/*.tsx"],
+  "exclude": ["node_modules", "dist", "templates"],
+  "paths": {  
+      "@/utils/masked-utils": ["./templates/masked-utils/index.ts"],  
+      "@/utils/masked-utils/*": ["./templates/masked-utils/*"],  
+      "@/styles/MaskedThemes/*": ["./templates/masked-themes/MaskedThemes/*"],  
+      "@/styles/MaskedAnimations/*": ["./templates/masked-animations/MaskedAnimations/*"],  
+      "@/components/*": ["./templates/masked-config/*"],
+      "@/*": ["./*"]  
+    } 
 }

@@ -1,7 +1,13 @@
 'use client'
 
 import { CardVariantMap } from '../../MaskedCards.types'
-import { FeatureAction, FeatureCardContainer, FeatureDescription, FeatureIcon, FeatureTitle } from './FeatureCard.styles'
+import {
+  FeatureAction,
+  FeatureCardContainer,
+  FeatureDescription,
+  FeatureIcon,
+  FeatureTitle
+} from './FeatureCard.styles'
 
 type Props = { $variant: 'feature' } & CardVariantMap['feature']
 

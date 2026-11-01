@@ -1,17 +1,17 @@
-import { getProjectPaths } from "@/utils/getProjectPaths.js";
-import { installDeps } from "@/utils/installDeps.js";
-import { copyTemplate } from "../utils/copyTemplate.js";
+import { getProjectPaths } from '@/utils/getProjectPaths.js'
+import { installDeps } from '@/utils/installDeps.js'
+import { copyTemplate } from '../utils/copyTemplate.js'
 
 export async function installMaskedCards() {
-  const paths = getProjectPaths();
+  const paths = getProjectPaths()
 
-  console.log("📦 Instalando Masked Cards...");
-  console.log("Framework detectado:", paths.framework);
+  console.log('📦 Instalando Masked Cards...')
+  console.log('Framework detectado:', paths.framework)
 
-  await installDeps([]);
+  await installDeps([])
 
   await copyTemplate({
-    templateDir: "masked-cards",
-    targetDir: paths.componentsDir,
-  });
+    templateDir: 'masked-cards',
+    targetDir: paths.componentsDir
+  })
 }

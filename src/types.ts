@@ -1,9 +1,9 @@
-export type Framework = "next" | "remix" | "vite" | "cra" | "unknown";
+export type Framework = 'next' | 'remix' | 'vite' | 'cra' | 'unknown'
 
-export type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
+export type PackageManager = 'npm' | 'pnpm' | 'yarn' | 'bun'
 
 /** Raízes de destino no projeto do usuário. */
-export type PathRoot = "components" | "styles" | "utils" | "hooks";
+export type PathRoot = 'components' | 'styles' | 'utils' | 'hooks'
 
 /**
  * Como tratar imports com alias `@/...` nos arquivos copiados:
@@ -11,9 +11,9 @@ export type PathRoot = "components" | "styles" | "utils" | "hooks";
  * - keep:     nunca altera
  * - relative: sempre converte para caminho relativo
  */
-export type AliasMode = "auto" | "keep" | "relative";
+export type AliasMode = 'auto' | 'keep' | 'relative'
 
 export interface NpmDep {
-  name: string;
-  range: string;
+  name: string
+  range: string
 }

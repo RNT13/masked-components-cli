@@ -9,5 +9,14 @@ type Props = { name: string } & InputVariantMap['time']
 export function FormikTimeInput({ name, ...props }: Props) {
   const [field, meta, helpers] = useField(name)
 
-  return <TimeInput {...props} variant="time" value={field.value} onChange={helpers.setValue} error={meta.error} touched={meta.touched} />
+  return (
+    <TimeInput
+      {...props}
+      variant="time"
+      value={field.value}
+      onChange={helpers.setValue}
+      error={meta.error}
+      touched={meta.touched}
+    />
+  )
 }

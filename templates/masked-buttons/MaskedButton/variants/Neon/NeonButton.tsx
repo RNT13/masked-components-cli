@@ -8,11 +8,11 @@ type props = { $variant: 'neon' } & ButtonVariantMap['neon']
 export default function NeonButton(props: props) {
   return (
     <NeonButtonWrapper $position={props.$position}>
-      <NeonButtonContainer 
-        {...props} 
+      <NeonButtonContainer
+        {...props}
         data-testid="neon-button"
-        $isError={props.state === 'error'} 
-        $isDisabled={props.state === 'disabled'} 
+        $isError={props.state === 'error'}
+        $isDisabled={props.state === 'disabled'}
       />
     </NeonButtonWrapper>
   )

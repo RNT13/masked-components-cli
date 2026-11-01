@@ -92,7 +92,8 @@ export const TimeOption = styled.button<{ $selected?: boolean }>`
   margin-bottom: 4px;
   background: ${({ $selected }) => ($selected ? maskedTheme.colors.baseBlue.dark20 : maskedTheme.colors.baseBlue.light02)};
   color: ${({ $selected }) => ($selected ? maskedTheme.colors.baseBlue.light50 : maskedTheme.colors.baseBlue.dark40)};
-  border: 2px solid ${({ $selected }) => ($selected ? maskedTheme.colors.baseBlue.light02 : maskedTheme.colors.baseBlue.dark20)};
+  border: 2px solid
+    ${({ $selected }) => ($selected ? maskedTheme.colors.baseBlue.light02 : maskedTheme.colors.baseBlue.dark20)};
   display: flex;
   justify-content: center;
   align-items: center;

@@ -8,11 +8,11 @@ type Props = { $variant: 'outline' } & ButtonVariantMap['outline']
 export default function OutlineButton(props: Props) {
   return (
     <OutlineButtonWrapper $position={props.$position}>
-      <OutlineButtonContainer 
-        {...props} 
+      <OutlineButtonContainer
+        {...props}
         data-testid="outline-button"
-        $isError={props.state === 'error'} 
-        $isDisabled={props.state === 'disabled'} 
+        $isError={props.state === 'error'}
+        $isDisabled={props.state === 'disabled'}
       />
     </OutlineButtonWrapper>
   )

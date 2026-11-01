@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import { BaseCard } from '../../Base/BaseCard'
 import { CardStatus } from '../../MaskedCards.types'
 
-const statusColors: Record<CardStatus, string> = {
-  active: maskedTheme.colors.baseGreen.base,
-  inactive: maskedTheme.colors.baseBlack.dark08,
-  warning: maskedTheme.colors.baseYellow.base,
-  error: maskedTheme.colors.baseRed.base
+const statusVar: Record<CardStatus, string> = {
+  active: `var(--mc-card-success, ${maskedTheme.colors.baseGreen.base})`,
+  inactive: `var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.dark08})`,
+  warning: `var(--mc-card-warning, ${maskedTheme.colors.baseYellow.base})`,
+  error: `var(--mc-card-danger, ${maskedTheme.colors.baseRed.base})`
 }
 
 export const ProductCardContainer = styled(BaseCard)``
@@ -23,11 +23,12 @@ export const ProductImagePlaceholder = styled.div`
   width: 100%;
   height: 180px;
   border-radius: ${maskedTheme.radius.sm};
-  background-color: ${maskedTheme.colors.baseBlue.light20};
+  background-color: var(--mc-card-placeholder-bg, ${maskedTheme.colors.baseBlue.light20});
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: ${maskedTheme.fontSize['3xl']};
+  color: var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
 `
 
 export const ProductHeader = styled.div`
@@ -40,7 +41,7 @@ export const ProductHeader = styled.div`
 export const ProductTitle = styled.h3`
   font-size: ${maskedTheme.fontSize.md};
   font-weight: 700;
-  color: ${maskedTheme.colors.baseBlack.dark40};
+  color: var(--mc-card-fg, ${maskedTheme.colors.baseBlack.dark40});
   margin: 0;
 `
 
@@ -49,8 +50,8 @@ export const ProductBadge = styled.span`
   font-weight: 600;
   padding: 2px 8px;
   border-radius: ${maskedTheme.radius.xl};
-  background-color: ${maskedTheme.colors.baseBlue.light20};
-  color: ${maskedTheme.colors.baseBlue.base};
+  background-color: var(--mc-card-accent-soft, ${maskedTheme.colors.baseBlue.light20});
+  color: var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
   white-space: nowrap;
 `
 
@@ -60,7 +61,7 @@ export const ProductStatus = styled.span<{ $status: CardStatus }>`
   gap: 4px;
   font-size: ${maskedTheme.fontSize.xs};
   font-weight: 600;
-  color: ${({ $status }) => statusColors[$status]};
+  color: ${({ $status }) => statusVar[$status]};
 
   &::before {
     content: '';
@@ -73,7 +74,7 @@ export const ProductStatus = styled.span<{ $status: CardStatus }>`
 
 export const ProductDescription = styled.p`
   font-size: ${maskedTheme.fontSize.sm};
-  color: ${maskedTheme.colors.baseBlack.dark20};
+  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.dark20});
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -91,12 +92,12 @@ export const ProductPriceRow = styled.div`
 export const ProductPrice = styled.strong`
   font-size: ${maskedTheme.fontSize.xl};
   font-weight: 700;
-  color: ${maskedTheme.colors.baseBlue.dark20};
+  color: var(--mc-card-accent-fg, ${maskedTheme.colors.baseBlue.dark20});
 `
 
 export const ProductOriginalPrice = styled.span`
   font-size: ${maskedTheme.fontSize.sm};
-  color: ${maskedTheme.colors.baseBlack.dark08};
+  color: var(--mc-card-faint-fg, ${maskedTheme.colors.baseBlack.dark08});
   text-decoration: line-through;
 `
 

@@ -1,13 +1,13 @@
-import { css, styled } from "styled-components";
-import { BaseButton } from "../../Base/BaseButton";
-import { ButtonPosition } from "../../MaskedButton.types";
+import { css, styled } from 'styled-components'
+import { BaseButton } from '../../Base/BaseButton'
+import { ButtonPosition } from '../../MaskedButton.types'
 
 type props = {
-  $isActive?: boolean;
-  $isError?: boolean;
-  $isDisabled?: boolean;
-  $position?: ButtonPosition;
-};
+  $isActive?: boolean
+  $isError?: boolean
+  $isDisabled?: boolean
+  $position?: ButtonPosition
+}
 
 const disabledStyles = css`
   color: ${({ theme }) => theme.colors.baseBlack.light40};
@@ -18,13 +18,10 @@ const disabledStyles = css`
     color: ${({ theme }) => theme.colors.baseBlack.light20};
     border-color: transparent;
   }
-`;
+`
 
 export const activeStyles = css`
-  color: var(
-    --mc-btn-fg-active,
-    ${({ theme }) => theme.colors.baseBlue.light40}
-  );
+  color: var(--mc-btn-fg-active, ${({ theme }) => theme.colors.baseBlue.light40});
   background-image: var(
     --mc-btn-gradient-active,
     var(
@@ -36,8 +33,7 @@ export const activeStyles = css`
       )
     )
   );
-  border: 2px solid
-    var(--mc-btn-border-active, ${({ theme }) => theme.colors.baseBlue.light30});
+  border: 2px solid var(--mc-btn-border-active, ${({ theme }) => theme.colors.baseBlue.light30});
 
   svg {
     color: inherit;
@@ -52,16 +48,10 @@ export const activeStyles = css`
         ${({ theme }) => theme.colors.baseBlue.light30}
       )
     );
-    color: var(
-      --mc-btn-fg-hover,
-      ${({ theme }) => theme.colors.baseBlue.dark40}
-    );
-    border-color: var(
-      --mc-btn-border-hover,
-      ${({ theme }) => theme.colors.baseBlue.base}
-    );
+    color: var(--mc-btn-fg-hover, ${({ theme }) => theme.colors.baseBlue.dark40});
+    border-color: var(--mc-btn-border-hover, ${({ theme }) => theme.colors.baseBlue.base});
   }
-`;
+`
 
 export const errorStyles = css`
   background-image: var(
@@ -72,14 +62,8 @@ export const errorStyles = css`
       ${({ theme }) => theme.colors.baseRed.dark}
     )
   );
-  color: var(
-    --mc-btn-danger-fg,
-    ${({ theme }) => theme.colors.baseRed.light30}
-  );
-  border-color: var(
-    --mc-btn-danger-border,
-    ${({ theme }) => theme.colors.baseRed.light08}
-  );
+  color: var(--mc-btn-danger-fg, ${({ theme }) => theme.colors.baseRed.light30});
+  border-color: var(--mc-btn-danger-border, ${({ theme }) => theme.colors.baseRed.light08});
 
   &:hover {
     background-image: var(
@@ -90,22 +74,16 @@ export const errorStyles = css`
         ${({ theme }) => theme.colors.baseRed.light08}
       )
     );
-    color: var(
-      --mc-btn-danger-fg,
-      ${({ theme }) => theme.colors.baseRed.light40}
-    );
-    border-color: var(
-      --mc-btn-danger-border,
-      ${({ theme }) => theme.colors.baseRed.light40}
-    );
+    color: var(--mc-btn-danger-fg, ${({ theme }) => theme.colors.baseRed.light40});
+    border-color: var(--mc-btn-danger-border, ${({ theme }) => theme.colors.baseRed.light40});
   }
-`;
+`
 
 export const GradientButtonWrapper = styled.div<props>`
   display: flex;
   align-items: center;
   justify-content: ${({ $position }) => $position};
-`;
+`
 
 export const GradientButtonContainer = styled(BaseButton)<props>`
   color: var(--mc-btn-fg, ${({ theme }) => theme.colors.baseBlue.light40});
@@ -117,8 +95,7 @@ export const GradientButtonContainer = styled(BaseButton)<props>`
       ${({ theme }) => theme.colors.baseBlue.dark}
     )
   );
-  border: 2px solid
-    var(--mc-btn-border, ${({ theme }) => theme.colors.baseBlue.light02});
+  border: 2px solid var(--mc-btn-border, ${({ theme }) => theme.colors.baseBlue.light02});
 
   &:hover {
     background-image: var(
@@ -129,17 +106,11 @@ export const GradientButtonContainer = styled(BaseButton)<props>`
         ${({ theme }) => theme.colors.baseBlue.light}
       )
     );
-    color: var(
-      --mc-btn-fg-hover,
-      ${({ theme }) => theme.colors.baseBlue.dark30}
-    );
-    border-color: var(
-      --mc-btn-border-hover,
-      ${({ theme }) => theme.colors.baseBlue.base}
-    );
+    color: var(--mc-btn-fg-hover, ${({ theme }) => theme.colors.baseBlue.dark30});
+    border-color: var(--mc-btn-border-hover, ${({ theme }) => theme.colors.baseBlue.base});
   }
 
   ${({ $isActive }) => $isActive && activeStyles}
   ${({ $isError }) => $isError && errorStyles}  
   ${({ $isDisabled }) => $isDisabled && disabledStyles}
-`;
+`

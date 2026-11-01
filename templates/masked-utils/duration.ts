@@ -3,28 +3,28 @@
 // Duração em minutos -> texto legível, com dicionários por locale.
 // Funções puras, SSR-safe, TypeScript >= 4.9.
 
-import { pickDictionary } from "./locale";
+import { pickDictionary } from './locale'
 
 export interface DurationDictionary {
   /** rótulo de minutos isolados (ex.: "45min") */
-  min: string;
+  min: string
   /** rótulo de horas (ex.: "1h") */
-  hour: string;
+  hour: string
   /** rótulo de minutos compostos (ex.: "1h 30min") */
-  minute: string;
+  minute: string
   /** texto para vazio/inválido/lista vazia */
-  empty: string;
+  empty: string
 }
 
-const DURATION_PT_BR: DurationDictionary = { min: "min", hour: "h", minute: "min", empty: "—" };
+const DURATION_PT_BR: DurationDictionary = { min: 'min', hour: 'h', minute: 'min', empty: '—' }
 
 export const durationDictionaries: Record<string, DurationDictionary> = {
-  "pt-BR": DURATION_PT_BR,
-  en: { min: "min", hour: "h", minute: "min", empty: "—" },
-};
+  'pt-BR': DURATION_PT_BR,
+  en: { min: 'min', hour: 'h', minute: 'min', empty: '—' }
+}
 
 function resolveDict(options: { locale?: string; dict?: DurationDictionary }): DurationDictionary {
-  return options.dict ?? pickDictionary(durationDictionaries, options.locale, DURATION_PT_BR);
+  return options.dict ?? pickDictionary(durationDictionaries, options.locale, DURATION_PT_BR)
 }
 
 /**
@@ -36,15 +36,15 @@ function resolveDict(options: { locale?: string; dict?: DurationDictionary }): D
  */
 export function formatDuration(
   minutes: number | string | null | undefined,
-  options: { locale?: string; dict?: DurationDictionary } = {},
+  options: { locale?: string; dict?: DurationDictionary } = {}
 ): string {
-  const dict = resolveDict(options);
-  const total = Math.floor(Number(minutes));
-  if (!Number.isFinite(total) || total <= 0) return dict.empty;
-  if (total < 60) return `${total}${dict.min}`;
-  const hours = Math.floor(total / 60);
-  const rest = total % 60;
-  return `${hours}${dict.hour}${rest > 0 ? ` ${rest}${dict.minute}` : ""}`;
+  const dict = resolveDict(options)
+  const total = Math.floor(Number(minutes))
+  if (!Number.isFinite(total) || total <= 0) return dict.empty
+  if (total < 60) return `${total}${dict.min}`
+  const hours = Math.floor(total / 60)
+  const rest = total % 60
+  return `${hours}${dict.hour}${rest > 0 ? ` ${rest}${dict.minute}` : ''}`
 }
 
 /**
@@ -54,10 +54,10 @@ export function formatDuration(
 export function averageDuration(
   items: Array<{ duration?: number | string | null }>,
   decimals = 0,
-  options: { locale?: string; dict?: DurationDictionary } = {},
+  options: { locale?: string; dict?: DurationDictionary } = {}
 ): string {
-  const dict = resolveDict(options);
-  if (!items.length) return dict.empty;
-  const total = items.reduce((acc, item) => acc + (Number(item.duration) || 0), 0);
-  return (total / items.length).toFixed(decimals);
+  const dict = resolveDict(options)
+  if (!items.length) return dict.empty
+  const total = items.reduce((acc, item) => acc + (Number(item.duration) || 0), 0)
+  return (total / items.length).toFixed(decimals)
 }

@@ -1,6 +1,11 @@
 import { css, styled } from 'styled-components'
 import { media } from '@/styles/MaskedThemes/MaskedThemes'
-import { DrawerBreakpoint, DrawerSide, DrawerTransition, ResponsiveSize } from './MaskedDrawer.types'
+import {
+  DrawerBreakpoint,
+  DrawerSide,
+  DrawerTransition,
+  ResponsiveSize
+} from './MaskedDrawer.types'
 
 const getTransform = (side: DrawerSide, isOpen: boolean) => {
   if (isOpen) return 'translate(0, 0)'
@@ -22,7 +27,11 @@ const getTransform = (side: DrawerSide, isOpen: boolean) => {
  * breakpoint pedido, caindo pro próximo tamanho maior quando o breakpoint
  * específico não foi informado (mobile -> tablet -> desktop).
  */
-function resolveSize(value: ResponsiveSize | undefined, breakpoint: DrawerBreakpoint, fallback: string): string {
+function resolveSize(
+  value: ResponsiveSize | undefined,
+  breakpoint: DrawerBreakpoint,
+  fallback: string
+): string {
   if (!value) return fallback
   if (typeof value === 'string') return value
 
@@ -31,61 +40,80 @@ function resolveSize(value: ResponsiveSize | undefined, breakpoint: DrawerBreakp
   return value.desktop ?? fallback
 }
 
-const getPosition = (side: DrawerSide, desktopSize: string, tabletSize: string, mobileSize: string) => {
+const getPosition = (
+  side: DrawerSide,
+  desktopSize: string,
+  tabletSize: string,
+  mobileSize: string
+) => {
   const isHorizontal = side === 'left' || side === 'right'
 
   return css`
-    ${side === 'left' &&
-    css`
-      top: 0;
-      left: 0;
-      height: 100vh;
-    `}
-    ${side === 'right' &&
-    css`
-      top: 0;
-      right: 0;
-      height: 100vh;
-    `}
-    ${side === 'top' &&
-    css`
-      top: 0;
-      left: 0;
-      width: 100vw;
-    `}
-    ${side === 'bottom' &&
-    css`
-      bottom: 0;
-      left: 0;
-      width: 100vw;
-    `}
+    ${
+      side === 'left' &&
+      css`
+        top: 0;
+        left: 0;
+        height: 100vh;
+      `
+    }
+    ${
+      side === 'right' &&
+      css`
+        top: 0;
+        right: 0;
+        height: 100vh;
+      `
+    }
+    ${
+      side === 'top' &&
+      css`
+        top: 0;
+        left: 0;
+        width: 100vw;
+      `
+    }
+    ${
+      side === 'bottom' &&
+      css`
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+      `
+    }
 
-    ${isHorizontal
-      ? css`
-          width: ${desktopSize};
-        `
-      : css`
-          height: ${desktopSize};
-        `}
-
-    ${media.tablet} {
-      ${isHorizontal
+    ${
+      isHorizontal
         ? css`
-            width: ${tabletSize};
+            width: ${desktopSize};
           `
         : css`
-            height: ${tabletSize};
-          `}
+            height: ${desktopSize};
+          `
+    }
+
+    ${media.tablet} {
+      ${
+        isHorizontal
+          ? css`
+              width: ${tabletSize};
+            `
+          : css`
+              height: ${tabletSize};
+            `
+      }
     }
 
     ${media.mobile} {
-      ${isHorizontal
-        ? css`
-            width: ${mobileSize};
-          `
-        : css`
-            height: ${mobileSize};
-          `}
+      ${
+        isHorizontal
+          ? css`
+              width: ${mobileSize};
+            `
+          : css`
+              height: ${mobileSize};
+            `
+      }
     }
   `
 }
@@ -93,7 +121,8 @@ const getPosition = (side: DrawerSide, desktopSize: string, tabletSize: string, 
 const transitionMap: Record<DrawerTransition, string> = {
   slide: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease',
   bounce: 'transform 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.4s ease',
-  premium: 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1)'
+  premium:
+    'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1)'
 }
 
 export const DrawerPanel = styled.div<{
@@ -111,7 +140,12 @@ export const DrawerPanel = styled.div<{
   overflow-y: auto;
 
   ${({ $side, $size, $fallback }) =>
-    getPosition($side, resolveSize($size, 'desktop', $fallback), resolveSize($size, 'tablet', $fallback), resolveSize($size, 'mobile', $fallback))}
+    getPosition(
+      $side,
+      resolveSize($size, 'desktop', $fallback),
+      resolveSize($size, 'tablet', $fallback),
+      resolveSize($size, 'mobile', $fallback)
+    )}
 
   transform: ${({ $side, $isOpen }) => getTransform($side, $isOpen)};
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};

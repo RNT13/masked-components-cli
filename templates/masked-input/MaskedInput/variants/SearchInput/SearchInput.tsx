@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { ErrorDiv, InputIconWrapper, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import {
+  ErrorDiv,
+  InputIconWrapper,
+  InputLabel,
+  MaskedInputContainer
+} from '../../MaskedInput.styles'
 import type { SearchInputProps } from '../../MaskedInput.types'
 import { useSmartSearch } from '../../hooks/useSmartSearch'
 import {
@@ -73,7 +78,10 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
     resultCount
   } = state
 
-  const hasFilters = (showStatusFilter && !!filterLabels) || (showDateFilter && !!dateField) || (showSortOptions && !!sortOptions?.length)
+  const hasFilters =
+    (showStatusFilter && !!filterLabels) ||
+    (showDateFilter && !!dateField) ||
+    (showSortOptions && !!sortOptions?.length)
 
   return (
     <SearchWrapper>
@@ -90,7 +98,7 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
           id={id}
           type="search"
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
           placeholder={placeholder}
           disabled={disabled}
           aria-invalid={hasError ? 'true' : undefined}
@@ -121,9 +129,17 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
               <div>
                 <FilterGroupLabel>Período</FilterGroupLabel>
                 <DateChipRow>
-                  {(['all', 'today', 'upcoming', 'past'] as const).map(key => (
-                    <DateChip key={key} type="button" $active={activeDateFilter === key} onClick={() => setActiveDateFilter(key)}>
-                      {dateFilterLabels?.[key] ?? { all: 'Todos', today: 'Hoje', upcoming: 'Próximos', past: 'Passados' }[key]}
+                  {(['all', 'today', 'upcoming', 'past'] as const).map((key) => (
+                    <DateChip
+                      key={key}
+                      type="button"
+                      $active={activeDateFilter === key}
+                      onClick={() => setActiveDateFilter(key)}
+                    >
+                      {dateFilterLabels?.[key] ??
+                        { all: 'Todos', today: 'Hoje', upcoming: 'Próximos', past: 'Passados' }[
+                          key
+                        ]}
                     </DateChip>
                   ))}
                 </DateChipRow>
@@ -134,8 +150,13 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
               <div>
                 <FilterGroupLabel>{sortGroupLabel}</FilterGroupLabel>
                 <SortChipRow>
-                  {sortOptions.map(option => (
-                    <SortChip key={option.key} type="button" $active={activeSort === option.key} onClick={() => setActiveSort(option.key)}>
+                  {sortOptions.map((option) => (
+                    <SortChip
+                      key={option.key}
+                      type="button"
+                      $active={activeSort === option.key}
+                      onClick={() => setActiveSort(option.key)}
+                    >
                       {option.label}
                     </SortChip>
                   ))}
@@ -148,7 +169,8 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
         {showResultCount && isFiltering && (
           <ResultsCount>
             {resultCount} de {total} resultado{total !== 1 ? 's' : ''}
-            {activeFilterCount > 0 && ` · ${activeFilterCount} filtro${activeFilterCount > 1 ? 's' : ''} ativo${activeFilterCount > 1 ? 's' : ''}`}
+            {activeFilterCount > 0 &&
+              ` · ${activeFilterCount} filtro${activeFilterCount > 1 ? 's' : ''} ativo${activeFilterCount > 1 ? 's' : ''}`}
           </ResultsCount>
         )}
 

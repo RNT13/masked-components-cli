@@ -10,8 +10,8 @@
    - gerados da paleta: qualquer chave de BaseColors (ex.: "baseRose")  
    - presets manuais: registrados via registerColorTheme (ex.: "light", "dark")  
 ========================================= */
-import { DefaultTheme } from "styled-components";
-import { BaseColors, ColorVariants } from "../types/MaskedTheme.types";
+import { DefaultTheme } from 'styled-components'
+import { BaseColors, ColorVariants } from '../types/MaskedTheme.types'
 
 /**
  * Valores de cor que um colorTheme expõe para os componentes.
@@ -19,33 +19,33 @@ import { BaseColors, ColorVariants } from "../types/MaskedTheme.types";
  */
 export interface ColorThemeValues {
   /** Cor principal (fundo/acento). */
-  base: string;
+  base: string
   /** Variações claras/escuras da cor principal. */
-  light08?: string;
-  light20?: string;
-  light40?: string;
-  light50?: string;
-  dark08?: string;
-  dark20?: string;
+  light08?: string
+  light20?: string
+  light40?: string
+  light50?: string
+  dark08?: string
+  dark20?: string
   /** Texto sobre a cor principal (quando o tema define). */
-  onBase?: string;
+  onBase?: string
   /** Brilho/glow para efeitos (ring, neon, shadow de active). */
-  glow?: string;
+  glow?: string
 }
 
-export type PaletteColorName = keyof BaseColors;
+export type PaletteColorName = keyof BaseColors
 
 /** Nome de tema aceito na prop colorTheme: chaves da paleta + temas registrados. */
-export type ColorThemeName = PaletteColorName | (string & {});
+export type ColorThemeName = PaletteColorName | (string & {})
 
 /** Alias curto: "ruby" -> baseRose (cor de exemplo da lib). */
 const COLOR_THEME_ALIASES: Record<string, PaletteColorName> = {
-  ruby: "baseRose",
-};
+  ruby: 'baseRose'
+}
 
 /* ---------- presets manuais ---------- */
 
-const registry = new Map<string, ColorThemeValues>();
+const registry = new Map<string, ColorThemeValues>()
 
 /**
  * Registra um preset de colorTheme (valores escritos à mão).
@@ -59,19 +59,16 @@ const registry = new Map<string, ColorThemeValues>();
  *   glow: 'rgba(124, 58, 237, 0.5)',
  * })
  */
-export function registerColorTheme(
-  name: string,
-  values: ColorThemeValues,
-): void {
-  registry.set(name, values);
+export function registerColorTheme(name: string, values: ColorThemeValues): void {
+  registry.set(name, values)
 }
 
 export function unregisterColorTheme(name: string): void {
-  registry.delete(name);
+  registry.delete(name)
 }
 
 export function listColorThemes(): string[] {
-  return [...registry.keys()];
+  return [...registry.keys()]
 }
 
 /**
@@ -89,18 +86,18 @@ export function listColorThemes(): string[] {
  */
 export function resolveColorTheme(
   colorTheme: ColorThemeName | undefined,
-  theme: DefaultTheme,
+  theme: DefaultTheme
 ): ColorThemeValues | undefined {
-  if (!colorTheme) return undefined;
+  if (!colorTheme) return undefined
 
-  const preset = registry.get(colorTheme);
-  if (preset) return preset;
+  const preset = registry.get(colorTheme)
+  if (preset) return preset
 
-  const alias = COLOR_THEME_ALIASES[colorTheme];
-  const paletteKey = (alias ?? colorTheme) as PaletteColorName;
-  const variants: ColorVariants | undefined = theme.colors[paletteKey];
+  const alias = COLOR_THEME_ALIASES[colorTheme]
+  const paletteKey = (alias ?? colorTheme) as PaletteColorName
+  const variants: ColorVariants | undefined = theme.colors[paletteKey]
 
-  if (!variants) return undefined;
+  if (!variants) return undefined
 
   return {
     base: variants.base,
@@ -110,8 +107,8 @@ export function resolveColorTheme(
     light50: variants.light50,
     dark08: variants.dark08,
     dark20: variants.dark20,
-    glow: variants.light50,
-  };
+    glow: variants.light50
+  }
 }
 
 /* ---------- presets embutidos ---------- */
@@ -121,21 +118,21 @@ export function resolveColorTheme(
  * (valores equivalentes ao ex-$theme="light" do Zandry; refinados
  * por componente no PASSO 4 quando cada variante for materializada).
  */
-registerColorTheme("light", {
-  base: "#ffffff",
-  onBase: "#1a1d26",
-  light40: "rgba(255,255,255,0.4)",
-  dark20: "#dde2ee",
-  glow: "rgba(255,255,255,0.5)",
-});
+registerColorTheme('light', {
+  base: '#ffffff',
+  onBase: '#1a1d26',
+  light40: 'rgba(255,255,255,0.4)',
+  dark20: '#dde2ee',
+  glow: 'rgba(255,255,255,0.5)'
+})
 
 /**
  * Preset "dark": superfície escura para uso sobre fundos claros.
  */
-registerColorTheme("dark", {
-  base: "#1a1d26",
-  onBase: "#e8eaf0",
-  light40: "#2e3347",
-  dark20: "#0f1117",
-  glow: "rgba(26,29,38,0.5)",
-});
+registerColorTheme('dark', {
+  base: '#1a1d26',
+  onBase: '#e8eaf0',
+  light40: '#2e3347',
+  dark20: '#0f1117',
+  glow: 'rgba(26,29,38,0.5)'
+})

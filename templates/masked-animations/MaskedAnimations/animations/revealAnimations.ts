@@ -1,4 +1,4 @@
-import { css } from "styled-components";
+import { css } from 'styled-components'
 import {
   blurIn,
   blurRise,
@@ -33,12 +33,12 @@ import {
   softRevealLeft,
   softRevealRight,
   softRevealUp,
-  zoomFromDeep,
-} from "./keyframes";
+  zoomFromDeep
+} from './keyframes'
 
-const EASE_STANDARD = "cubic-bezier(0.22, 1, 0.36, 1)";
-const EASE_OVERSHOOT = "cubic-bezier(0.34, 1.56, 0.64, 1)";
-const EASE_BOUNCE = "cubic-bezier(0.22, 1.4, 0.36, 1)";
+const EASE_STANDARD = 'cubic-bezier(0.22, 1, 0.36, 1)'
+const EASE_OVERSHOOT = 'cubic-bezier(0.34, 1.56, 0.64, 1)'
+const EASE_BOUNCE = 'cubic-bezier(0.22, 1.4, 0.36, 1)'
 
 const revealHelper = (animation: ReturnType<typeof css>) => css`
   opacity: 1;
@@ -46,7 +46,7 @@ const revealHelper = (animation: ReturnType<typeof css>) => css`
   backface-visibility: hidden;
   transform: translateZ(0);
   ${animation}
-`;
+`
 
 export const revealAnimations = {
   revealFadeInUp: revealHelper(css`
@@ -168,18 +168,15 @@ export const revealAnimations = {
   `),
 
   revealSmoothBounceDown: revealHelper(css`
-    animation: ${smoothBounceDown} 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.15)
-      forwards;
+    animation: ${smoothBounceDown} 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;
   `),
 
   revealSmoothBounceLeft: revealHelper(css`
-    animation: ${smoothBounceLeft} 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.15)
-      forwards;
+    animation: ${smoothBounceLeft} 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;
   `),
 
   revealSmoothBounceRight: revealHelper(css`
-    animation: ${smoothBounceRight} 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.15)
-      forwards;
+    animation: ${smoothBounceRight} 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;
   `),
 
   /* Reveal por máscara (clip-path), sem deslocar layout */
@@ -197,5 +194,5 @@ export const revealAnimations = {
    */
   revealFadeOutDown: revealHelper(css`
     animation: ${fadeInDown} 1s ease forwards;
-  `),
-};
+  `)
+}

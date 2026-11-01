@@ -21,8 +21,17 @@ export function MaskedDrawer({
 
   return (
     <>
-      {overlay && <DrawerOverlay $isOpen={isOpen} $blur={overlayBlur} $zIndex={zIndex} onClick={onClose} />}
-      <DrawerPanel $side={side} $isOpen={isOpen} $size={size} $fallback={fallback} $transition={transition} $zIndex={zIndex}>
+      {overlay && (
+        <DrawerOverlay $isOpen={isOpen} $blur={overlayBlur} $zIndex={zIndex} onClick={onClose} />
+      )}
+      <DrawerPanel
+        $side={side}
+        $isOpen={isOpen}
+        $size={size}
+        $fallback={fallback}
+        $transition={transition}
+        $zIndex={zIndex}
+      >
         {children}
       </DrawerPanel>
     </>

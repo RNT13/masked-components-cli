@@ -79,13 +79,13 @@ function matchesAccept(file: File, accept?: string): boolean {
 
   const patterns = accept
     .split(',')
-    .map(p => p.trim().toLowerCase())
+    .map((p) => p.trim().toLowerCase())
     .filter(Boolean)
 
   const mime = file.type.toLowerCase()
   const name = file.name.toLowerCase()
 
-  return patterns.some(pattern => {
+  return patterns.some((pattern) => {
     // Extensão: ".png"
     if (pattern.startsWith('.')) {
       return name.endsWith(pattern)
@@ -154,13 +154,13 @@ export function FileInput(props: Props) {
     const files = validateFiles(Array.from(filesList))
     if (files.length === 0) return
 
-    const urls = files.map(f => URL.createObjectURL(f))
+    const urls = files.map((f) => URL.createObjectURL(f))
 
     prev.current.forEach(URL.revokeObjectURL)
     prev.current = urls
 
     setPreviews(urls)
-    setFileNames(files.map(f => f.name))
+    setFileNames(files.map((f) => f.name))
 
     props.onFileChange?.({ files, previews: urls })
 
@@ -183,12 +183,15 @@ export function FileInput(props: Props) {
 
     try {
       const results = await Promise.allSettled(
-        files.map(async file => {
+        files.map(async (file) => {
           const fd = new FormData()
           fd.append('file', file)
           fd.append('upload_preset', props.uploadPreset as string)
 
-          const res = await fetch(`https://api.cloudinary.com/v1_1/${props.cloudName}/image/upload`, { method: 'POST', body: fd })
+          const res = await fetch(
+            `https://api.cloudinary.com/v1_1/${props.cloudName}/image/upload`,
+            { method: 'POST', body: fd }
+          )
 
           if (!res.ok) {
             throw new Error(`Falha no upload de "${file.name}"`)
@@ -203,11 +206,17 @@ export function FileInput(props: Props) {
         })
       )
 
-      const uploaded = results.filter((r): r is PromiseFulfilledResult<string> => r.status === 'fulfilled').map(r => r.value)
+      const uploaded = results
+        .filter((r): r is PromiseFulfilledResult<string> => r.status === 'fulfilled')
+        .map((r) => r.value)
 
       const failedCount = results.length - uploaded.length
       if (failedCount > 0) {
-        toast.error(failedCount === files.length ? 'Falha ao enviar o(s) arquivo(s).' : `${failedCount} arquivo(s) falharam no envio.`)
+        toast.error(
+          failedCount === files.length
+            ? 'Falha ao enviar o(s) arquivo(s).'
+            : `${failedCount} arquivo(s) falharam no envio.`
+        )
       }
 
       if (uploaded.length > 0) {
@@ -252,7 +261,7 @@ export function FileInput(props: Props) {
         accept={props.accept}
         multiple={multiple}
         disabled={props.disabled}
-        onChange={e => {
+        onChange={(e) => {
           handleFiles(e.target.files)
           e.target.value = '' // permite reselecionar o mesmo arquivo depois
         }}
@@ -268,7 +277,7 @@ export function FileInput(props: Props) {
       {isSingleCard ? (
         <FileCard
           $dragOver={dragOver}
-          onDragOver={e => {
+          onDragOver={(e) => {
             e.preventDefault()
             if (!busy) setDragOver(true)
           }}
@@ -276,7 +285,11 @@ export function FileInput(props: Props) {
           onDrop={handleDrop}
         >
           <FileCardPreviewBox $aspect={props.aspect}>
-            {displayPreview ? <Image src={displayPreview} alt={props.label ?? 'Preview'} fill sizes="100%" /> : <BsImage />}
+            {displayPreview ? (
+              <Image src={displayPreview} alt={props.label ?? 'Preview'} fill sizes="100%" />
+            ) : (
+              <BsImage />
+            )}
           </FileCardPreviewBox>
 
           <FileCardFooter>

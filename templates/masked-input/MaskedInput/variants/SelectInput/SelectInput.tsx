@@ -3,7 +3,12 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { ErrorDiv, InputIconWrapper, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import {
+  ErrorDiv,
+  InputIconWrapper,
+  InputLabel,
+  MaskedInputContainer
+} from '../../MaskedInput.styles'
 
 import { InputVariantMap } from '../../MaskedInput.types'
 import { SelectDropdown, SelectOption, SelectTrigger } from './SelectInput.styles'
@@ -24,7 +29,7 @@ export function SelectInput(props: Props) {
 
   const hasError = props.touched && Boolean(props.error)
 
-  const selectedOption = props.options.find(opt => opt.value === props.value)
+  const selectedOption = props.options.find((opt) => opt.value === props.value)
 
   /* ============================================================
    * CALCULA POSIÇÃO DO DROPDOWN NO BODY
@@ -67,7 +72,9 @@ export function SelectInput(props: Props) {
 
       const clickedInsideTrigger = containerRef.current && containerRef.current.contains(target)
 
-      const clickedInsideDropdown = document.getElementById('masked-select-dropdown')?.contains(target)
+      const clickedInsideDropdown = document
+        .getElementById('masked-select-dropdown')
+        ?.contains(target)
 
       if (!clickedInsideTrigger && !clickedInsideDropdown) {
         setOpen(false)
@@ -79,7 +86,14 @@ export function SelectInput(props: Props) {
   }, [])
 
   return (
-    <MaskedInputContainer $variant="select" ref={containerRef} $radius={props.radius} data-error={hasError} $icon={!props.icon} $open={open}>
+    <MaskedInputContainer
+      $variant="select"
+      ref={containerRef}
+      $radius={props.radius}
+      data-error={hasError}
+      $icon={!props.icon}
+      $open={open}
+    >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
           <span>{props.label}</span>
@@ -98,7 +112,7 @@ export function SelectInput(props: Props) {
         className={`${hasError ? 'error' : ''}`}
         onClick={() => {
           if (!open) updateDropdownPosition()
-          setOpen(o => !o)
+          setOpen((o) => !o)
         }}
       >
         {selectedOption?.label ?? 'Selecione uma opção'}
@@ -118,7 +132,7 @@ export function SelectInput(props: Props) {
               width: dropdownPos.width
             }}
           >
-            {props.options.map(option => (
+            {props.options.map((option) => (
               <SelectOption
                 key={option.value}
                 className={`${option.value === props.value ? 'selected' : ''}`}

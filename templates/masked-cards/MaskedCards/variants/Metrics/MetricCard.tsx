@@ -2,7 +2,15 @@
 
 import { CardIconBadge, MetricColumnBody, MetricRowBody } from '../../Base/BaseCard.styles'
 import { CardVariantMap } from '../../MaskedCards.types'
-import { MetricBadge, MetricCardContainer, MetricLabel, MetricRightIcon, MetricTop, MetricTrend, MetricValue } from './MetricCard.styles'
+import {
+  MetricBadge,
+  MetricCardContainer,
+  MetricLabel,
+  MetricRightIcon,
+  MetricTop,
+  MetricTrend,
+  MetricValue
+} from './MetricCard.styles'
 
 type Props = { $variant: 'metric' } & CardVariantMap['metric']
 
@@ -40,10 +48,18 @@ export default function MetricCard({
   ) : null
 
   return (
-    <MetricCardContainer direction={direction} size={size} fullWidth={fullWidth} cardBg={cardBg} href={href} onClick={onClick} className={className}>
+    <MetricCardContainer
+      direction={direction}
+      size={size}
+      fullWidth={fullWidth}
+      cardBg={cardBg}
+      href={href}
+      onClick={onClick}
+      className={className}
+    >
       {direction === 'row' ? (
         <>
-          <CardIconBadge $bg={iconBgColor} $color={iconTextColor} $iconSize={iconSize}>
+          <CardIconBadge $color={iconTextColor} $iconSize={iconSize}>
             {icon}
           </CardIconBadge>
 

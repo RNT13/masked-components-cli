@@ -25,7 +25,15 @@ export default function StatCard({
   className
 }: Props) {
   return (
-    <StatCardContainer size={size} fullWidth={fullWidth} direction={direction} href={href} onClick={onClick} className={className} cardBg={cardBg}>
+    <StatCardContainer
+      size={size}
+      fullWidth={fullWidth}
+      direction={direction}
+      href={href}
+      onClick={onClick}
+      className={className}
+      cardBg={cardBg}
+    >
       {icon && (
         <StatIcon $bg={iconBgColor} $color={iconTextColor} $iconSize={iconSize}>
           {icon}

@@ -7,7 +7,7 @@ export const animationRegistry = {
   ...revealAnimations,
   ...continuousAnimations,
   ...controlledAnimations,
-  ...oneShotAnimations  
+  ...oneShotAnimations
 } as const
 
 export type AnimationName = keyof typeof animationRegistry

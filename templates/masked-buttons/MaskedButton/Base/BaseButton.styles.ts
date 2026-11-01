@@ -1,7 +1,7 @@
-import { continuousAnimations } from "@/utils/masked-animations/animations/continuousAnimations";
-import { transitions } from "@/utils/masked-animations/animations/transitions";
-import styled, { css } from "styled-components";
-import { ButtonShape, ButtonSize, ButtonState } from "../MaskedButton.types";
+import { continuousAnimations } from '@/utils/masked-animations/animations/continuousAnimations'
+import { transitions } from '@/utils/masked-animations/animations/transitions'
+import styled, { css } from 'styled-components'
+import { ButtonShape, ButtonSize, ButtonState } from '../MaskedButton.types'
 
 const sizeStyles: Record<ButtonSize, ReturnType<typeof css>> = {
   sm: css`
@@ -15,8 +15,8 @@ const sizeStyles: Record<ButtonSize, ReturnType<typeof css>> = {
   lg: css`
     padding: 16px 20px;
     font-size: 18px;
-  `,
-};
+  `
+}
 
 const iconSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   sm: css`
@@ -30,8 +30,8 @@ const iconSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   lg: css`
     width: 24px;
     height: 24px;
-  `,
-};
+  `
+}
 
 const circleSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   sm: css`
@@ -45,11 +45,11 @@ const circleSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   lg: css`
     width: 70px;
     height: 70px;
-  `,
-};
+  `
+}
 
-const getShapeStyles = ($shape?: ButtonShape, $size: ButtonSize = "md") => {
-  if ($shape === "circle") {
+const getShapeStyles = ($shape?: ButtonShape, $size: ButtonSize = 'md') => {
+  if ($shape === 'circle') {
     return css`
       ${circleSizes[$size]}
       border-radius: 50%;
@@ -59,16 +59,16 @@ const getShapeStyles = ($shape?: ButtonShape, $size: ButtonSize = "md") => {
       .btn-text {
         display: none;
       }
-    `;
+    `
   }
-  if ($shape === "square")
+  if ($shape === 'square')
     return css`
       border-radius: 6px;
-    `;
+    `
   return css`
     border-radius: var(--mc-btn-radius, 18px);
-  `;
-};
+  `
+}
 
 const stateStyles: Record<ButtonState, ReturnType<typeof css>> = {
   loading: css`
@@ -86,8 +86,8 @@ const stateStyles: Record<ButtonState, ReturnType<typeof css>> = {
     &:hover {
       ${continuousAnimations.continuousShakeX}
     }
-  `,
-};
+  `
+}
 
 export const LabelDiv = styled.div`
   position: absolute;
@@ -106,7 +106,7 @@ export const LabelDiv = styled.div`
   ${transitions.delay}
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 87%;
     left: 50%;
@@ -115,7 +115,7 @@ export const LabelDiv = styled.div`
     height: 8px;
     background-color: ${({ theme }) => theme.colors.baseBlue.dark};
   }
-`;
+`
 
 export const ButtonContent = styled.span<{ $state: ButtonState }>`
   position: relative;
@@ -123,25 +123,25 @@ export const ButtonContent = styled.span<{ $state: ButtonState }>`
   align-items: center;
   gap: 8px;
   ${({ $state }) =>
-    $state === "disabled" &&
+    $state === 'disabled' &&
     css`
       opacity: 0.5;
     `}
-`;
+`
 
 export const IconWrapper = styled.span<{ $size?: ButtonSize }>`
   display: flex;
   align-items: center;
   svg {
-    ${({ $size = "md" }) => iconSizes[$size]}
+    ${({ $size = 'md' }) => iconSizes[$size]}
   }
-`;
+`
 
 export const BaseButtonContainer = styled.button<{
-  $size?: ButtonSize;
-  $state?: ButtonState;
-  $fullWidth?: boolean;
-  $shape?: ButtonShape;
+  $size?: ButtonSize
+  $state?: ButtonState
+  $fullWidth?: boolean
+  $shape?: ButtonShape
 }>`
   display: inline-flex;
   align-items: center;
@@ -151,16 +151,15 @@ export const BaseButtonContainer = styled.button<{
   position: relative;
   text-decoration: none;
 
-  ${({ $size = "md" }) => sizeStyles[$size]}
-  ${({ $fullWidth }) => $fullWidth && "width: 100%; justify-content: center;"}  
-  ${({ $state = "default" }) => stateStyles[$state]}  
+  ${({ $size = 'md' }) => sizeStyles[$size]}
+  ${({ $fullWidth }) => $fullWidth && 'width: 100%; justify-content: center;'}  
+  ${({ $state = 'default' }) => stateStyles[$state]}  
   ${({ $shape, $size }) => getShapeStyles($shape, $size)}  
   
   ${transitions.fast}  
   
   &:focus-visible {
-    outline: 2px solid
-      var(--mc-btn-ring-focus, ${({ theme }) => theme.colors.baseBlue.base});
+    outline: 2px solid var(--mc-btn-ring-focus, ${({ theme }) => theme.colors.baseBlue.base});
     outline-offset: 2px;
   }
 
@@ -176,4 +175,4 @@ export const BaseButtonContainer = styled.button<{
   &:active {
     transform: scale(0.97);
   }
-`;
+`

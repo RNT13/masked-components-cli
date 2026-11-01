@@ -16,7 +16,13 @@ export function MaskedPopup({
   return (
     <>
       <PopupOverlay $isOpen={isOpen} $blur={overlayBlur} $zIndex={zIndex} onClick={onClose} />
-      <PopupPanel $isOpen={isOpen} $width={width} $maxWidth={maxWidth} $transition={transition} $zIndex={zIndex}>
+      <PopupPanel
+        $isOpen={isOpen}
+        $width={width}
+        $maxWidth={maxWidth}
+        $transition={transition}
+        $zIndex={zIndex}
+      >
         {children}
       </PopupPanel>
     </>

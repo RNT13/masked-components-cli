@@ -1,7 +1,13 @@
 'use client'
 
 import { CardVariantMap } from '../../MaskedCards.types'
-import { CompareCardContainer, CompareIcon, CompareLabel, CompareTrend, CompareValue } from './CompareCard.styles'
+import {
+  CompareCardContainer,
+  CompareIcon,
+  CompareLabel,
+  CompareTrend,
+  CompareValue
+} from './CompareCard.styles'
 
 type Props = { $variant: 'compare' } & CardVariantMap['compare']
 
@@ -23,7 +29,13 @@ export default function CompareCard({
   const arrow = compareTrend === 'up' ? '↗' : compareTrend === 'down' ? '↘' : '→'
 
   return (
-    <CompareCardContainer size={size} fullWidth={fullWidth} href={href} onClick={onClick} className={className}>
+    <CompareCardContainer
+      size={size}
+      fullWidth={fullWidth}
+      href={href}
+      onClick={onClick}
+      className={className}
+    >
       <CompareIcon $bg={iconBgColor} $color={iconTextColor} $iconSize={iconSize}>
         {icon}
       </CompareIcon>

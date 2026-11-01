@@ -66,7 +66,8 @@ export const FileCard = styled.div<{ $dragOver?: boolean }>`
   gap: ${maskedTheme.spacing.sm};
   padding: ${maskedTheme.spacing.md};
   border-radius: ${maskedTheme.radius.lg};
-  border: 2px dashed ${({ $dragOver }) => ($dragOver ? maskedTheme.colors.baseBlue.base : maskedTheme.colors.baseBlue.light20)};
+  border: 2px dashed
+    ${({ $dragOver }) => ($dragOver ? maskedTheme.colors.baseBlue.base : maskedTheme.colors.baseBlue.light20)};
   background: ${({ $dragOver }) => ($dragOver ? maskedTheme.colors.baseBlue.light40 : maskedTheme.colors.baseBlue.light02)};
   transition: ${maskedTheme.transition.default};
 `

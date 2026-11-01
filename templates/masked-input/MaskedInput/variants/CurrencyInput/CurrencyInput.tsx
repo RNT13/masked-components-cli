@@ -40,7 +40,7 @@ export function CurrencyInput(props: Props) {
 
     // Atualiza apenas se realmente houver mudança
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCents(current => (current === nextCents ? current : nextCents))
+    setCents((current) => (current === nextCents ? current : nextCents))
   }, [props.value])
 
   /* ============================================================
@@ -60,13 +60,13 @@ export function CurrencyInput(props: Props) {
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key >= '0' && e.key <= '9') {
       e.preventDefault()
-      setCents(prev => prev * 10 + Number(e.key))
+      setCents((prev) => prev * 10 + Number(e.key))
       return
     }
 
     if (e.key === 'Backspace') {
       e.preventDefault()
-      setCents(prev => Math.floor(prev / 10))
+      setCents((prev) => Math.floor(prev / 10))
       return
     }
   }
@@ -79,7 +79,12 @@ export function CurrencyInput(props: Props) {
   }
 
   return (
-    <MaskedInputContainer $variant="currency" $radius={props.radius} data-error={hasError} $icon={!props.symbol}>
+    <MaskedInputContainer
+      $variant="currency"
+      $radius={props.radius}
+      data-error={hasError}
+      $icon={!props.symbol}
+    >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
           <span>{props.label}</span>

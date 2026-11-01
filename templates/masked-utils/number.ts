@@ -2,10 +2,10 @@
 
 export interface NumberFormatOptions {
   /** Locale de formatação. Padrão "pt-BR". */
-  locale?: string;
+  locale?: string
 }
 
-const DEFAULT_LOCALE = "pt-BR";
+const DEFAULT_LOCALE = 'pt-BR'
 
 /**
  * Converte valor em número seguro. Inválido -> 0.
@@ -15,9 +15,8 @@ const DEFAULT_LOCALE = "pt-BR";
  * @example toNumber('abc')    // 0
  */
 export function toNumber(value: string | number | null | undefined): number {
-  const parsed =
-    typeof value === "string" ? parseFloat(value) : Number(value ?? 0);
-  return Number.isFinite(parsed) ? parsed : 0;
+  const parsed = typeof value === 'string' ? parseFloat(value) : Number(value ?? 0)
+  return Number.isFinite(parsed) ? parsed : 0
 }
 
 /**
@@ -28,15 +27,15 @@ export function toNumber(value: string | number | null | undefined): number {
 export function formatNumber(
   value: number | string | null | undefined,
   decimals?: number,
-  options: NumberFormatOptions = {},
+  options: NumberFormatOptions = {}
 ): string {
-  const { locale = DEFAULT_LOCALE } = options;
+  const { locale = DEFAULT_LOCALE } = options
   return toNumber(value).toLocaleString(
     locale,
     decimals !== undefined
       ? { minimumFractionDigits: decimals, maximumFractionDigits: decimals }
-      : undefined,
-  );
+      : undefined
+  )
 }
 
 /**
@@ -47,13 +46,13 @@ export function formatNumber(
 export function formatDecimal(
   value: number | string | null | undefined,
   decimals = 1,
-  options: NumberFormatOptions = {},
+  options: NumberFormatOptions = {}
 ): string {
-  const { locale = DEFAULT_LOCALE } = options;
+  const { locale = DEFAULT_LOCALE } = options
   return toNumber(value).toLocaleString(locale, {
     minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  });
+    maximumFractionDigits: decimals
+  })
 }
 
 /**
@@ -65,15 +64,15 @@ export function formatDecimal(
 export function formatPercent(
   value: number | string | null | undefined,
   decimals = 1,
-  options: NumberFormatOptions & { showSign?: boolean } = {},
+  options: NumberFormatOptions & { showSign?: boolean } = {}
 ): string {
-  const { locale = DEFAULT_LOCALE, showSign = false } = options;
-  const n = toNumber(value);
-  const sign = showSign && n > 0 ? "+" : "";
+  const { locale = DEFAULT_LOCALE, showSign = false } = options
+  const n = toNumber(value)
+  const sign = showSign && n > 0 ? '+' : ''
   return `${sign}${n.toLocaleString(locale, {
     minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  })}%`;
+    maximumFractionDigits: decimals
+  })}%`
 }
 
 /**
@@ -81,6 +80,6 @@ export function formatPercent(
  * @example getPercentage(25, 50) // 50
  */
 export function getPercentage(value: number, maxValue: number): number {
-  if (!maxValue || maxValue <= 0) return 0;
-  return Math.min(100, Math.round((value / maxValue) * 100));
+  if (!maxValue || maxValue <= 0) return 0
+  return Math.min(100, Math.round((value / maxValue) * 100))
 }

@@ -21,7 +21,7 @@ export function MaskedCards(props: CardProps) {
     case 'feature':
       return <FeatureCard {...props} />
     case 'plan':
-      return <PlanCard {...props} $active={props.$active ?? false} />
+      return <PlanCard {...props} active={props.active ?? props.$active ?? false} />
     default:
       return null
   }

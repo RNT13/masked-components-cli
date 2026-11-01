@@ -7,7 +7,12 @@
  */
 
 type CssWithRegisterProperty = {
-  registerProperty?: (definition: { name: string; syntax: string; inherits: boolean; initialValue: string }) => void
+  registerProperty?: (definition: {
+    name: string
+    syntax: string
+    inherits: boolean
+    initialValue: string
+  }) => void
 }
 
 const PROPERTIES = ['--gold-angle', '--silver-angle']
@@ -18,7 +23,8 @@ export function registerAnimationProperties(): void {
   if (registered || typeof window === 'undefined') return
   registered = true
 
-  const css = (typeof CSS !== 'undefined' ? CSS : undefined) as unknown as CssWithRegisterProperty | undefined
+  const css = (typeof CSS !== 'undefined' ? CSS : undefined) as unknown as
+    CssWithRegisterProperty | undefined
   if (!css || typeof css.registerProperty !== 'function') return
 
   for (const name of PROPERTIES) {

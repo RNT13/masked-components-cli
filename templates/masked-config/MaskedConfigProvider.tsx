@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import React, { ComponentType, createContext, useContext, type ReactNode } from "react";
+import React, { ComponentType, createContext, useContext, type ReactNode } from 'react'
 
 /**
  * Provider GLOBAL opcional da biblioteca.
@@ -15,49 +15,46 @@ import React, { ComponentType, createContext, useContext, type ReactNode } from 
 
 /** Assinatura mínima de um componente de link (compatível com next/link). */
 export interface LinkComponentProps {
-  href: string;
-  className?: string;
-  children?: ReactNode;
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-  [key: string]: unknown;
+  href: string
+  className?: string
+  children?: ReactNode
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
+  [key: string]: unknown
 }
 
 /** Assinatura mínima de um componente de imagem (compatível com next/image). */
 export interface ImageComponentProps {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  className?: string;
-  [key: string]: unknown;
+  src: string
+  alt: string
+  width?: number
+  height?: number
+  className?: string
+  [key: string]: unknown
 }
 
 export interface MaskedConfig {
   /** Componente de link usado por MaskedButton/MaskedCards quando `href` é passado. */
-  linkComponent?: ComponentType<LinkComponentProps>;
+  linkComponent?: ComponentType<LinkComponentProps>
   /** Componente de imagem usado pelo FileInput (preview). */
-  imageComponent?: ComponentType<ImageComponentProps>;
+  imageComponent?: ComponentType<ImageComponentProps>
   /** Toaster injetável (ex.: react-hot-toast). Chamado por FileInput em falha/sucesso de upload. */
-  onError?: (message: string) => void;
-  onSuccess?: (message: string) => void;
+  onError?: (message: string) => void
+  onSuccess?: (message: string) => void
   /** Locale padrão lido pelos componentes (dicionários pt-BR/en embutidos; utils seguem recebendo `locale` por parâmetro). */
-  locale?: string;
+  locale?: string
 }
 
-const MaskedConfigContext = createContext<MaskedConfig>({});
+const MaskedConfigContext = createContext<MaskedConfig>({})
 
-export function MaskedConfigProvider(props: {
-  config?: MaskedConfig;
-  children: ReactNode;
-}) {
+export function MaskedConfigProvider(props: { config?: MaskedConfig; children: ReactNode }) {
   return (
     <MaskedConfigContext.Provider value={props.config ?? {}}>
       {props.children}
     </MaskedConfigContext.Provider>
-  );
+  )
 }
 
 /** Lê a config global. Sem provider, retorna `{}` (fallbacks nativos). */
 export function useMaskedConfig(): MaskedConfig {
-  return useContext(MaskedConfigContext);
+  return useContext(MaskedConfigContext)
 }

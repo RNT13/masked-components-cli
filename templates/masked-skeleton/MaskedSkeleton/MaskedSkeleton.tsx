@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { forwardRef } from "react";
-import { css, styled } from "styled-components";
+import { forwardRef } from 'react'
+import { css, styled } from 'styled-components'
 
 /* ---------------------------------------------------------------
  * Tokens CSS (sobrescrevíveis via colorTheme/registry ou manualmente):
@@ -15,11 +15,11 @@ import { css, styled } from "styled-components";
  * --------------------------------------------------------------- */
 
 type SkeletonBoxProps = {
-  $width?: string | number;
-  $height?: string | number;
-  $radius?: string | number;
-  $animation: "shimmer" | "pulse" | "none";
-};
+  $width?: string | number
+  $height?: string | number
+  $radius?: string | number
+  $animation: 'shimmer' | 'pulse' | 'none'
+}
 
 const mcSkeletonPulse = css`
   animation: mcSkeletonPulse 1.6s ease-in-out infinite;
@@ -33,7 +33,7 @@ const mcSkeletonPulse = css`
       opacity: 1;
     }
   }
-`;
+`
 
 const mcSkeletonShimmer = css`
   @keyframes mcSkeletonShimmer {
@@ -44,26 +44,20 @@ const mcSkeletonShimmer = css`
       transform: translateX(120%);
     }
   }
-`;
+`
 
 const SkeletonBox = styled.div<SkeletonBoxProps>`
   position: relative;
   overflow: hidden;
   isolation: isolate;
 
-  width: ${({ $width }) =>
-    typeof $width === "number" ? `${$width}px` : ($width ?? "100%")};
-  height: ${({ $height }) =>
-    typeof $height === "number" ? `${$height}px` : ($height ?? "16px")};
+  width: ${({ $width }) => (typeof $width === 'number' ? `${$width}px` : ($width ?? '100%'))};
+  height: ${({ $height }) => (typeof $height === 'number' ? `${$height}px` : ($height ?? '16px'))};
   border-radius: ${({ $radius }) =>
-    typeof $radius === "number" ? `${$radius}px` : ($radius ?? "12px")};
+    typeof $radius === 'number' ? `${$radius}px` : ($radius ?? '12px')};
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.08),
-      rgba(255, 255, 255, 0.04)
-    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)),
     linear-gradient(
       90deg,
       var(--mc-skeleton-base, rgba(255, 255, 255, 0.04)) 0%,
@@ -71,10 +65,10 @@ const SkeletonBox = styled.div<SkeletonBoxProps>`
       var(--mc-skeleton-base, rgba(255, 255, 255, 0.04)) 100%
     );
 
-  ${({ $animation }) => $animation === "pulse" && mcSkeletonPulse}
+  ${({ $animation }) => $animation === 'pulse' && mcSkeletonPulse}
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(
@@ -84,9 +78,9 @@ const SkeletonBox = styled.div<SkeletonBoxProps>`
       transparent 100%
     );
     animation: ${({ $animation }) =>
-      $animation === "shimmer"
-        ? "mcSkeletonShimmer var(--mc-skeleton-duration, 1.35s) ease-in-out infinite"
-        : "none"};
+      $animation === 'shimmer'
+        ? 'mcSkeletonShimmer var(--mc-skeleton-duration, 1.35s) ease-in-out infinite'
+        : 'none'};
     pointer-events: none;
   }
 
@@ -98,19 +92,19 @@ const SkeletonBox = styled.div<SkeletonBoxProps>`
       animation: none;
     }
   }
-`;
+`
 
 export interface MaskedSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Largura (número = px). Default: '100%'. */
-  width?: string | number;
+  width?: string | number
   /** Altura (número = px). Default: 16. */
-  height?: string | number;
+  height?: string | number
   /** Raio de borda (número = px). Ignorado quando `circle`. Default: 12. */
-  radius?: string | number;
+  radius?: string | number
   /** Atalho para um círculo (use width=height para o diâmetro). */
-  circle?: boolean;
+  circle?: boolean
   /** Tipo de animação. 'shimmer' (faixa varrendo) | 'pulse' | 'none'. Default: 'shimmer'. */
-  animation?: "shimmer" | "pulse" | "none";
+  animation?: 'shimmer' | 'pulse' | 'none'
 }
 
 /**
@@ -122,25 +116,18 @@ export interface MaskedSkeletonProps extends React.HTMLAttributes<HTMLDivElement
  */
 export const MaskedSkeleton = forwardRef<HTMLDivElement, MaskedSkeletonProps>(
   (
-    {
-      width = "100%",
-      height = 16,
-      radius = 12,
-      circle = false,
-      animation = "shimmer",
-      ...rest
-    },
-    ref,
+    { width = '100%', height = 16, radius = 12, circle = false, animation = 'shimmer', ...rest },
+    ref
   ) => (
     <SkeletonBox
       ref={ref}
-      $width={circle ? (width === "100%" ? height : width) : width}
+      $width={circle ? (width === '100%' ? height : width) : width}
       $height={height}
-      $radius={circle ? "999px" : radius}
+      $radius={circle ? '999px' : radius}
       $animation={animation}
       aria-hidden="true"
       {...rest}
     />
-  ),
-);
-MaskedSkeleton.displayName = "MaskedSkeleton";
+  )
+)
+MaskedSkeleton.displayName = 'MaskedSkeleton'

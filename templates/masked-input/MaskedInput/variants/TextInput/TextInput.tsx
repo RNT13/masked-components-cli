@@ -1,6 +1,11 @@
 'use client'
 
-import { ErrorDiv, InputIconWrapper, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import {
+  ErrorDiv,
+  InputIconWrapper,
+  InputLabel,
+  MaskedInputContainer
+} from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
 
 type Props = { variant: 'default' } & InputVariantMap['default']
@@ -9,7 +14,12 @@ export function TextInput(props: Props) {
   const hasError = props.touched && props.error
 
   return (
-    <MaskedInputContainer $variant="default" $radius={props.radius} data-error={hasError} $icon={!props.icon}>
+    <MaskedInputContainer
+      $variant="default"
+      $radius={props.radius}
+      data-error={hasError}
+      $icon={!props.icon}
+    >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
           <span>{props.label}</span>
@@ -22,7 +32,7 @@ export function TextInput(props: Props) {
         id={props.id}
         type={props.type ?? 'text'}
         value={props.value ?? ''}
-        onChange={e => props.onChange?.(e.target.value)}
+        onChange={(e) => props.onChange?.(e.target.value)}
         placeholder={props.placeholder}
         className={hasError ? 'error' : ''}
         aria-invalid={hasError ? 'true' : undefined}

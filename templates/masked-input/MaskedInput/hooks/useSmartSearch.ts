@@ -81,13 +81,13 @@ export function useSmartSearch<T>(data: T[] | undefined, config: UseSmartSearchC
   const source: T[] = data ?? NO_ITEMS
 
   const toggleFilter = useCallback((field: string, value: string, multiple = false) => {
-    setActiveFilters(prev => {
+    setActiveFilters((prev) => {
       const current = prev[field] ?? []
       if (!multiple) {
         return current[0] === value ? { ...prev, [field]: [] } : { ...prev, [field]: [value] }
       }
       const exists = current.includes(value)
-      const next = exists ? current.filter(v => v !== value) : [...current, value]
+      const next = exists ? current.filter((v) => v !== value) : [...current, value]
       return { ...prev, [field]: next }
     })
   }, [])
@@ -103,16 +103,17 @@ export function useSmartSearch<T>(data: T[] | undefined, config: UseSmartSearchC
     const query = normalizeText(search)
     const today = getLocalToday()
 
-    const base = source.filter(item => {
+    const base = source.filter((item) => {
       const matchesSearch =
-        !query || searchFields.some(field => normalizeText(getNestedValue(item, field)).includes(query))
+        !query ||
+        searchFields.some((field) => normalizeText(getNestedValue(item, field)).includes(query))
 
       const matchesStatus = (() => {
         if (!filterField) return true
         const selected = activeFilters[filterField] ?? []
         if (selected.length === 0) return true
         const itemValue = normalizeText(getNestedValue(item, filterField))
-        return selected.some(v => normalizeText(v) === itemValue)
+        return selected.some((v) => normalizeText(v) === itemValue)
       })()
 
       const matchesDate = (() => {
@@ -129,20 +130,37 @@ export function useSmartSearch<T>(data: T[] | undefined, config: UseSmartSearchC
 
     if (!activeSort || sortOptions.length === 0) return base
 
-    const option = sortOptions.find(o => o.key === activeSort)
+    const option = sortOptions.find((o) => o.key === activeSort)
     if (!option) return base
 
     const direction = option.direction ?? 'asc'
     const type = option.type ?? 'string'
 
     return [...base].sort((a, b) => {
-      const result = compareValues(getNestedValue(a, option.field), getNestedValue(b, option.field), type, locale)
+      const result = compareValues(
+        getNestedValue(a, option.field),
+        getNestedValue(b, option.field),
+        type,
+        locale
+      )
       return direction === 'desc' ? -result : result
     })
-  }, [source, search, searchFields, filterField, dateField, activeFilters, activeDateFilter, activeSort, sortOptions, locale])
+  }, [
+    source,
+    search,
+    searchFields,
+    filterField,
+    dateField,
+    activeFilters,
+    activeDateFilter,
+    activeSort,
+    sortOptions,
+    locale
+  ])
 
   const activeFilterCount =
-    Object.values(activeFilters).reduce((acc, v) => acc + v.length, 0) + (activeDateFilter !== 'all' ? 1 : 0)
+    Object.values(activeFilters).reduce((acc, v) => acc + v.length, 0) +
+    (activeDateFilter !== 'all' ? 1 : 0)
   const hasActiveSort = activeSort !== null
 
   return {

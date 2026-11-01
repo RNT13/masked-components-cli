@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
-import { MouseEvent, useState } from "react";
-import { resolveButtonTokens } from "../../buttonTokens";
-import { ButtonVariantMap } from "../../MaskedButton.types";
-import { RadioDot, RadioLabel, RadioWrapper } from "./RadioButton.styles";
+import { MouseEvent, useState } from 'react'
+import { resolveButtonTokens } from '../../buttonTokens'
+import { ButtonVariantMap } from '../../MaskedButton.types'
+import { RadioDot, RadioLabel, RadioWrapper } from './RadioButton.styles'
 
-type Props = { $variant: "radio" } & ButtonVariantMap["radio"];
+type Props = { $variant: 'radio' } & ButtonVariantMap['radio']
 
 export default function RadioButton({
   checked,
@@ -16,22 +16,22 @@ export default function RadioButton({
   name,
   value,
   optionValue,
-  state = "default",
+  state = 'default',
   ariaLabel,
   className,
   colorTheme,
-  tokens,
+  tokens
 }: Props) {
-  const isControlled = checked !== undefined;
-  const [internal, setInternal] = useState(defaultChecked);
-  const isChecked = isControlled ? checked : internal;
-  const isDisabled = state === "disabled" || state === "loading";
+  const isControlled = checked !== undefined
+  const [internal, setInternal] = useState(defaultChecked)
+  const isChecked = isControlled ? checked : internal
+  const isDisabled = state === 'disabled' || state === 'loading'
 
   function handleClick(event: MouseEvent<HTMLButtonElement>) {
-    if (isDisabled || isChecked) return; // radio não desmarca
-    if (!isControlled) setInternal(true);
-    onCheckedChange?.(true);
-    onClick?.(event);
+    if (isDisabled || isChecked) return // radio não desmarca
+    if (!isControlled) setInternal(true)
+    onCheckedChange?.(true)
+    onClick?.(event)
   }
 
   return (
@@ -52,5 +52,5 @@ export default function RadioButton({
       />
       {radioLabel && <RadioLabel>{radioLabel}</RadioLabel>}
     </RadioWrapper>
-  );
+  )
 }

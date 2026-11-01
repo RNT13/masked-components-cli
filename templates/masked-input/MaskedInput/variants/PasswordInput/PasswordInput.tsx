@@ -2,7 +2,12 @@
 
 import { useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
-import { ErrorDiv, InputIconWrapper, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import {
+  ErrorDiv,
+  InputIconWrapper,
+  InputLabel,
+  MaskedInputContainer
+} from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
 import { PasswordToggle } from './PasswordInput.styles'
 
@@ -13,7 +18,12 @@ export function PasswordInput(props: Props) {
   const hasError = props.touched && props.error
 
   return (
-    <MaskedInputContainer $variant="password" $radius={props.radius} data-error={hasError} $icon={!props.icon}>
+    <MaskedInputContainer
+      $variant="password"
+      $radius={props.radius}
+      data-error={hasError}
+      $icon={!props.icon}
+    >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
           <span>{props.label}</span>
@@ -26,7 +36,7 @@ export function PasswordInput(props: Props) {
         id={props.id}
         type={show ? 'text' : 'password'}
         value={props.value ?? ''}
-        onChange={e => props.onChange?.(e.target.value)}
+        onChange={(e) => props.onChange?.(e.target.value)}
         className={hasError ? 'error' : ''}
         placeholder={props.placeholder}
         aria-invalid={hasError ? 'true' : undefined}
@@ -34,7 +44,9 @@ export function PasswordInput(props: Props) {
         disabled={props.disabled}
       />
 
-      <PasswordToggle onClick={() => setShow(s => !s)}>{show ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</PasswordToggle>
+      <PasswordToggle onClick={() => setShow((s) => !s)}>
+        {show ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+      </PasswordToggle>
 
       {hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
     </MaskedInputContainer>

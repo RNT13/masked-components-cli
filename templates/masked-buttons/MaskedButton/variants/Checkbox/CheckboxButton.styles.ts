@@ -1,30 +1,30 @@
-import { transitions } from "@/utils/masked-animations/animations/transitions";
-import { keyframes, styled } from "styled-components";
+import { transitions } from '@/utils/masked-animations/animations/transitions'
+import { keyframes, styled } from 'styled-components'
 
 type Props = {
-  $isChecked?: boolean;
-  $isLoading?: boolean;
-};
+  $isChecked?: boolean
+  $isLoading?: boolean
+}
 
 const spin = keyframes`  
   to { transform: rotate(360deg); }  
-`;
+`
 
 export const CheckboxWrapper = styled.div<{
-  $position: "left" | "right" | "center";
+  $position: 'left' | 'right' | 'center'
 }>`
   display: flex;
   align-items: center;
   justify-content: ${({ $position }) => $position};
   gap: 8px;
-`;
+`
 
 export const CheckboxLabel = styled.span`
   font-size: 14px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.baseBlack.light40};
   user-select: none;
-`;
+`
 
 export const CheckboxBox = styled.button<Props>`
   display: inline-flex;
@@ -38,9 +38,7 @@ export const CheckboxBox = styled.button<Props>`
   cursor: pointer;
 
   background-color: ${({ theme, $isChecked }) =>
-    $isChecked
-      ? `var(--mc-switch-track-on, ${theme.colors.baseBlue.base})`
-      : "transparent"};
+    $isChecked ? `var(--mc-switch-track-on, ${theme.colors.baseBlue.base})` : 'transparent'};
   border: 2px solid
     ${({ theme, $isChecked }) =>
       $isChecked
@@ -52,10 +50,7 @@ export const CheckboxBox = styled.button<Props>`
   svg {
     width: 14px;
     height: 14px;
-    color: var(
-      --mc-switch-knob-bg,
-      ${({ theme }) => theme.colors.baseBlue.light40}
-    );
+    color: var(--mc-switch-knob-bg, ${({ theme }) => theme.colors.baseBlue.light40});
 
     ${({ $isLoading }) =>
       $isLoading &&
@@ -65,16 +60,12 @@ export const CheckboxBox = styled.button<Props>`
   }
 
   &:focus-visible {
-    outline: 2px solid
-      var(--mc-switch-ring-focus, ${({ theme }) => theme.colors.baseBlue.base});
+    outline: 2px solid var(--mc-switch-ring-focus, ${({ theme }) => theme.colors.baseBlue.base});
     outline-offset: 2px;
   }
 
   &:hover:not(:disabled) {
-    border-color: var(
-      --mc-switch-border-on,
-      ${({ theme }) => theme.colors.baseBlue.base}
-    );
+    border-color: var(--mc-switch-border-on, ${({ theme }) => theme.colors.baseBlue.base});
     transform: scale(1.05);
   }
 
@@ -86,4 +77,4 @@ export const CheckboxBox = styled.button<Props>`
     cursor: not-allowed;
     opacity: 0.5;
   }
-`;
+`

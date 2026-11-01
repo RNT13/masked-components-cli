@@ -1,4 +1,3 @@
-
 import { AnimationName } from './AnimationRegistry'
 import { MAnimationPosition } from './MaskedAnimation'
 

@@ -1,17 +1,17 @@
-import { getProjectPaths } from "@/utils/getProjectPaths.js";
-import { copyTemplate } from "../utils/copyTemplate.js";
-import { installDeps } from "../utils/installDeps.js";
+import { getProjectPaths } from '@/utils/getProjectPaths.js'
+import { copyTemplate } from '../utils/copyTemplate.js'
+import { installDeps } from '../utils/installDeps.js'
 
 export async function installMaskedInput() {
-  const paths = getProjectPaths();
+  const paths = getProjectPaths()
 
-  console.log("📦 Instalando Masked Input...");
-  console.log("Framework detectado:", paths.framework);
+  console.log('📦 Instalando Masked Input...')
+  console.log('Framework detectado:', paths.framework)
 
-  await installDeps([]);
+  await installDeps([])
 
   await copyTemplate({
-    templateDir: "masked-input",
-    targetDir: paths.componentsDir,
-  });
+    templateDir: 'masked-input',
+    targetDir: paths.componentsDir
+  })
 }

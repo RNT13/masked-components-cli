@@ -9,10 +9,10 @@ export default function LinkButton(props: props) {
   return (
     <LinkButtonWrapper $position={props.$position}>
       <LinkButtonContainer
-        {...props} 
+        {...props}
         data-testid="link-button"
-        $isError={props.state === 'error'} 
-        $isDisabled={props.state === 'disabled'} 
+        $isError={props.state === 'error'}
+        $isDisabled={props.state === 'disabled'}
       />
     </LinkButtonWrapper>
   )

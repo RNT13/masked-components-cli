@@ -4,55 +4,55 @@
 // Funções puras, SSR-safe: Date/Date.now só são lidos dentro das funções e
 // podem ser sobrescritos por parâmetro (now). TypeScript >= 4.9.
 
-import { pickDictionary } from "./locale";
+import { pickDictionary } from './locale'
 
 export interface TimeUntilDictionary {
   /** quando já passou ou é agora */
-  now: string;
+  now: string
   /** prefixo relativo ("em" / "in") */
-  prefix: string;
+  prefix: string
   /** rótulo de minutos */
-  min: string;
+  min: string
   /** rótulo de horas */
-  hour: string;
+  hour: string
 }
 
 export interface TimeAgoDictionary {
   /** menos de 1 minuto ("agora" / "now") */
-  now: string;
+  now: string
   /** rótulo de minutos */
-  minute: string;
+  minute: string
   /** rótulo de horas */
-  hour: string;
+  hour: string
   /** rótulo de dias */
-  day: string;
+  day: string
 }
 
-const TIME_UNTIL_PT_BR: TimeUntilDictionary = { now: "agora", prefix: "em", min: "min", hour: "h" };
-const TIME_AGO_PT_BR: TimeAgoDictionary = { now: "agora", minute: "min", hour: "h", day: "d" };
+const TIME_UNTIL_PT_BR: TimeUntilDictionary = { now: 'agora', prefix: 'em', min: 'min', hour: 'h' }
+const TIME_AGO_PT_BR: TimeAgoDictionary = { now: 'agora', minute: 'min', hour: 'h', day: 'd' }
 
 /** Dicionários de `getTimeUntil`. Para outro idioma: `timeUntilDictionaries.es = {...}`. */
 export const timeUntilDictionaries: Record<string, TimeUntilDictionary> = {
-  "pt-BR": TIME_UNTIL_PT_BR,
-  en: { now: "now", prefix: "in", min: "min", hour: "h" },
-};
+  'pt-BR': TIME_UNTIL_PT_BR,
+  en: { now: 'now', prefix: 'in', min: 'min', hour: 'h' }
+}
 
 /** Dicionários de `timeAgo`. */
 export const timeAgoDictionaries: Record<string, TimeAgoDictionary> = {
-  "pt-BR": TIME_AGO_PT_BR,
-  en: { now: "now", minute: "min", hour: "h", day: "d" },
-};
+  'pt-BR': TIME_AGO_PT_BR,
+  en: { now: 'now', minute: 'min', hour: 'h', day: 'd' }
+}
 
-const MINUTES_PER_DAY = 24 * 60;
+const MINUTES_PER_DAY = 24 * 60
 
 /**
  * "09:30" -> 570 (minutos desde 00:00). Vazio/nulo/inválido -> 0.
  * @example timeToMinutes('09:30') // 570
  */
 export function timeToMinutes(time: string | null | undefined): number {
-  if (!time) return 0;
-  const [hours, minutes] = time.split(":").map(Number);
-  return (hours || 0) * 60 + (minutes || 0);
+  if (!time) return 0
+  const [hours, minutes] = time.split(':').map(Number)
+  return (hours || 0) * 60 + (minutes || 0)
 }
 
 /**
@@ -60,8 +60,8 @@ export function timeToMinutes(time: string | null | undefined): number {
  * @example minutesToTime(570) // "09:30"
  */
 export function minutesToTime(totalMinutes: number): string {
-  const clamped = Math.max(0, Math.floor(totalMinutes || 0));
-  return `${String(Math.floor(clamped / 60)).padStart(2, "0")}:${String(clamped % 60).padStart(2, "0")}`;
+  const clamped = Math.max(0, Math.floor(totalMinutes || 0))
+  return `${String(Math.floor(clamped / 60)).padStart(2, '0')}:${String(clamped % 60).padStart(2, '0')}`
 }
 
 /**
@@ -73,12 +73,12 @@ export function minutesToTime(totalMinutes: number): string {
  * @example addMinutes('--:--', 60)  // "--:--"
  */
 export function addMinutes(time: string, minutes: number): string {
-  if (!time || time === "--:--") return "--:--";
-  const delta = Number(minutes);
-  if (!Number.isFinite(delta)) return time;
-  const total = timeToMinutes(time) + Math.trunc(delta);
-  const wrapped = ((total % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;
-  return minutesToTime(wrapped);
+  if (!time || time === '--:--') return '--:--'
+  const delta = Number(minutes)
+  if (!Number.isFinite(delta)) return time
+  const total = timeToMinutes(time) + Math.trunc(delta)
+  const wrapped = ((total % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY
+  return minutesToTime(wrapped)
 }
 
 /**
@@ -88,10 +88,10 @@ export function addMinutes(time: string, minutes: number): string {
  * @example addMinutesNoWrap('--:--', 60) // "--:--"
  */
 export function addMinutesNoWrap(time: string, minutes: number): string {
-  if (!time || time === "--:--") return "--:--";
-  const delta = Number(minutes);
-  if (!Number.isFinite(delta)) return time;
-  return minutesToTime(timeToMinutes(time) + Math.trunc(delta));
+  if (!time || time === '--:--') return '--:--'
+  const delta = Number(minutes)
+  if (!Number.isFinite(delta)) return time
+  return minutesToTime(timeToMinutes(time) + Math.trunc(delta))
 }
 
 /**
@@ -99,8 +99,8 @@ export function addMinutesNoWrap(time: string, minutes: number): string {
  * @example formatTime('09:30:00') // "09:30"
  */
 export function formatTime(time: string | null | undefined): string {
-  if (!time) return "";
-  return time.split(":").slice(0, 2).join(":");
+  if (!time) return ''
+  return time.split(':').slice(0, 2).join(':')
 }
 
 /**
@@ -111,16 +111,17 @@ export function formatTime(time: string | null | undefined): string {
  */
 export function getTimeUntil(
   time: string,
-  options: { now?: Date; locale?: string; dict?: TimeUntilDictionary } = {},
+  options: { now?: Date; locale?: string; dict?: TimeUntilDictionary } = {}
 ): string {
-  const now = options.now ?? new Date();
-  const dict = options.dict ?? pickDictionary(timeUntilDictionaries, options.locale, TIME_UNTIL_PT_BR);
-  const diff = timeToMinutes(time) - (now.getHours() * 60 + now.getMinutes());
-  if (diff <= 0) return dict.now;
-  if (diff < 60) return `${dict.prefix} ${diff} ${dict.min}`;
-  const hours = Math.floor(diff / 60);
-  const minutes = diff % 60;
-  return `${dict.prefix} ${hours}${dict.hour}${minutes > 0 ? ` ${minutes}${dict.min}` : ""}`;
+  const now = options.now ?? new Date()
+  const dict =
+    options.dict ?? pickDictionary(timeUntilDictionaries, options.locale, TIME_UNTIL_PT_BR)
+  const diff = timeToMinutes(time) - (now.getHours() * 60 + now.getMinutes())
+  if (diff <= 0) return dict.now
+  if (diff < 60) return `${dict.prefix} ${diff} ${dict.min}`
+  const hours = Math.floor(diff / 60)
+  const minutes = diff % 60
+  return `${dict.prefix} ${hours}${dict.hour}${minutes > 0 ? ` ${minutes}${dict.min}` : ''}`
 }
 
 /**
@@ -130,31 +131,31 @@ export function getTimeUntil(
  */
 export function timeAgo(
   value: string | number | Date,
-  options: { now?: Date | number; locale?: string; dict?: TimeAgoDictionary } = {},
+  options: { now?: Date | number; locale?: string; dict?: TimeAgoDictionary } = {}
 ): string {
-  const target = value instanceof Date ? value.getTime() : new Date(value).getTime();
-  if (Number.isNaN(target)) return "";
-  const nowMs = options.now instanceof Date ? options.now.getTime() : (options.now ?? Date.now());
-  const dict = options.dict ?? pickDictionary(timeAgoDictionaries, options.locale, TIME_AGO_PT_BR);
+  const target = value instanceof Date ? value.getTime() : new Date(value).getTime()
+  if (Number.isNaN(target)) return ''
+  const nowMs = options.now instanceof Date ? options.now.getTime() : (options.now ?? Date.now())
+  const dict = options.dict ?? pickDictionary(timeAgoDictionaries, options.locale, TIME_AGO_PT_BR)
 
-  const minutes = Math.floor((nowMs - target) / 60000);
-  if (minutes < 1) return dict.now;
-  if (minutes < 60) return `${minutes}${dict.minute}`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}${dict.hour}`;
-  return `${Math.floor(hours / 24)}${dict.day}`;
+  const minutes = Math.floor((nowMs - target) / 60000)
+  if (minutes < 1) return dict.now
+  if (minutes < 60) return `${minutes}${dict.minute}`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}${dict.hour}`
+  return `${Math.floor(hours / 24)}${dict.day}`
 }
 
 /* ----- nomes publicados na lib (nada se perde) ----- */
 
 /** Minutos totais -> "HH:MM" (90 -> "01:30"). Igual a `minutesToTime`. */
 export function minutesToClock(totalMinutes: number): string {
-  return minutesToTime(totalMinutes);
+  return minutesToTime(totalMinutes)
 }
 
 /** "01:30" -> 90. Igual a `timeToMinutes`. */
 export function clockToMinutes(value?: string | null): number {
-  return timeToMinutes(value);
+  return timeToMinutes(value)
 }
 
 /**
@@ -162,5 +163,5 @@ export function clockToMinutes(value?: string | null): number {
  * @example getLocalDateString(new Date(2026, 0, 5)) // "2026-01-05"
  */
 export function getLocalDateString(date: Date = new Date()): string {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 }

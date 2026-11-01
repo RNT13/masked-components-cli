@@ -4,7 +4,12 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { BsClock } from 'react-icons/bs'
 
-import { ErrorDiv, InputIconWrapper, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import {
+  ErrorDiv,
+  InputIconWrapper,
+  InputLabel,
+  MaskedInputContainer
+} from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
 import {
   TimeClearButton,
@@ -77,7 +82,7 @@ export function TimeInput(props: Props) {
     const maxLeft = window.innerWidth - dropdownWidth - VIEWPORT_MARGIN
     left = Math.min(Math.max(left, VIEWPORT_MARGIN), Math.max(maxLeft, VIEWPORT_MARGIN))
 
-    setDropdownPos(prev => ({ ...prev, left, top: triggerRect.bottom + 6 }))
+    setDropdownPos((prev) => ({ ...prev, left, top: triggerRect.bottom + 6 }))
   }, [open, align])
 
   useEffect(() => {
@@ -132,7 +137,14 @@ export function TimeInput(props: Props) {
   }
 
   return (
-    <MaskedInputContainer $variant="time" ref={containerRef} $radius={props.radius} data-error={hasError} $icon={!props.icon} $open={open}>
+    <MaskedInputContainer
+      $variant="time"
+      ref={containerRef}
+      $radius={props.radius}
+      data-error={hasError}
+      $icon={!props.icon}
+      $open={open}
+    >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
           {props.icon}
@@ -148,24 +160,29 @@ export function TimeInput(props: Props) {
         id="masked-time-trigger"
         className={hasError ? 'error' : ''}
         disabled={props.disabled}
-        onClick={() => !props.disabled && setOpen(o => !o)}
+        onClick={() => !props.disabled && setOpen((o) => !o)}
         aria-invalid={hasError ? 'true' : undefined}
         aria-describedby={hasError ? `${props.id}-error` : undefined}
       >
-        <TimeTriggerValue $isPlaceholder={!props.value}>{props.value || props.placeholder || '00:00'}</TimeTriggerValue>
+        <TimeTriggerValue $isPlaceholder={!props.value}>
+          {props.value || props.placeholder || '00:00'}
+        </TimeTriggerValue>
         <BsClock />
       </TimeTrigger>
 
       {open &&
         createPortal(
-          <TimeDropdown ref={dropdownRef} style={{ top: dropdownPos.top, left: dropdownPos.left, minWidth: dropdownPos.width }}>
+          <TimeDropdown
+            ref={dropdownRef}
+            style={{ top: dropdownPos.top, left: dropdownPos.left, minWidth: dropdownPos.width }}
+          >
             <TimeColumnsRow>
               <TimeColumn>
                 <TimeColumnLabel>Hora</TimeColumnLabel>
-                {HOURS.map(h => (
+                {HOURS.map((h) => (
                   <TimeOption
                     key={h}
-                    ref={el => {
+                    ref={(el) => {
                       hourRefs.current[h] = el
                     }}
                     type="button"
@@ -181,10 +198,10 @@ export function TimeInput(props: Props) {
 
               <TimeColumn>
                 <TimeColumnLabel>Min</TimeColumnLabel>
-                {minutes.map(m => (
+                {minutes.map((m) => (
                   <TimeOption
                     key={m}
-                    ref={el => {
+                    ref={(el) => {
                       minuteRefs.current[m] = el
                     }}
                     type="button"

@@ -113,7 +113,12 @@ export const continuousAnimations = {
       height: 220%;
       border-radius: inherit;
 
-      background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.6), transparent 70%);
+      background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.6),
+        transparent 70%
+      );
 
       filter: blur(16px);
       mix-blend-mode: screen;
@@ -221,7 +226,12 @@ export const continuousAnimations = {
       inset: -50%;
       width: 200%;
       height: 200%;
-      background: linear-gradient(90deg, transparent 30%, rgba(255, 255, 255, 0.45), transparent 70%);
+      background: linear-gradient(
+        90deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.45),
+        transparent 70%
+      );
       animation: ${shineLoop} 5s ease-in-out infinite;
     }
   `,
@@ -275,7 +285,8 @@ export const continuousAnimations = {
 
       pointer-events: none;
 
-      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 1)) drop-shadow(0 0 24px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 60px rgba(255, 215, 0, 0.6));
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 1)) drop-shadow(0 0 24px rgba(255, 215, 0, 0.9))
+        drop-shadow(0 0 60px rgba(255, 215, 0, 0.6));
     }
 
     &::after {
@@ -292,7 +303,8 @@ export const continuousAnimations = {
       pointer-events: none;
 
       background:
-        radial-gradient(circle, #ffffff 0%, #ffd700 40%, transparent 70%), linear-gradient(#ffffff, #ffffff), linear-gradient(#ffffff, #ffffff);
+        radial-gradient(circle, #ffffff 0%, #ffd700 40%, transparent 70%),
+        linear-gradient(#ffffff, #ffffff), linear-gradient(#ffffff, #ffffff);
 
       background-size:
         100% 100%,
@@ -302,7 +314,8 @@ export const continuousAnimations = {
       background-position: center;
       background-repeat: no-repeat;
 
-      filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 12px rgba(255, 215, 0, 0.6));
+      filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.9))
+        drop-shadow(0 0 12px rgba(255, 215, 0, 0.6));
 
       opacity: 0;
 
@@ -353,7 +366,8 @@ export const continuousAnimations = {
 
       pointer-events: none;
 
-      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.4))
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7))
+        drop-shadow(0 0 14px rgba(255, 255, 255, 0.4))
         drop-shadow(0 0 24px rgba(255, 255, 255, 0.2));
     }
   `,
@@ -389,10 +403,10 @@ export const continuousAnimations = {
     animation: ${rocketTrajectory} 4s cubic-bezier(0.22, 1.4, 0.36, 1);
   `,
 
-  continuousDots: css`  
-    &::after {  
-      content: '';  
-      animation: ${dotsLoop} 1.4s steps(1, end) infinite;  
-    }  
-  `,
+  continuousDots: css`
+    &::after {
+      content: '';
+      animation: ${dotsLoop} 1.4s steps(1, end) infinite;
+    }
+  `
 }

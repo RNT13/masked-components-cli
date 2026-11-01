@@ -1,45 +1,41 @@
-"use client";
+'use client'
 
-import { MouseEvent, useState } from "react";
-import { CheckIcon, SpinnerIcon } from "../../Base/icons";
-import { resolveButtonTokens } from "../../buttonTokens";
-import { ButtonVariantMap } from "../../MaskedButton.types";
-import {
-  CheckboxBox,
-  CheckboxLabel,
-  CheckboxWrapper,
-} from "./CheckboxButton.styles";
+import { MouseEvent, useState } from 'react'
+import { CheckIcon, SpinnerIcon } from '../../Base/icons'
+import { resolveButtonTokens } from '../../buttonTokens'
+import { ButtonVariantMap } from '../../MaskedButton.types'
+import { CheckboxBox, CheckboxLabel, CheckboxWrapper } from './CheckboxButton.styles'
 
 type Props = {
-  $variant: "checkbox";
-} & ButtonVariantMap["checkbox"];
+  $variant: 'checkbox'
+} & ButtonVariantMap['checkbox']
 
 export default function CheckboxButton({
-  $position = "left",
+  $position = 'left',
   checked,
   defaultChecked = false,
   onCheckedChange,
   onClick,
   $checkboxLabel,
-  state = "default",
+  state = 'default',
   ariaLabel,
   className,
   colorTheme,
-  tokens,
+  tokens
 }: Props) {
-  const isControlled = checked !== undefined;
-  const [internal, setInternal] = useState(defaultChecked);
-  const isChecked = isControlled ? checked : internal;
+  const isControlled = checked !== undefined
+  const [internal, setInternal] = useState(defaultChecked)
+  const isChecked = isControlled ? checked : internal
 
-  const isLoading = state === "loading";
-  const isDisabled = state === "disabled" || isLoading;
+  const isLoading = state === 'loading'
+  const isDisabled = state === 'disabled' || isLoading
 
   function handleClick(event: MouseEvent<HTMLButtonElement>) {
-    if (isDisabled) return;
-    const next = !isChecked;
-    if (!isControlled) setInternal(next);
-    onCheckedChange?.(next);
-    onClick?.(event);
+    if (isDisabled) return
+    const next = !isChecked
+    if (!isControlled) setInternal(next)
+    onCheckedChange?.(next)
+    onClick?.(event)
   }
 
   return (
@@ -63,5 +59,5 @@ export default function CheckboxButton({
 
       {$checkboxLabel && <CheckboxLabel>{$checkboxLabel}</CheckboxLabel>}
     </CheckboxWrapper>
-  );
+  )
 }

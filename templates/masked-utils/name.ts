@@ -5,7 +5,7 @@
  * @example normalizeDisplayName('  Ana   Souza ') // "Ana Souza"
  */
 export function normalizeDisplayName(value: string): string {
-  return value.trim().replace(/\s+/g, " ");
+  return value.trim().replace(/\s+/g, ' ')
 }
 
 /**
@@ -13,7 +13,7 @@ export function normalizeDisplayName(value: string): string {
  * @example getFirstName('Ana Souza Lima') // "Ana"
  */
 export function getFirstName(fullName: string): string {
-  return fullName.trim().split(" ")[0];
+  return fullName.trim().split(' ')[0]
 }
 
 /**
@@ -21,12 +21,12 @@ export function getFirstName(fullName: string): string {
  * @example getInitials('Ana Souza Lima') // "AS"
  */
 export function getInitials(name: string): string {
-  const parts = name.split(" ").filter(Boolean);
-  if (!parts.length) return "?";
+  const parts = name.split(' ').filter(Boolean)
+  if (!parts.length) return '?'
   return parts
     .slice(0, 2)
     .map((w) => w[0].toUpperCase())
-    .join("");
+    .join('')
 }
 
 /**
@@ -34,10 +34,10 @@ export function getInitials(name: string): string {
  * @example truncateText('texto longo', 8) // "texto..."
  */
 export function truncateText(value: string, maxLength: number): string {
-  const normalized = normalizeDisplayName(value);
-  if (!normalized || maxLength <= 0) return "";
-  if (normalized.length <= maxLength) return normalized;
-  return `${normalized.slice(0, Math.max(1, maxLength - 3)).trimEnd()}...`;
+  const normalized = normalizeDisplayName(value)
+  if (!normalized || maxLength <= 0) return ''
+  if (normalized.length <= maxLength) return normalized
+  return `${normalized.slice(0, Math.max(1, maxLength - 3)).trimEnd()}...`
 }
 
 /**
@@ -45,15 +45,15 @@ export function truncateText(value: string, maxLength: number): string {
  * @example truncateByWord('Empresa Muito Grande SA', 15) // "Empresa Muito..."
  */
 export function truncateByWord(value: string, maxLength = 22): string {
-  const normalized = normalizeDisplayName(value);
-  if (!normalized || normalized.length <= maxLength) return normalized;
-  let result = "";
-  for (const word of normalized.split(" ")) {
-    const next = result ? `${result} ${word}` : word;
-    if (next.length + 3 > maxLength) break;
-    result = next;
+  const normalized = normalizeDisplayName(value)
+  if (!normalized || normalized.length <= maxLength) return normalized
+  let result = ''
+  for (const word of normalized.split(' ')) {
+    const next = result ? `${result} ${word}` : word
+    if (next.length + 3 > maxLength) break
+    result = next
   }
-  return result ? `${result}...` : truncateText(normalized, maxLength);
+  return result ? `${result}...` : truncateText(normalized, maxLength)
 }
 
 /**
@@ -61,7 +61,7 @@ export function truncateByWord(value: string, maxLength = 22): string {
  * @example getInitial('ana souza') // "A"
  */
 export function getInitial(name: string): string {
-  return name.trim().charAt(0).toUpperCase() || "?";
+  return name.trim().charAt(0).toUpperCase() || '?'
 }
 
 /**
@@ -69,8 +69,8 @@ export function getInitial(name: string): string {
  * @example abbreviateName('Ana Souza Lima') // "Ana L."
  */
 export function abbreviateName(fullName: string): string {
-  const parts = normalizeDisplayName(fullName).split(" ").filter(Boolean);
-  if (parts.length === 0) return "";
-  if (parts.length === 1) return parts[0];
-  return `${parts[0]} ${parts[parts.length - 1][0].toUpperCase()}.`;
+  const parts = normalizeDisplayName(fullName).split(' ').filter(Boolean)
+  if (parts.length === 0) return ''
+  if (parts.length === 1) return parts[0]
+  return `${parts[0]} ${parts[parts.length - 1][0].toUpperCase()}.`
 }

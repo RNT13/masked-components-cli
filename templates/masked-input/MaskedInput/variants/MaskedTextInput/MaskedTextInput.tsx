@@ -1,6 +1,11 @@
 'use client'
 
-import { ErrorDiv, InputIconWrapper, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import {
+  ErrorDiv,
+  InputIconWrapper,
+  InputLabel,
+  MaskedInputContainer
+} from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
 
 type Props = { variant: 'masked' } & InputVariantMap['masked']
@@ -62,7 +67,12 @@ export function MaskedTextInput(props: Props) {
   }
 
   return (
-    <MaskedInputContainer $variant="masked" $radius={props.radius} data-error={hasError} $icon={!props.icon}>
+    <MaskedInputContainer
+      $variant="masked"
+      $radius={props.radius}
+      data-error={hasError}
+      $icon={!props.icon}
+    >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
           <span>{props.label}</span>

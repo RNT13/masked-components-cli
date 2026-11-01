@@ -12,22 +12,17 @@
  */
 export function extractFirstError(
   value: unknown,
-  skipKeys: string[] = ["success", "code"],
+  skipKeys: string[] = ['success', 'code']
 ): string | null {
-  if (!value) return null;
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) return extractFirstError(value[0], skipKeys);
-  if (typeof value === "object") {
-    const keys = Object.keys(value as object).filter(
-      (k) => !skipKeys.includes(k),
-    );
+  if (!value) return null
+  if (typeof value === 'string') return value
+  if (Array.isArray(value)) return extractFirstError(value[0], skipKeys)
+  if (typeof value === 'object') {
+    const keys = Object.keys(value as object).filter((k) => !skipKeys.includes(k))
     for (const key of keys) {
-      const found = extractFirstError(
-        (value as Record<string, unknown>)[key],
-        skipKeys,
-      );
-      if (found) return found;
+      const found = extractFirstError((value as Record<string, unknown>)[key], skipKeys)
+      if (found) return found
     }
   }
-  return null;
+  return null
 }

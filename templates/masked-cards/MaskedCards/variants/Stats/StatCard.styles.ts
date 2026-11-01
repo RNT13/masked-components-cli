@@ -11,11 +11,12 @@ export const StatIcon = styled(CardIconBadge)``
 export const StatValue = styled.strong<{ $valueTextColor?: string }>`
   font-size: ${maskedTheme.fontSize['2xl']};
   font-weight: 700;
-  color: ${({ $valueTextColor }) => $valueTextColor ?? maskedTheme.colors.baseBlack.dark40};
+  color: ${({ $valueTextColor }) =>
+    $valueTextColor ?? `var(--mc-card-fg, ${maskedTheme.colors.baseBlack.dark40})`};
   margin-top: ${maskedTheme.spacing.sm};
 `
-
 export const StatLabel = styled.span<{ $labelTextColor?: string }>`
   font-size: ${maskedTheme.fontSize.sm};
-  color: ${({ $labelTextColor }) => $labelTextColor ?? maskedTheme.colors.baseBlack.dark20};
+  color: ${({ $labelTextColor }) =>
+    $labelTextColor ?? `var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.dark20})`};
 `

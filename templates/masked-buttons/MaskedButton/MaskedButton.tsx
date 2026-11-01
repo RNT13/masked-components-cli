@@ -1,21 +1,21 @@
-"use client";
+'use client'
 
-import type { ComponentProps } from "react";
+import type { ComponentProps } from 'react'
 
-import { useMaskedConfig } from "@/utils/masked-config/MaskedConfigProvider";
+import { useMaskedConfig } from "@/components/ui/MaskedConfigProvider";
 
-import { ButtonProps, ButtonState } from "./MaskedButton.types";
-import DefaultButton from "./variants/Default/DefaultButton";
-import OutlineButton from "./variants/Outline/OutlineButton";
-import GhostButton from "./variants/Ghost/GhostButton";
-import LinkButton from "./variants/Link/LinkButton";
-import GradientButton from "./variants/Gradient/GradientButton";
-import NeonButton from "./variants/Neon/NeonButton";
-import ToggleButton from "./variants/Toggle/ToggleButton";
-import SwitchButton from "./variants/Switch/SwitchButton";
-import SoftButton from "./variants/Soft/SoftButton";
-import CheckboxButton from "./variants/Checkbox/CheckboxButton";
-import RadioButton from "./variants/Radio/RadioButton";
+import { ButtonProps, ButtonState } from './MaskedButton.types'
+import DefaultButton from './variants/Default/DefaultButton'
+import OutlineButton from './variants/Outline/OutlineButton'
+import GhostButton from './variants/Ghost/GhostButton'
+import LinkButton from './variants/Link/LinkButton'
+import GradientButton from './variants/Gradient/GradientButton'
+import NeonButton from './variants/Neon/NeonButton'
+import ToggleButton from './variants/Toggle/ToggleButton'
+import SwitchButton from './variants/Switch/SwitchButton'
+import SoftButton from './variants/Soft/SoftButton'
+import CheckboxButton from './variants/Checkbox/CheckboxButton'
+import RadioButton from './variants/Radio/RadioButton'
 
 export function MaskedButton(props: ButtonProps) {
   const {
@@ -54,74 +54,52 @@ export function MaskedButton(props: ButtonProps) {
     colorTheme,
 
     ...rest
-  } = props;
+  } = props
 
-  const config = useMaskedConfig();
-  const resolvedLinkComponent = linkComponent ?? config.linkComponent;
+  const config = useMaskedConfig()
+  const resolvedLinkComponent = linkComponent ?? config.linkComponent
 
-  const resolvedVariant = variant ?? $variant;
-  const resolvedState: ButtonState = disabled
-    ? "disabled"
-    : (state ?? "default");
+  const resolvedVariant = variant ?? $variant
+  const resolvedState: ButtonState = disabled ? 'disabled' : (state ?? 'default')
 
   const internal = {
     ...rest,
     $variant: resolvedVariant,
     state: resolvedState,
     shapes: shape ?? rest.shapes,
-    $position: position ?? $position ?? "center",
+    $position: position ?? $position ?? 'center',
     $isActive: active ?? $isActive ?? false,
     colorTheme,
     tokens: props.tokens,
-    linkComponent: resolvedLinkComponent,
-  };
+    linkComponent: resolvedLinkComponent
+  }
 
   switch (resolvedVariant) {
-    case "default":
-      return (
-        <DefaultButton
-          {...(internal as ComponentProps<typeof DefaultButton>)}
-        />
-      );
-    case "outline":
-      return (
-        <OutlineButton
-          {...(internal as ComponentProps<typeof OutlineButton>)}
-        />
-      );
-    case "ghost":
-      return (
-        <GhostButton {...(internal as ComponentProps<typeof GhostButton>)} />
-      );
-    case "link":
-      return (
-        <LinkButton {...(internal as ComponentProps<typeof LinkButton>)} />
-      );
-    case "gradient":
-      return (
-        <GradientButton
-          {...(internal as ComponentProps<typeof GradientButton>)}
-        />
-      );
-    case "neon":
-      return (
-        <NeonButton {...(internal as ComponentProps<typeof NeonButton>)} />
-      );
-    case "soft":
-      return (
-        <SoftButton {...(internal as ComponentProps<typeof SoftButton>)} />
-      );
+    case 'default':
+      return <DefaultButton {...(internal as ComponentProps<typeof DefaultButton>)} />
+    case 'outline':
+      return <OutlineButton {...(internal as ComponentProps<typeof OutlineButton>)} />
+    case 'ghost':
+      return <GhostButton {...(internal as ComponentProps<typeof GhostButton>)} />
+    case 'link':
+      return <LinkButton {...(internal as ComponentProps<typeof LinkButton>)} />
+    case 'gradient':
+      return <GradientButton {...(internal as ComponentProps<typeof GradientButton>)} />
+    case 'neon':
+      return <NeonButton {...(internal as ComponentProps<typeof NeonButton>)} />
+    case 'soft':
+      return <SoftButton {...(internal as ComponentProps<typeof SoftButton>)} />
 
-    case "toggle":
+    case 'toggle':
       return (
         <ToggleButton
           {...(internal as ComponentProps<typeof ToggleButton>)}
           $toggleLabel={toggleLabel ?? $toggleLabel}
           onToggle={onToggle}
         />
-      );
+      )
 
-    case "switch":
+    case 'switch':
       return (
         <SwitchButton
           {...(internal as ComponentProps<typeof SwitchButton>)}
@@ -130,9 +108,9 @@ export function MaskedButton(props: ButtonProps) {
           onCheckedChange={onCheckedChange}
           switchLabel={switchLabel}
         />
-      );
+      )
 
-    case "checkbox":
+    case 'checkbox':
       return (
         <CheckboxButton
           {...(internal as ComponentProps<typeof CheckboxButton>)}
@@ -141,9 +119,9 @@ export function MaskedButton(props: ButtonProps) {
           defaultChecked={defaultChecked}
           onCheckedChange={onCheckedChange}
         />
-      );
+      )
 
-    case "radio":
+    case 'radio':
       return (
         <RadioButton
           {...(internal as ComponentProps<typeof RadioButton>)}
@@ -154,9 +132,9 @@ export function MaskedButton(props: ButtonProps) {
           defaultChecked={defaultChecked}
           onCheckedChange={onCheckedChange}
         />
-      );
+      )
 
     default:
-      return null;
+      return null
   }
 }

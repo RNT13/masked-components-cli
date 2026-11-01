@@ -1,10 +1,10 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
-import { registerAnimationProperties } from "../animations/registerAnimationProperties";
+import { useEffect } from 'react'
+import { registerAnimationProperties } from '../animations/registerAnimationProperties'
 
 export function useAnimationEngine() {
   useEffect(() => {
-    registerAnimationProperties();
-  }, []);
+    registerAnimationProperties()
+  }, [])
 }

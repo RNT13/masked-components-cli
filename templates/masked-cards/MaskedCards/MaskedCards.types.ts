@@ -1,9 +1,9 @@
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
+import { CardTokenOverrides } from './cardTokens'
 
 export type CardSize = 'sm' | 'md' | 'lg' | 'xl'
 export type CardTrend = 'up' | 'down' | 'neutral'
 export type CardStatus = 'active' | 'inactive' | 'warning' | 'error'
-
 export type CardDirection = 'row' | 'column'
 
 export type BaseCardProps = {
@@ -14,7 +14,13 @@ export type BaseCardProps = {
   cardBg?: string
   direction?: CardDirection
   className?: string
-  children?: React.ReactNode
+  style?: CSSProperties
+  children?: ReactNode
+
+  /** Paleta registrada em colorThemes (ex.: 'ruby'). Deriva os tokens --mc-card-*. */
+  colorTheme?: string
+  /** Overrides diretos de tokens --mc-card-*. */
+  tokens?: CardTokenOverrides
 }
 
 type WithIcon = {
@@ -22,6 +28,14 @@ type WithIcon = {
   iconTextColor?: string
   iconBgColor?: string
   iconSize?: number
+}
+
+/** Opções de formatação de preço (domínio 'product'). */
+export type PriceFormat = {
+  /** Locale Intl (default 'pt-BR'). */
+  locale?: string
+  /** Código ISO da moeda (default 'BRL'). */
+  currency?: string
 }
 
 export type CardVariantMap = {
@@ -33,10 +47,10 @@ export type CardVariantMap = {
       trendValue?: string
       trend?: CardTrend
       rightIcon?: ReactNode
-      value: string | number | string[] | null | undefined
-      value2?: string | number | string[] | null | undefined
-      label: string | number | string[] | null | undefined
-      label2?: string | number | string[] | null | undefined
+      value: string | number | null | undefined
+      value2?: string | number | null | undefined
+      label: string | number | null | undefined
+      label2?: string | number | null | undefined
     }
 
   stat: BaseCardProps &
@@ -59,12 +73,20 @@ export type CardVariantMap = {
 
   product: BaseCardProps & {
     image?: string
+    /** Alt text da imagem (default: `title`). */
+    imageAlt?: string
+    /** Conteúdo do placeholder quando `image` é ausente (default: nada). */
+    imagePlaceholder?: ReactNode
+    /** Formata o preço via Intl; sem ela, o valor é exibido como veio. */
+    priceFormat?: PriceFormat
     title: string
     description?: string
     price?: string | number
     originalPrice?: string | number
     badge?: string
     status?: CardStatus
+    /** Rótulos de status por idioma (default pt-BR). */
+    statusLabels?: Partial<Record<CardStatus, string>>
     actions?: ReactNode
   }
 
@@ -79,11 +101,16 @@ export type CardVariantMap = {
   plan: BaseCardProps &
     WithIcon & {
       planName: string
-      $active?: boolean
+      /** Cartão ativo (gradiente). Prop pública nova. */
+      active?: boolean
       statusLabel?: string
       description?: string
       renewalDate?: string
+      /** Prefixo do rótulo de renovação (default 'Renovação em'). */
+      renewalLabel?: string
       action?: ReactNode
+      /** @deprecated use `active` */
+      $active?: boolean
     }
 }
 

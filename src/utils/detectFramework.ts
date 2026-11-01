@@ -1,33 +1,33 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs'
+import path from 'path'
 
-export type Framework = "next" | "vite" | "cra" | "unknown";
+export type Framework = 'next' | 'vite' | 'cra' | 'unknown'
 
 export function detectFramework(): Framework {
-  const packagePath = path.join(process.cwd(), "package.json");
+  const packagePath = path.join(process.cwd(), 'package.json')
 
   if (!fs.existsSync(packagePath)) {
-    return "unknown";
+    return 'unknown'
   }
 
-  const pkg = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
+  const pkg = JSON.parse(fs.readFileSync(packagePath, 'utf-8'))
 
   const deps = {
     ...pkg.dependencies,
-    ...pkg.devDependencies,
-  };
-
-  if (deps["next"]) {
-    return "next";
+    ...pkg.devDependencies
   }
 
-  if (deps["vite"]) {
-    return "vite";
+  if (deps['next']) {
+    return 'next'
   }
 
-  if (deps["react-scripts"]) {
-    return "cra";
+  if (deps['vite']) {
+    return 'vite'
   }
 
-  return "unknown";
+  if (deps['react-scripts']) {
+    return 'cra'
+  }
+
+  return 'unknown'
 }

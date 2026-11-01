@@ -1,12 +1,12 @@
-import fs from "fs";
-import { detectFramework } from "./detectFramework";
+import fs from 'fs'
+import { detectFramework } from './detectFramework'
 
 export function getProjectPaths() {
-  const framework = detectFramework();
+  const framework = detectFramework()
 
-  const hasSrc = fs.existsSync("src");
+  const hasSrc = fs.existsSync('src')
 
-  const base = hasSrc ? "src" : ".";
+  const base = hasSrc ? 'src' : '.'
 
   return {
     framework,
@@ -15,6 +15,6 @@ export function getProjectPaths() {
     animationsDir: `${base}/styles/`,
     stylesDir: `${base}/styles`,
     utilsDir: `${base}/utils`,
-    hooksDir: `${base}/hooks`,
-  };
+    hooksDir: `${base}/hooks`
+  }
 }

@@ -8,11 +8,11 @@ type props = { $variant: 'ghost' } & ButtonVariantMap['ghost']
 export default function GhostButton(props: props) {
   return (
     <GhostButtonWrapper $position={props.$position}>
-      <GhostButtonContainer 
-        {...props} 
+      <GhostButtonContainer
+        {...props}
         data-testid="ghost-button"
-        $isError={props.state === 'error'} 
-        $isDisabled={props.state === 'disabled'} 
+        $isError={props.state === 'error'}
+        $isDisabled={props.state === 'disabled'}
       />
     </GhostButtonWrapper>
   )

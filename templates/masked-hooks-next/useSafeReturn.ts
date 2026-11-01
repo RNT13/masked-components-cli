@@ -38,8 +38,11 @@ const joinQueryParam = (path: string, key: string, value: string) => {
 
 export const buildPath = (...parts: Array<string | number | null | undefined>) => {
   const cleanParts = parts
-    .filter((part): part is string | number => part !== null && part !== undefined && String(part).trim() !== '')
-    .map(part =>
+    .filter(
+      (part): part is string | number =>
+        part !== null && part !== undefined && String(part).trim() !== ''
+    )
+    .map((part) =>
       String(part)
         .trim()
         .replace(/^\/+|\/+$/g, '')
@@ -72,7 +75,8 @@ export const useSafeReturn = (options: UseSafeReturnOptions = {}) => {
         return
       }
 
-      const safeFallback = sanitizeInternalPath(customFallback) ?? sanitizeInternalPath(fallbackPath) ?? '/'
+      const safeFallback =
+        sanitizeInternalPath(customFallback) ?? sanitizeInternalPath(fallbackPath) ?? '/'
       router.replace(safeFallback)
     },
     [allowHistoryBack, fallbackPath, router, returnTo]
