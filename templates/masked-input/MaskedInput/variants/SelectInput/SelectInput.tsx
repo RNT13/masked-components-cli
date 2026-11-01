@@ -9,8 +9,8 @@ import {
   InputLabel,
   MaskedInputContainer
 } from '../../MaskedInput.styles'
-
 import { InputVariantMap } from '../../MaskedInput.types'
+import { resolveInputTokens } from '../../inputTokens'
 import { SelectDropdown, SelectOption, SelectTrigger } from './SelectInput.styles'
 
 type Props = { variant: 'select' } & InputVariantMap['select']
@@ -28,17 +28,11 @@ export function SelectInput(props: Props) {
   })
 
   const hasError = props.touched && Boolean(props.error)
-
   const selectedOption = props.options.find((opt) => opt.value === props.value)
 
-  /* ============================================================
-   * CALCULA POSIÇÃO DO DROPDOWN NO BODY
-   * ============================================================ */
   function updateDropdownPosition() {
     if (!triggerRef.current) return
-
     const rect = triggerRef.current.getBoundingClientRect()
-
     setDropdownPos({
       top: rect.bottom + 6,
       left: rect.left,
@@ -46,9 +40,6 @@ export function SelectInput(props: Props) {
     })
   }
 
-  /* ============================================================
-   * AO ABRIR -> CALCULA POSIÇÃO E MONITORA RESIZE/SCROLL
-   * ============================================================ */
   useLayoutEffect(() => {
     if (!open) return
 
@@ -63,17 +54,12 @@ export function SelectInput(props: Props) {
     }
   }, [open])
 
-  /* ============================================================
-   * FECHA AO CLICAR FORA
-   * ============================================================ */
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       const target = e.target as Node
-
       const clickedInsideTrigger = containerRef.current && containerRef.current.contains(target)
-
       const clickedInsideDropdown = document
-        .getElementById('masked-select-dropdown')
+        .getElementById(`masked-select-dropdown-${props.id}`)
         ?.contains(target)
 
       if (!clickedInsideTrigger && !clickedInsideDropdown) {
@@ -83,7 +69,7 @@ export function SelectInput(props: Props) {
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [props.id])
 
   return (
     <MaskedInputContainer
@@ -93,6 +79,10 @@ export function SelectInput(props: Props) {
       data-error={hasError}
       $icon={!props.icon}
       $open={open}
+      style={{
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...props.containerStyle
+      }}
     >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
@@ -102,30 +92,27 @@ export function SelectInput(props: Props) {
 
       {props.icon && <InputIconWrapper>{props.icon}</InputIconWrapper>}
 
-      {/* ============================================================
-       * TRIGGER
-       * ============================================================ */}
       <SelectTrigger
-        id="masked-select-trigger"
+        id={props.id ?? 'masked-select-trigger'}
         ref={triggerRef}
         type="button"
         className={`${hasError ? 'error' : ''}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
         onClick={() => {
           if (!open) updateDropdownPosition()
           setOpen((o) => !o)
         }}
       >
-        {selectedOption?.label ?? 'Selecione uma opção'}
+        {selectedOption?.label ?? props.placeholder ?? 'Selecione...'}
         <span className={`arrow ${open ? 'open' : ''}`} />
       </SelectTrigger>
 
-      {/* ============================================================
-       * DROPDOWN VIA PORTAL
-       * ============================================================ */}
       {open &&
         createPortal(
           <SelectDropdown
-            id="masked-select-dropdown"
+            id={`masked-select-dropdown-${props.id}`}
+            role="listbox"
             style={{
               top: dropdownPos.top,
               left: dropdownPos.left,
@@ -135,13 +122,13 @@ export function SelectInput(props: Props) {
             {props.options.map((option) => (
               <SelectOption
                 key={option.value}
+                role="option"
+                aria-selected={option.value === props.value}
                 className={`${option.value === props.value ? 'selected' : ''}`}
                 onClick={() => {
                   props.onChange?.(option.value)
                   setOpen(false)
                 }}
-                aria-invalid={hasError ? 'true' : undefined}
-                aria-describedby={hasError ? `${props.id}-error` : undefined}
               >
                 {option.label}
               </SelectOption>

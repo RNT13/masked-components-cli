@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { CSSProperties, ReactNode } from 'react'
+import type { ComponentType, CSSProperties, ReactNode } from 'react'
 import type { InputColorTheme, InputTokenOverrides } from './inputTokens'
 
 export type BaseProps = {
@@ -81,7 +81,15 @@ export type SearchInputProps<T = any> = BaseProps & {
 
   sortOptions?: SortOption[]
   showSortOptions?: boolean
-  sortGroupLabel?: string
+  sortGroupLabel?: string  
+  /* ---- labels (A.6) ---- */  
+  filterGroupLabel?: string  
+  dateGroupLabel?: string  
+  resultCountFormatter?: (info: {  
+    resultCount: number  
+    total: number  
+    activeFilterCount: number  
+  }) => string
 
   getItemKey?: (item: T) => string | number
 
@@ -121,7 +129,7 @@ export type InputVariantMap = {
     previewMode?: 'normal' | 'replace'
     uploadPreset?: string
     cloudName?: string
-    onChange?: (files: File | File[] | string | string[]) => void
+    onChange?: (files: File | File[] | string | string[] | null) => void
     onFileChange?: (payload: { files: File[]; previews: string[] }) => void
     onUploadingChange?: (uploading: boolean) => void
     error?: string
@@ -131,9 +139,35 @@ export type InputVariantMap = {
     accept?: string
     maxSizeMB?: number
     aspect?: 'square' | 'wide'
+    onRemove?: () => void
+
+    /* ---- imagem injetável (H.5) ---- */
+    imageComponent?:
+      | ReactNode
+      | ComponentType<{
+          src: string
+          alt: string
+          fill?: boolean
+          style?: CSSProperties
+        }>
+    imageIcon?: ReactNode
+
+    /* ---- notificações injetáveis (K.2) ---- */
+    onError?: (message: string) => void
+    onSuccess?: (message: string) => void
+
+    /* ---- labels/dicionário (A.6) ---- */
     filenameLabel?: string
     removeLabel?: string
-    onRemove?: () => void
+    chooseFileLabel?: string
+    selectFilesLabel?: string
+    uploadingLabel?: string
+    dropHintLabel?: string
+    uploadSuccessMessage?: string
+    uploadConfigMessage?: string
+    invalidTypeMessage?: (filename: string) => string
+    maxSizeMessage?: (filename: string, maxSizeMB: number) => string
+    uploadFailedMessage?: (failedCount: number, totalCount: number) => string
   }
 
   search: SearchInputProps<any>
@@ -157,6 +191,10 @@ export type InputVariantMap = {
     icon?: ReactNode
     clockIcon?: ReactNode
     align?: 'left' | 'right' | 'center'
+    /* ---- labels (A.6) ---- */
+    hourLabel?: string
+    minuteLabel?: string
+    clearLabel?: string
   }
 }
 

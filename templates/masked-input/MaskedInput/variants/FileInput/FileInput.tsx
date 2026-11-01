@@ -1,48 +1,26 @@
 /**
- * FileInput
+ * FileInput  
  *
- * Campo de upload de arquivo com preview, drag-and-drop e suporte a:
- * - arquivo único ou múltiplo
- * - upload local
- * - upload direto para Cloudinary
- * - remoção com preview controlado
+ * Upload com preview, drag-and-drop e dois modos:  
+ * - fileMode="local": o arquivo vai no submit do formulário  
+ * - fileMode="cloudinary": sobe direto e devolve a URL  
  *
- * @remarks
- * Use `fileMode="local"` quando o arquivo será enviado no submit do formulário.
- * Use `fileMode="cloudinary"` quando o componente deve enviar a imagem e devolver a URL final.
- *
- * A validação de tipo/tamanho aqui é apenas conveniência (client-side, contornável).
- * A validação que garante segurança é a do servidor (ex: company_write_serializer.py).
- *
- * @example
- * Upload de logo local:
- * ```tsx
- * <MaskedInput
- *   variant="file"
- *   id="logo"
- *   label="Logo"
- *   aspect="square"
- *   fileMode="local"
- *   accept="image/*"
- *   maxSizeMB={5}
- *   value={company?.logo}
- *   onChange={(file) => form.setFieldValue('logoFile', file)}
- *   onRemove={() => {
- *     form.setFieldValue('logoFile', null)
- *     form.setFieldValue('removeLogo', true)
- *   }}
- * />
- * ```
+ * Imagem de preview e notificações são injetáveis:  
+ * - props.imageComponent ou <MaskedConfigProvider config={{ imageComponent }}>, fallback <img>  
+ * - props.onError/onSuccess ou callbacks do provider, fallback silencioso  
  */
 
 'use client'
 
-import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
-import toast from 'react-hot-toast'
-import { BsImage } from 'react-icons/bs'
+import type { CSSProperties, DragEvent } from 'react'
+
+import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
+
+import { ImageIcon } from '../../icons'
 import { ErrorDiv, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
+import { resolveInputTokens } from '../../inputTokens'
 import {
   FileCard,
   FileCardFileName,
@@ -56,10 +34,8 @@ import {
 
 type Props = { variant: 'file' } & InputVariantMap['file']
 
-/** Limite de tamanho padrão quando o pai não define `maxSizeMB`. */
 const DEFAULT_MAX_SIZE_MB = 5
 
-/** Extrai um nome de arquivo legível de uma URL (Cloudinary, Django media, etc.) */
 function filenameFromUrl(url: string): string {
   try {
     const path = new URL(url).pathname
@@ -69,11 +45,6 @@ function filenameFromUrl(url: string): string {
   }
 }
 
-/**
- * Verifica se o tipo real do arquivo bate com o filtro `accept`.
- * Suporta padrões como "image/*", "image/png", ".png,.jpg" ou lista separada por vírgula.
- * Se `accept` não for informado, aceita qualquer tipo (comportamento neutro).
- */
 function matchesAccept(file: File, accept?: string): boolean {
   if (!accept || !accept.trim()) return true
 
@@ -86,21 +57,18 @@ function matchesAccept(file: File, accept?: string): boolean {
   const name = file.name.toLowerCase()
 
   return patterns.some((pattern) => {
-    // Extensão: ".png"
-    if (pattern.startsWith('.')) {
-      return name.endsWith(pattern)
-    }
-    // Wildcard de família: "image/*"
+    if (pattern.startsWith('.')) return name.endsWith(pattern)
     if (pattern.endsWith('/*')) {
       const family = pattern.slice(0, pattern.indexOf('/'))
       return mime.startsWith(`${family}/`)
     }
-    // MIME exato: "image/png"
     return mime === pattern
   })
 }
 
 export function FileInput(props: Props) {
+  const config = useMaskedConfig()
+
   const inputRef = useRef<HTMLInputElement | null>(null)
   const [previews, setPreviews] = useState<string[]>([])
   const [fileNames, setFileNames] = useState<string[]>([])
@@ -110,9 +78,8 @@ export function FileInput(props: Props) {
 
   const hasError = props.touched && props.error
   const multiple = Boolean(props.multiple)
-  const isSingleCard = !multiple // logo/banner = card único; múltiplos = grid legado
+  const isSingleCard = !multiple
 
-  // Valor já existente (ex: URL salva no backend), usado quando nenhum arquivo novo foi escolhido.
   const existingValue = Array.isArray(props.value) ? props.value[0] : props.value
   const hasNewSelection = previews.length > 0
   const displayPreview = hasNewSelection ? previews[0] : existingValue || null
@@ -122,23 +89,42 @@ export function FileInput(props: Props) {
       ? filenameFromUrl(existingValue)
       : (props.filenameLabel ?? 'Nenhum arquivo escolhido')
 
-  /**
-   * Valida tipo real e tamanho de cada arquivo ANTES de gerar previews/uploads.
-   * Arquivos inválidos são descartados com feedback ao usuário.
-   */
+  const notifyError = (message: string) => props.onError?.(message) ?? config.onError?.(message)
+  const notifySuccess = (message: string) =>
+    props.onSuccess?.(message) ?? config.onSuccess?.(message)
+
+  // Renderizador de imagem: prop > provider > <img> nativo
+  const ImageComponent = props.imageComponent ?? config.imageComponent
+  const renderImage = (src: string, alt: string, style?: CSSProperties) =>
+    ImageComponent ? (
+      <ImageComponent src={src} alt={alt} fill style={style} />
+    ) : (
+      <img
+        src={src}
+        alt={alt}
+        style={{ width: '100%', height: '100%', objectFit: 'cover', ...style }}
+      />
+    )
+
   function validateFiles(files: File[]): File[] {
     const maxSizeMB = props.maxSizeMB ?? DEFAULT_MAX_SIZE_MB
     const valid: File[] = []
 
     for (const file of files) {
-      // 1) Tipo real do arquivo (defesa contra accept="image/*" contornável)
       if (!matchesAccept(file, props.accept)) {
-        toast.error(`"${file.name}" tem um tipo não permitido e foi ignorado`)
+        notifyError(
+          props.invalidTypeMessage
+            ? props.invalidTypeMessage(file.name)
+            : `"${file.name}" tem um tipo não permitido e foi ignorado`
+        )
         continue
       }
-      // 2) Tamanho
       if (file.size > maxSizeMB * 1024 * 1024) {
-        toast.error(`"${file.name}" excede ${maxSizeMB}MB e foi ignorado`)
+        notifyError(
+          props.maxSizeMessage
+            ? props.maxSizeMessage(file.name, maxSizeMB)
+            : `"${file.name}" excede ${maxSizeMB}MB e foi ignorado`
+        )
         continue
       }
       valid.push(file)
@@ -150,7 +136,6 @@ export function FileInput(props: Props) {
   function handleFiles(filesList: FileList | null) {
     if (!filesList || filesList.length === 0) return
 
-    // Valida ANTES de criar object URLs, para não vazar previews de arquivos rejeitados.
     const files = validateFiles(Array.from(filesList))
     if (files.length === 0) return
 
@@ -174,7 +159,9 @@ export function FileInput(props: Props) {
 
   async function uploadToCloudinary(files: File[]) {
     if (!props.uploadPreset || !props.cloudName) {
-      toast.error('Configuração de upload ausente (cloudName/uploadPreset)')
+      notifyError(
+        props.uploadConfigMessage ?? 'Configuração de upload ausente (cloudName/uploadPreset)'
+      )
       return
     }
 
@@ -212,16 +199,18 @@ export function FileInput(props: Props) {
 
       const failedCount = results.length - uploaded.length
       if (failedCount > 0) {
-        toast.error(
-          failedCount === files.length
-            ? 'Falha ao enviar o(s) arquivo(s).'
-            : `${failedCount} arquivo(s) falharam no envio.`
+        notifyError(
+          props.uploadFailedMessage
+            ? props.uploadFailedMessage(failedCount, files.length)
+            : failedCount === files.length
+              ? 'Falha ao enviar o(s) arquivo(s).'
+              : `${failedCount} arquivo(s) falharam no envio.`
         )
       }
 
       if (uploaded.length > 0) {
         props.onChange?.(multiple ? uploaded : uploaded[0])
-        toast.success('Upload concluído!')
+        notifySuccess(props.uploadSuccessMessage ?? 'Upload concluído!')
       }
     } finally {
       setIsUploading(false)
@@ -239,7 +228,7 @@ export function FileInput(props: Props) {
     props.onChange?.(multiple ? [] : null)
   }
 
-  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault()
     setDragOver(false)
     if (props.disabled || isUploading) return
@@ -253,9 +242,17 @@ export function FileInput(props: Props) {
   const busy = isUploading || props.disabled
 
   return (
-    <MaskedInputContainer $variant="file" $radius={props.radius}>
+    <MaskedInputContainer
+      $variant="file"
+      $radius={props.radius}
+      style={{
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...props.containerStyle
+      }}
+    >
       <input
         ref={inputRef}
+        id={props.id}
         type="file"
         hidden
         accept={props.accept}
@@ -263,7 +260,7 @@ export function FileInput(props: Props) {
         disabled={props.disabled}
         onChange={(e) => {
           handleFiles(e.target.files)
-          e.target.value = '' // permite reselecionar o mesmo arquivo depois
+          e.target.value = ''
         }}
       />
 
@@ -285,21 +282,21 @@ export function FileInput(props: Props) {
           onDrop={handleDrop}
         >
           <FileCardPreviewBox $aspect={props.aspect}>
-            {displayPreview ? (
-              <Image src={displayPreview} alt={props.label ?? 'Preview'} fill sizes="100%" />
-            ) : (
-              <BsImage />
-            )}
+            {displayPreview
+              ? renderImage(displayPreview, props.label ?? 'Preview')
+              : (props.imageIcon ?? <ImageIcon />)}
           </FileCardPreviewBox>
 
           <FileCardFooter>
             <FileTrigger type="button" onClick={() => inputRef.current?.click()} disabled={busy}>
-              {isUploading ? 'Enviando...' : 'Escolher arquivo'}
+              {isUploading
+                ? (props.uploadingLabel ?? 'Enviando...')
+                : (props.chooseFileLabel ?? 'Escolher arquivo')}
             </FileTrigger>
             <FileCardFileName title={displayFileName}>{displayFileName}</FileCardFileName>
           </FileCardFooter>
 
-          <FileDropHint>ou arraste uma imagem aqui</FileDropHint>
+          <FileDropHint>{props.dropHintLabel ?? 'ou arraste uma imagem aqui'}</FileDropHint>
 
           {displayPreview && (
             <FileRemoveButton type="button" onClick={handleRemove} disabled={busy}>
@@ -310,13 +307,17 @@ export function FileInput(props: Props) {
       ) : (
         <>
           <FileTrigger type="button" onClick={() => inputRef.current?.click()} disabled={busy}>
-            {isUploading ? 'Enviando...' : 'Selecionar arquivos'}
+            {isUploading
+              ? (props.uploadingLabel ?? 'Enviando...')
+              : (props.selectFilesLabel ?? 'Selecionar arquivos')}
           </FileTrigger>
 
           {previews.length > 0 && (
             <PreviewImageDiv>
               {previews.map((src, i) => (
-                <Image key={src} src={src} alt={fileNames[i] ?? 'Preview'} width={88} height={88} />
+                <span key={src} style={{ position: 'relative', display: 'block' }}>
+                  {renderImage(src, fileNames[i] ?? 'Preview')}
+                </span>
               ))}
             </PreviewImageDiv>
           )}

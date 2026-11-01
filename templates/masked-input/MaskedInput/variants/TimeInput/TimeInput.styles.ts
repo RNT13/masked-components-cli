@@ -42,7 +42,7 @@ export const TimeDropdown = styled.div`
   overflow: hidden;
   background: ${maskedTheme.colors.baseBlue.light30};
   border: 2px solid ${maskedTheme.colors.baseBlue.base};
-  z-index: 999999;
+  z-index: ${maskedTheme.zIndex.tooltip};
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
 
   animation: timeFade 0.18s ease;

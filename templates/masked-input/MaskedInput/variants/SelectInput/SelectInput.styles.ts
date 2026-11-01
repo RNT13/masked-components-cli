@@ -15,9 +15,9 @@ export const SelectDropdown = styled.div`
   padding: 4px 4px 0px 4px;
   border-radius: 16px;
   overflow: hidden;
-  background: ${maskedTheme.colors.baseBlue.light30};
-  border: 2px solid ${maskedTheme.colors.baseBlue.base};
-  z-index: 999999;
+  background: var(--mc-input-bg, ${maskedTheme.colors.baseBlue.light30});
+  border: 2px solid var(--mc-input-border-hover, ${maskedTheme.colors.baseBlue.base});
+  z-index: ${maskedTheme.zIndex.tooltip};
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
 
   transition: ${maskedTheme.transition.slow};
@@ -41,9 +41,9 @@ export const SelectOption = styled.div`
   padding: 8px;
   border-radius: 14px;
   margin-bottom: 4px;
-  background: ${maskedTheme.colors.baseBlue.light20};
-  color: ${maskedTheme.colors.baseBlue.dark40};
-  border: 2px solid ${maskedTheme.colors.baseBlue.dark20};
+  background: var(--mc-input-bg-focus, ${maskedTheme.colors.baseBlue.light20});
+  color: var(--mc-input-label-fg, ${maskedTheme.colors.baseBlue.dark40});
+  border: 2px solid var(--mc-input-border, ${maskedTheme.colors.baseBlue.dark20});
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,8 +52,8 @@ export const SelectOption = styled.div`
   transition: ${maskedTheme.transition.slow};
 
   &:hover {
-    background: ${maskedTheme.colors.baseBlue.dark20};
+    background: var(--mc-input-icon-fg, ${maskedTheme.colors.baseBlue.dark20});
     color: ${maskedTheme.colors.baseBlue.light50};
-    border-color: ${maskedTheme.colors.baseBlue.light20};
+    border-color: var(--mc-input-bg-focus, ${maskedTheme.colors.baseBlue.light20});
   }
 `

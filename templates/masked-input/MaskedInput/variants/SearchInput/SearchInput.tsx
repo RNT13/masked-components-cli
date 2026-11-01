@@ -9,6 +9,7 @@ import {
 } from '../../MaskedInput.styles'
 import type { SearchInputProps } from '../../MaskedInput.types'
 import { useSmartSearch } from '../../hooks/useSmartSearch'
+import { resolveInputTokens } from '../../inputTokens'
 import {
   DateChip,
   DateChipRow,
@@ -85,7 +86,16 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
 
   return (
     <SearchWrapper>
-      <MaskedInputContainer $variant="search" $radius={radius} data-error={hasError} $icon={!icon}>
+      <MaskedInputContainer
+        $variant="search"
+        $radius={radius}
+        data-error={hasError}
+        $icon={!icon}
+        style={{
+          ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+          ...props.containerStyle
+        }}
+      >
         {label && (
           <InputLabel htmlFor={id} $required={required}>
             {label}
@@ -109,7 +119,7 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
           <FiltersWrapper>
             {showStatusFilter && filterLabels && filterField && (
               <div>
-                <FilterGroupLabel>Filtros</FilterGroupLabel>
+                <FilterGroupLabel>{props.filterGroupLabel ?? 'Filtros'}</FilterGroupLabel>
                 <FilterChipRow>
                   {Object.entries(filterLabels).map(([key, chipLabel]) => (
                     <FilterChip
@@ -127,7 +137,7 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
 
             {showDateFilter && dateField && (
               <div>
-                <FilterGroupLabel>Período</FilterGroupLabel>
+                <FilterGroupLabel>{props.dateGroupLabel ?? 'Período'}</FilterGroupLabel>
                 <DateChipRow>
                   {(['all', 'today', 'upcoming', 'past'] as const).map((key) => (
                     <DateChip
@@ -168,9 +178,12 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
 
         {showResultCount && isFiltering && (
           <ResultsCount>
-            {resultCount} de {total} resultado{total !== 1 ? 's' : ''}
-            {activeFilterCount > 0 &&
-              ` · ${activeFilterCount} filtro${activeFilterCount > 1 ? 's' : ''} ativo${activeFilterCount > 1 ? 's' : ''}`}
+            {props.resultCountFormatter
+              ? props.resultCountFormatter({ resultCount, total, activeFilterCount })
+              : `${resultCount} de ${total} resultado${total !== 1 ? 's' : ''}` +
+                (activeFilterCount > 0
+                  ? ` · ${activeFilterCount} filtro${activeFilterCount > 1 ? 's' : ''} ativo${activeFilterCount > 1 ? 's' : ''}`
+                  : '')}
           </ResultsCount>
         )}
 

@@ -32,9 +32,8 @@ const IMPORT = /(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(["'])([^"']+)\1/g
  * Os testes desses ids rodam com `it.fails`: quando o sub-passo corrigir o
  * template, o teste passa a falhar "de propósito" e deve voltar para `it`.
  */
-const KNOWN_FAILING = new Map<string, string>([
-  ['masked-input', 'react-icons, next e react-hot-toast — resolve nos PASSOS 4.4 e 4.6'],
-  ['masked-input-formik', 'idem + imports ../../../masked-input — resolve no PASSO 4.7']
+const KNOWN_FAILING = new Map<string, string>([  
+  ['masked-input-formik', 'pasta própria templates/masked-input-formik — resolve no PASSO 4.7']  
 ])
 
 interface VirtualFile {

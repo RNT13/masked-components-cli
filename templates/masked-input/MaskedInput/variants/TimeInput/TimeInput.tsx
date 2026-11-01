@@ -2,8 +2,8 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { BsClock } from 'react-icons/bs'
 
+import { ClockIcon } from '../../icons'
 import {
   ErrorDiv,
   InputIconWrapper,
@@ -11,6 +11,7 @@ import {
   MaskedInputContainer
 } from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
+import { resolveInputTokens } from '../../inputTokens'
 import {
   TimeClearButton,
   TimeColumn,
@@ -56,14 +57,12 @@ export function TimeInput(props: Props) {
   const { hour, minute } = parseTime(props.value)
   const align = props.align ?? 'left'
 
-  /** Posição inicial: usa a largura do trigger como aproximação antes de medir o dropdown real */
   function updateDropdownPosition() {
     if (!triggerRef.current) return
     const rect = triggerRef.current.getBoundingClientRect()
     setDropdownPos({ top: rect.bottom + 6, left: rect.left, width: rect.width })
   }
 
-  /** Reposiciona com base na largura REAL do dropdown, já respeitando `align` e a borda da viewport */
   useLayoutEffect(() => {
     if (!open || !triggerRef.current || !dropdownRef.current) return
 
@@ -71,14 +70,12 @@ export function TimeInput(props: Props) {
     const dropdownWidth = dropdownRef.current.offsetWidth
 
     let left = triggerRect.left
-
     if (align === 'right') {
       left = triggerRect.right - dropdownWidth
     } else if (align === 'center') {
       left = triggerRect.left + triggerRect.width / 2 - dropdownWidth / 2
     }
 
-    // Clamp: nunca deixa vazar pra fora da tela nas duas bordas
     const maxLeft = window.innerWidth - dropdownWidth - VIEWPORT_MARGIN
     left = Math.min(Math.max(left, VIEWPORT_MARGIN), Math.max(maxLeft, VIEWPORT_MARGIN))
 
@@ -144,6 +141,10 @@ export function TimeInput(props: Props) {
       data-error={hasError}
       $icon={!props.icon}
       $open={open}
+      style={{
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...props.containerStyle
+      }}
     >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
@@ -157,17 +158,19 @@ export function TimeInput(props: Props) {
       <TimeTrigger
         ref={triggerRef}
         type="button"
-        id="masked-time-trigger"
+        id={props.id ?? 'masked-time-trigger'}
         className={hasError ? 'error' : ''}
         disabled={props.disabled}
         onClick={() => !props.disabled && setOpen((o) => !o)}
         aria-invalid={hasError ? 'true' : undefined}
         aria-describedby={hasError ? `${props.id}-error` : undefined}
+        aria-haspopup="dialog"
+        aria-expanded={open}
       >
         <TimeTriggerValue $isPlaceholder={!props.value}>
           {props.value || props.placeholder || '00:00'}
         </TimeTriggerValue>
-        <BsClock />
+        {props.clockIcon ?? <ClockIcon />}
       </TimeTrigger>
 
       {open &&
@@ -178,7 +181,7 @@ export function TimeInput(props: Props) {
           >
             <TimeColumnsRow>
               <TimeColumn>
-                <TimeColumnLabel>Hora</TimeColumnLabel>
+                <TimeColumnLabel>{props.hourLabel ?? 'Hora'}</TimeColumnLabel>
                 {HOURS.map((h) => (
                   <TimeOption
                     key={h}
@@ -197,7 +200,7 @@ export function TimeInput(props: Props) {
               <TimeSeparator>:</TimeSeparator>
 
               <TimeColumn>
-                <TimeColumnLabel>Min</TimeColumnLabel>
+                <TimeColumnLabel>{props.minuteLabel ?? 'Min'}</TimeColumnLabel>
                 {minutes.map((m) => (
                   <TimeOption
                     key={m}
@@ -217,7 +220,7 @@ export function TimeInput(props: Props) {
             {props.clearable !== false && (
               <TimeDropdownFooter>
                 <TimeClearButton type="button" onClick={handleClear}>
-                  Limpar horário
+                  {props.clearLabel ?? 'Limpar horário'}
                 </TimeClearButton>
               </TimeDropdownFooter>
             )}
