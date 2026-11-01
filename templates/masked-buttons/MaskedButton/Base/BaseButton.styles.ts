@@ -1,5 +1,5 @@
-import { continuousAnimations } from '@/utils/masked-animations/animations/continuousAnimations'
-import { transitions } from '@/utils/masked-animations/animations/transitions'
+import { continuousAnimations } from '@/styles/MaskedAnimations/animations/continuousAnimations'
+import { transitions } from '@/styles/MaskedAnimations/animations/transitions'
 import styled, { css } from 'styled-components'
 import { ButtonShape, ButtonSize, ButtonState } from '../MaskedButton.types'
 

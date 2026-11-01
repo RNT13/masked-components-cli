@@ -1,4 +1,4 @@
-import { transitions } from '@/utils/masked-animations/animations/transitions'
+import { transitions } from '@/styles/MaskedAnimations/animations/transitions'
 import { keyframes, styled } from 'styled-components'
 
 type Props = {

@@ -1,4 +1,4 @@
-import { transitions } from '@/utils/masked-animations/animations/transitions'
+import { transitions } from '@/styles/MaskedAnimations/animations/transitions'
 import { styled } from 'styled-components'
 
 export const RadioWrapper = styled.div`

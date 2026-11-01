@@ -1,4 +1,4 @@
-import { transitions } from '@/utils/masked-animations/animations/transitions'
+import { transitions } from '@/styles/MaskedAnimations/animations/transitions'
 import { css, styled } from 'styled-components'
 import { BaseButton } from '../../Base/BaseButton'
 import { ButtonPosition } from '../../MaskedButton.types'
