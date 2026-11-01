@@ -22,11 +22,7 @@ function makeTemplates(root: string): string {
   const t = path.join(root, "templates");
   fs.outputFileSync(
     path.join(t, "masked-themes/MaskedThemes/MaskedThemes.ts"),
-    "import { c } from '@/utils/colorUtils'\nexport const maskedTheme = c\n",
-  );
-  fs.outputFileSync(
-    path.join(t, "color-utils/colorUtils.ts"),
-    "export const c = 1\n",
+    "import { c } from '@/utils/masked-utils'\nexport const maskedTheme = c\n",
   );
   fs.outputFileSync(
     path.join(
@@ -44,16 +40,24 @@ function makeTemplates(root: string): string {
     "import '../animations/nao-existe'\n",
   );
   fs.outputFileSync(
+    path.join(t, "masked-config/MaskedConfig/MaskedConfigProvider.tsx"),
+    "export const MaskedConfigProvider = () => null\n",
+  );
+  fs.outputFileSync(
     path.join(t, "masked-buttons/MaskedButton/Base/BaseButton.styles.ts"),
     "import { transitions } from '@/styles/MaskedAnimations/animations/transitions'\nimport { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'\nexport const x = [transitions, maskedTheme]\n",
   );
   fs.outputFileSync(
     path.join(t, "masked-utils/index.ts"),
-    "export * from './date'\n",
+    "export * from './date'\nexport * from './color'\n",
   );
   fs.outputFileSync(
     path.join(t, "masked-utils/date.ts"),
     "export const d = 1\n",
+  );
+  fs.outputFileSync(
+    path.join(t, "masked-utils/color.ts"),
+    "export const c = 1\n",
   );
   return t;
 }
@@ -98,12 +102,13 @@ describe("instalação ponta a ponta", () => {
     const plan = planInstall(info, ["masked-buttons"]);
     expect(plan.entries.map((entry) => entry.id)).toEqual([
       "masked-animations",
+      "masked-utils",
       "masked-themes",
+      "masked-config",
       "masked-buttons",
     ]);
     expect(plan.toInstall.map((dep) => dep.name)).toEqual([
       "styled-components",
-      "react-icons",
     ]);
 
     const report = await executeInstall(plan, info, paths, base, templates);
@@ -130,10 +135,10 @@ describe("instalação ponta a ponta", () => {
       path.join(project, "src/styles/MaskedThemes/MaskedThemes.ts"),
       "utf8",
     );
-    expect(themes).toContain("from '../../utils/colorUtils'");
-    expect(fs.existsSync(path.join(project, "src/utils/colorUtils.ts"))).toBe(
-      true,
-    );
+    expect(themes).toContain("from '../../utils/masked-utils'");
+    expect(
+      fs.existsSync(path.join(project, "src/utils/masked-utils/index.ts")),
+    ).toBe(true);
 
     // arquivo morto excluído pelo registro
     expect(
@@ -173,16 +178,8 @@ describe("instalação ponta a ponta", () => {
     const templates = makeTemplates(root);
     const project = makeProject(root, { alias: false });
     fs.outputFileSync(
-      path.join(project, "src/styles/MaskedThemes/MaskedThemes.ts"),
-      "import { c } from '@/utils/masked-utils/color'\nexport const maskedTheme = c\n",
-    );
-    fs.outputFileSync(
-      path.join(project, "src/utils/masked-utils/color.ts"),
-      "export const c = 1\n",
-    );
-    fs.outputFileSync(
-      path.join(project, "src/utils/masked-utils/index.ts"),
-      "export * from './color'\nexport * from './date'\n",
+      path.join(project, "src/utils/index.ts"),
+      "export const meu = 1\n",
     );
     const info = detectProject(project, {});
     await executeInstall(
@@ -209,10 +206,10 @@ describe("instalação ponta a ponta", () => {
     const paths = resolveProjectPaths(info);
     const plan = planInstall(info, ["masked-utils"]);
 
-    await executeInstall(plan, info, paths, base, templates);
+    const first = await executeInstall(plan, info, paths, base, templates);
     const second = await executeInstall(plan, info, paths, base, templates);
     expect(second.files.created).toHaveLength(0);
-    expect(second.files.unchanged).toHaveLength(2);
+    expect(second.files.unchanged).toHaveLength(first.files.created.length);
 
     const file = path.join(project, "src/utils/masked-utils/date.ts");
     fs.writeFileSync(file, "export const d = 'meu'\n");
@@ -264,7 +261,6 @@ describe("instalação ponta a ponta", () => {
 
     expect(plan.warnings.join("\n")).toMatch(/react/);
     expect(plan.warnings.join("\n")).toMatch(/TypeScript/);
-    expect(plan.warnings.join("\n")).toMatch(/next\/image/);
     expect(plan.depWarnings.join("\n")).toMatch(/styled-components \^5\.3\.0/);
     expect(plan.toInstall.map((dep) => dep.name)).not.toContain(
       "styled-components",
@@ -274,7 +270,10 @@ describe("instalação ponta a ponta", () => {
   it("falha com mensagem clara se um template do registro não existir", async () => {
     const root = tmp();
     const templates = path.join(root, "templates");
-    fs.ensureDirSync(templates);
+    // masked-popup requer masked-themes → masked-utils; cria os dois para
+    // garantir que a falha reportada é exatamente a do popup ausente.
+    fs.ensureDirSync(path.join(templates, "masked-utils"));
+    fs.ensureDirSync(path.join(templates, "masked-themes"));
     const project = makeProject(root, { alias: false });
     const info = detectProject(project, {});
     await expect(

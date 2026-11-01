@@ -1,7 +1,6 @@
 "use client";
 
-import { createContext, useContext } from "react";
-import type { ComponentType, ReactNode } from "react";
+import React, { ComponentType, createContext, useContext, type ReactNode } from "react";
 
 /**
  * Provider GLOBAL opcional da biblioteca.

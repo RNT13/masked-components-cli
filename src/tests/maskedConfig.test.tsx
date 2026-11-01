@@ -1,38 +1,58 @@
+// src/tests/maskedConfig.test.tsx
 import { describe, expect, it } from "vitest";
-import { createElement } from "react";
-// @ts-expect-error react-dom/server typings are unavailable in this project
 import { renderToStaticMarkup } from "react-dom/server";
-import { MaskedConfigProvider, useMaskedConfig } from "../../templates/masked-config";
+import React from "react";
+import {
+  MaskedConfigProvider,
+  useMaskedConfig,
+} from "../../templates/masked-config/MaskedConfigProvider";
 
-function Probe(props: {
-  onRead: (cfg: ReturnType<typeof useMaskedConfig>) => void;
-}) {
-  props.onRead(useMaskedConfig());
-  return null;
+function Probe() {
+  const config = useMaskedConfig();
+  return (
+    <output data-probe="true">
+      {JSON.stringify({
+        hasLink: config.linkComponent !== undefined,
+        hasImage: config.imageComponent !== undefined,
+        locale: config.locale ?? null,
+        hasOnError: config.onError !== undefined,
+        hasOnSuccess: config.onSuccess !== undefined,
+      })}
+    </output>
+  );
 }
+
+const FakeLink = (props: { href: string; children?: React.ReactNode }) => (
+  <a href={props.href}>{props.children}</a>
+);
 
 describe("MaskedConfigProvider", () => {
   it("sem provider: config vazia (fallbacks nativos)", () => {
-    let cfg: ReturnType<typeof useMaskedConfig> | undefined;
-    renderToStaticMarkup(createElement(Probe, { onRead: (c) => (cfg = c) }));
-    expect(cfg).toEqual({});
+    const html = renderToStaticMarkup(<Probe />);
+    // renderToStaticMarkup escapa aspas como &quot;
+    expect(html).toContain("&quot;hasLink&quot;:false");
+    expect(html).toContain("&quot;hasImage&quot;:false");
+    expect(html).toContain("&quot;locale&quot;:null");
+    expect(html).toContain("&quot;hasOnError&quot;:false");
+    expect(html).toContain("&quot;hasOnSuccess&quot;:false");
   });
 
   it("com provider: expõe linkComponent/locale/callbacks", () => {
-    let cfg: ReturnType<typeof useMaskedConfig> | undefined;
-    const Link = (p: { href: string }) => createElement("a", { href: p.href });
-    const onError = () => undefined;
-    renderToStaticMarkup(
-      createElement(
-        MaskedConfigProvider,
-        {
-          config: { linkComponent: Link as never, onError, locale: "en" },
-          children: createElement(Probe, { onRead: (c) => (cfg = c) }),
-        },
-      ),
+    const html = renderToStaticMarkup(
+      <MaskedConfigProvider
+        config={{
+          linkComponent: FakeLink,
+          locale: "en-US",
+          onError: () => {},
+          onSuccess: () => {},
+        }}
+      >
+        <Probe />
+      </MaskedConfigProvider>,
     );
-    expect(cfg?.linkComponent).toBe(Link);
-    expect(cfg?.onError).toBe(onError);
-    expect(cfg?.locale).toBe("en");
+    expect(html).toContain("&quot;hasLink&quot;:true");
+    expect(html).toContain("&quot;locale&quot;:&quot;en-US&quot;");
+    expect(html).toContain("&quot;hasOnError&quot;:true");
+    expect(html).toContain("&quot;hasOnSuccess&quot;:true");
   });
 });

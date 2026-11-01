@@ -11,8 +11,7 @@
    - presets manuais: registrados via registerColorTheme (ex.: "light", "dark")  
 ========================================= */
 import { DefaultTheme } from "styled-components";
-import { ColorVariants } from "../../masked-utils";
-import { BaseColors } from "../types/MaskedTheme.types";
+import { BaseColors, ColorVariants } from "../types/MaskedTheme.types";
 
 /**
  * Valores de cor que um colorTheme expõe para os componentes.

@@ -1,7 +1,7 @@
 // templates/masked-themes/MaskedThemes.ts
 import { DefaultTheme } from "styled-components";
-import { colorHSLVariants } from "../../masked-utils";
 import { ThemeGradient } from "../types/MaskedTheme.types";
+import { colorHSLVariants } from "@/utils/masked-utils";
 
 /* =========================================  
    BREAKPOINTS  

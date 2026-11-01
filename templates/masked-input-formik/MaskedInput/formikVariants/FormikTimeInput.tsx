@@ -1,8 +1,8 @@
 'use client'
 
 import { useField } from 'formik'
-import { InputVariantMap } from '../MaskedInput.types'
-import { TimeInput } from '../variants/TimeInput/TimeInput'
+import { InputVariantMap } from '../../../masked-input/MaskedInput/MaskedInput.types'
+import { TimeInput } from '../../../masked-input/MaskedInput/variants/TimeInput/TimeInput'
 
 type Props = { name: string } & InputVariantMap['time']
 
