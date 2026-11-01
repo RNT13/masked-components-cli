@@ -1,64 +1,62 @@
 // templates/masked-input/MaskedInput/inputTokens.ts
-// Resolve os tokens --mc-input-* (prop `tokens` > preset `colorTheme` > fallback do tema).
+//
+// Resolve colorTheme + overrides em CSS vars --mc-input-*.
+// Padrão F.26: --mc-<componente>-<propriedade>[-<estado>]
+// Precedência: tokens (prop) > colorTheme (registro) > fallback do CSS.
+
 import type { CSSProperties } from 'react'
-import { getColorThemeTokens } from '@/styles/MaskedThemes/ColorThemes'
+import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
+import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 
-export type InputColorTheme = Parameters<typeof getColorThemeTokens>[0]
+export const INPUT_TOKEN_PROPS = [
+  'bg',
+  'bg-focus',
+  'fg',
+  'border',
+  'border-hover',
+  'focus-ring',
+  'placeholder',
+  'label-fg',
+  'icon-fg',
+  'error-bg',
+  'error-border',
+  'error-fg',
+  'error-ring',
+  'disabled-bg'
+] as const
 
-export type InputTokenOverrides = Partial<
-  Record<
-    | 'bg'
-    | 'bgFocus'
-    | 'fg'
-    | 'border'
-    | 'borderHover'
-    | 'focusRing'
-    | 'placeholder'
-    | 'labelFg'
-    | 'iconFg'
-    | 'errorBg'
-    | 'errorBorder'
-    | 'errorFg'
-    | 'errorRing'
-    | 'disabledBg',
-    string
-  >
->
-
-const TOKEN_KEYS: Record<keyof Required<InputTokenOverrides>, string> = {
-  bg: '--mc-input-bg',
-  bgFocus: '--mc-input-bg-focus',
-  fg: '--mc-input-fg',
-  border: '--mc-input-border',
-  borderHover: '--mc-input-border-hover',
-  focusRing: '--mc-input-focus-ring',
-  placeholder: '--mc-input-placeholder',
-  labelFg: '--mc-input-label-fg',
-  iconFg: '--mc-input-icon-fg',
-  errorBg: '--mc-input-error-bg',
-  errorBorder: '--mc-input-error-border',
-  errorFg: '--mc-input-error-fg',
-  errorRing: '--mc-input-error-ring',
-  disabledBg: '--mc-input-disabled-bg'
-}
+export type InputTokenProp = (typeof INPUT_TOKEN_PROPS)[number]
+export type InputTokens = Partial<Record<InputTokenProp, string | number>>
 
 export function resolveInputTokens(opts: {
-  colorTheme?: InputColorTheme
-  tokens?: InputTokenOverrides
-}): CSSProperties | undefined {
-  const preset =
-    (opts.colorTheme != null
-      ? (
-          getColorThemeTokens(opts.colorTheme) as
-            Record<string, Record<string, string> | undefined> | undefined
-        )?.input
-      : undefined) ?? {}
+  colorTheme?: string
+  tokens?: InputTokens | Record<string, string | number>
+}): CSSProperties {
+  const vars: Record<string, string | number> = {}
 
-  const merged: Record<string, string> = { ...preset, ...(opts.tokens ?? {}) }
-  const style: Record<string, string> = {}
-  for (const [key, cssVar] of Object.entries(TOKEN_KEYS)) {
-    const v = merged[key]
-    if (v != null) style[cssVar] = v
+  const values =
+    opts.colorTheme && opts.colorTheme !== 'default'
+      ? resolveColorTheme(opts.colorTheme, maskedTheme)
+      : undefined
+
+  if (values) {
+    const border = values.light20 ?? values.base
+    const ring = values.glow ?? values.light40 ?? values.base
+
+    vars['--mc-input-border'] = border
+    vars['--mc-input-border-hover'] = values.base
+    vars['--mc-input-focus-ring'] = ring
+    vars['--mc-input-label-fg'] = values.dark20 ?? values.base
+    vars['--mc-input-icon-fg'] = values.base
+    if (values.light08) vars['--mc-input-bg-focus'] = values.light08
+    if (values.onBase) vars['--mc-input-fg'] = values.onBase
   }
-  return Object.keys(style).length ? (style as CSSProperties) : undefined
+
+  const tokens = opts.tokens as Record<string, string | number> | undefined
+  for (const key of INPUT_TOKEN_PROPS) {
+    const v = tokens?.[key]
+    if (v !== undefined) vars[`--mc-input-${key}`] = v
+  }
+
+  return vars as CSSProperties
 }

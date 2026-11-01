@@ -6,6 +6,8 @@ import {
   unregisterColorTheme,
   listColorThemes
 } from '../../templates/masked-themes/MaskedThemes/ColorThemes'
+import { resolveInputTokens } from '../../templates/masked-input/MaskedInput/inputTokens'
+import { resolveButtonTokens } from '../../templates/masked-buttons/MaskedButton/buttonTokens'
 
 describe('resolveColorTheme', () => {
   it('undefined -> undefined (componente usa default)', () => {
@@ -54,5 +56,36 @@ describe('maskedTheme', () => {
 
   it('gradient.primary existe (ex-brand)', () => {
     expect(maskedTheme.gradient.primary).toContain('linear-gradient')
+  })
+})
+
+describe('resolveInputTokens', () => {
+  it("colorTheme 'dark' gera variáveis --mc-input-*", () => {
+    const style = resolveInputTokens({ colorTheme: 'dark' }) as Record<string, string>
+    const keys = Object.keys(style ?? {}).filter((k) => k.startsWith('--mc-input-'))
+    expect(keys.length).toBeGreaterThan(0)
+  })
+
+  it('tokens sobrescrevem o preset', () => {
+    const style = resolveInputTokens({
+      colorTheme: 'dark',
+      tokens: { bg: '#123456' }
+    }) as Record<string, string>
+    expect(style['--mc-input-bg']).toBe('#123456')
+  })
+})
+
+describe('resolveButtonTokens', () => {
+  it("colorTheme 'dark' gera --mc-btn-*", () => {
+    const s = resolveButtonTokens({ colorTheme: 'dark' }) as Record<string, string>
+    expect(s['--mc-btn-bg']).toBeDefined()
+    expect(s['--mc-switch-track-on']).toBe(s['--mc-btn-bg'])
+  })
+  it('tokens sobrescrevem o preset', () => {
+    const s = resolveButtonTokens({ colorTheme: 'dark', tokens: { bg: 'red' } }) as Record<
+      string,
+      string
+    >
+    expect(s['--mc-btn-bg']).toBe('red')
   })
 })

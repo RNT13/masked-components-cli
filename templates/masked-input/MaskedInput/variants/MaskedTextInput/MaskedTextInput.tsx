@@ -1,5 +1,7 @@
 'use client'
 
+import type { ChangeEvent } from 'react'
+import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
   InputIconWrapper,
@@ -10,16 +12,12 @@ import { InputVariantMap } from '../../MaskedInput.types'
 
 type Props = { variant: 'masked' } & InputVariantMap['masked']
 
-/* ============================================================
- * REMOVE TODOS OS CARACTERES NÃO NUMÉRICOS
- * ============================================================ */
+/* Remove todos os caracteres não numéricos */
 function removeMask(value: string) {
   return value.replace(/\D/g, '')
 }
 
-/* ============================================================
- * APLICA UMA MÁSCARA STRING EX: 000.000.000-00
- * ============================================================ */
+/* Aplica uma máscara string, ex: 000.000.000-00 */
 function applyMask(value: string, maskPattern: string) {
   const numbers = removeMask(value)
 
@@ -36,19 +34,15 @@ function applyMask(value: string, maskPattern: string) {
       } else {
         break
       }
-    } else {
-      if (numbers[numberIndex]) {
-        result += maskChar
-      }
+    } else if (numbers[numberIndex]) {
+      result += maskChar
     }
   }
 
   return result
 }
 
-/* ============================================================
- * RESOLVE SE A MASK É FIXA OU DINÂMICA
- * ============================================================ */
+/* Resolve se a máscara é fixa ou dinâmica */
 function resolveMask(mask: string | ((value: string) => string), value: string) {
   return typeof mask === 'function' ? mask(value) : mask
 }
@@ -56,14 +50,10 @@ function resolveMask(mask: string | ((value: string) => string), value: string) 
 export function MaskedTextInput(props: Props) {
   const hasError = props.touched && props.error
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value
-
     const currentMask = resolveMask(props.mask, rawValue)
-
-    const maskedValue = applyMask(rawValue, currentMask)
-
-    props.onChange?.(maskedValue)
+    props.onChange?.(applyMask(rawValue, currentMask))
   }
 
   return (
@@ -72,6 +62,11 @@ export function MaskedTextInput(props: Props) {
       $radius={props.radius}
       data-error={hasError}
       $icon={!props.icon}
+      className={props.className}
+      style={{
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...props.containerStyle
+      }}
     >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
@@ -83,6 +78,8 @@ export function MaskedTextInput(props: Props) {
 
       <input
         id={props.id}
+        name={props.name}
+        inputMode="numeric"
         value={props.value ?? ''}
         onChange={handleChange}
         placeholder={props.placeholder}

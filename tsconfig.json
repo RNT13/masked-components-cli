@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022"],
+    "jsx": "react-jsx",  
+    "lib": ["ES2022", "DOM"], 
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "types": ["node"],
@@ -11,16 +12,13 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  "include": ["src/**/*.ts", "vitest.config.ts", "./**/*.ts", "./**/*.tsx"],
-  "exclude": ["node_modules", "dist", "templates"],
-  "paths": {  
-      "@/utils/masked-utils": ["./templates/masked-utils/index.ts"],  
-      "@/utils/masked-utils/*": ["./templates/masked-utils/*"],  
-      "@/styles/MaskedThemes/*": ["./templates/masked-themes/MaskedThemes/*"],  
-      "@/styles/MaskedAnimations/*": ["./templates/masked-animations/MaskedAnimations/*"],  
-      "@/components/*": ["./templates/masked-config/*"],
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",  
+    "ignoreDeprecations": "6.0",
+    "paths": {  
       "@/*": ["./*"]  
-    } 
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vitest.config.ts"],  
+  "exclude": ["node_modules", "dist", "templates"],
 }

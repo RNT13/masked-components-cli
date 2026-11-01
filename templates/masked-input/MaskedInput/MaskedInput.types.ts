@@ -1,4 +1,6 @@
-import type { ReactNode } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { CSSProperties, ReactNode } from 'react'
+import type { InputColorTheme, InputTokenOverrides } from './inputTokens'
 
 export type BaseProps = {
   name?: string
@@ -21,12 +23,10 @@ export type BaseProps = {
   showError?: boolean
   required?: boolean
 
-  /** Preset/paleta registrada em colorThemes (resolve tokens --mc-input-*) */
-  colorTheme?: import('./inputTokens').InputColorTheme
-  /** Sobrescritas diretas de tokens --mc-input-* */
-  tokens?: import('./inputTokens').InputTokenOverrides
-  /** Estilo extra aplicado no container (ex.: tokens resolvidos) */
-  containerStyle?: React.CSSProperties
+  /* ---- tokens (§A6) ---- */
+  colorTheme?: InputColorTheme
+  tokens?: InputTokenOverrides
+  containerStyle?: CSSProperties
 }
 
 export type DateFilterKey = 'all' | 'today' | 'upcoming' | 'past'
@@ -88,7 +88,7 @@ export type SearchInputProps<T = any> = BaseProps & {
   showResultCount?: boolean
   showClearButton?: boolean
 
-  children?: (state: SmartSearchState<T>) => React.ReactNode
+  children?: (state: SmartSearchState<T>) => ReactNode
 }
 
 export type InputVariantMap = {
@@ -97,7 +97,15 @@ export type InputVariantMap = {
   }
 
   textarea: BaseProps
-  password: BaseProps
+
+  password: BaseProps & {
+    showIcon?: ReactNode
+    hideIcon?: ReactNode
+    /** aria-label do botão quando a senha está oculta. Padrão: 'Mostrar senha' */
+    showLabel?: string
+    /** aria-label do botão quando a senha está visível. Padrão: 'Ocultar senha' */
+    hideLabel?: string
+  }
 
   masked: BaseProps & {
     mask: string | ((value: string) => string)
@@ -146,7 +154,8 @@ export type InputVariantMap = {
     minuteStep?: number
     placeholder?: string
     clearable?: boolean
-    icon?: React.ReactNode
+    icon?: ReactNode
+    clockIcon?: ReactNode
     align?: 'left' | 'right' | 'center'
   }
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
   InputIconWrapper,
@@ -19,6 +20,11 @@ export function TextareaInput(props: Props) {
       $radius={props.radius}
       data-error={hasError}
       $icon={!props.icon}
+      className={props.className}
+      style={{
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...props.containerStyle
+      }}
     >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>
@@ -30,6 +36,7 @@ export function TextareaInput(props: Props) {
 
       <textarea
         id={props.id}
+        name={props.name}
         value={props.value ?? ''}
         onChange={(e) => props.onChange?.(e.target.value)}
         className={hasError ? 'error' : ''}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
   InputIconWrapper,
@@ -8,9 +9,8 @@ import {
   MaskedInputContainer
 } from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
-import { resolveInputTokens } from '../../inputTokens'
-import { EyeIcon, EyeOffIcon } from '../../icons'
 import { PasswordToggle } from './PasswordInput.styles'
+import { EyeIcon, EyeOffIcon } from '../../icons'
 
 type Props = { variant: 'password' } & InputVariantMap['password']
 
@@ -18,12 +18,19 @@ export function PasswordInput(props: Props) {
   const [show, setShow] = useState(false)
   const hasError = props.touched && props.error
 
+  const showIcon = props.showIcon ?? <EyeIcon />
+  const hideIcon = props.hideIcon ?? <EyeOffIcon />
+  const toggleLabel = show
+    ? (props.hideLabel ?? 'Ocultar senha')
+    : (props.showLabel ?? 'Mostrar senha')
+
   return (
     <MaskedInputContainer
       $variant="password"
       $radius={props.radius}
       data-error={hasError}
       $icon={!props.icon}
+      className={props.className}
       style={{
         ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
         ...props.containerStyle
@@ -39,6 +46,7 @@ export function PasswordInput(props: Props) {
 
       <input
         id={props.id}
+        name={props.name}
         type={show ? 'text' : 'password'}
         value={props.value ?? ''}
         onChange={(e) => props.onChange?.(e.target.value)}
@@ -52,10 +60,11 @@ export function PasswordInput(props: Props) {
       <PasswordToggle
         type="button"
         onClick={() => setShow((s) => !s)}
-        aria-label={show ? 'Ocultar senha' : 'Mostrar senha'}
+        aria-label={toggleLabel}
         aria-pressed={show}
+        disabled={props.disabled}
       >
-        {show ? (props.hideIcon ?? <EyeOffIcon />) : (props.showIcon ?? <EyeIcon />)}
+        {show ? hideIcon : showIcon}
       </PasswordToggle>
 
       {hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}

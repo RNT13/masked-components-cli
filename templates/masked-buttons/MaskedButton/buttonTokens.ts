@@ -5,8 +5,9 @@
 
 import type { CSSProperties } from 'react'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
+import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 
-/** Paleta neutra da lib (F.25): usa a rampa baseBlack do tema default. */
+/** Paleta neutra da lib (F.25). */
 const NEUTRAL = {
   bg: '#1a1a1a',
   fg: '#fafafa',
@@ -59,51 +60,58 @@ const SWITCH_TOKEN_PROPS = [
 export type ButtonTokensStyle = CSSProperties
 
 /**
- * Gera o objeto de style com as CSS vars do botão.
- * Precedência: tokens (prop) > colorTheme (registro) > nada (CSS usa fallback do tema).
+ * Gera o objeto de style com as CSS vars do botão.  
+ * Precedência: tokens (prop) > colorTheme (registro) > nada (CSS usa fallback do tema).  
  *
- * @example
- * <button style={resolveButtonTokens({ colorTheme: 'ruby' })} />
+ * @example <button style={resolveButtonTokens({ colorTheme: 'ruby' })} />  
  */
 export function resolveButtonTokens(opts: {
   colorTheme?: string
   tokens?: Record<string, string | number>
 }): ButtonTokensStyle {
   const vars: Record<string, string | number> = {}
-  const palette =
+
+  const c =
     opts.colorTheme && opts.colorTheme !== 'default'
-      ? resolveColorTheme(opts.colorTheme)?.palette
+      ? resolveColorTheme(opts.colorTheme, maskedTheme)
       : undefined
 
-  if (palette) {
-    vars['--mc-btn-bg'] = palette.bg
-    vars['--mc-btn-bg-hover'] = palette.bgHover
-    vars['--mc-btn-bg-active'] = palette.bgActive
-    vars['--mc-btn-fg'] = palette.fg
-    vars['--mc-btn-fg-hover'] = palette.fgHover ?? palette.fg
-    vars['--mc-btn-fg-active'] = palette.fgActive ?? palette.fg
-    vars['--mc-btn-border'] = palette.border ?? palette.bg
-    vars['--mc-btn-border-hover'] = palette.borderHover ?? palette.bgHover
-    vars['--mc-btn-border-active'] = palette.borderActive ?? palette.bgActive
-    vars['--mc-btn-ring'] = palette.ring
-    vars['--mc-btn-ring-focus'] = palette.ring
+  if (c) {
+    const bg = c.base
+    const bgHover = c.dark08 ?? c.base
+    const bgActive = c.dark20 ?? bgHover
+    const fg = c.onBase ?? NEUTRAL.fg
+    const ring = c.glow ?? c.light50 ?? c.base
 
-    // gradiente (variantes gradient/neon): a paleta deriva duas cores
-    vars['--mc-btn-gradient'] = `linear-gradient(180deg, ${palette.bgHover}, ${palette.bg})`
-    vars['--mc-btn-gradient-hover'] = `linear-gradient(180deg, ${palette.bg}, ${palette.bgHover})`
-    vars['--mc-btn-gradient-active'] =
-      `linear-gradient(180deg, ${palette.bgActive}, ${palette.bgHover})`
+    vars['--mc-btn-bg'] = bg
+    vars['--mc-btn-bg-hover'] = bgHover
+    vars['--mc-btn-bg-active'] = bgActive
+    vars['--mc-btn-fg'] = fg
+    vars['--mc-btn-fg-hover'] = fg
+    vars['--mc-btn-fg-active'] = fg
+    vars['--mc-btn-border'] = bg
+    vars['--mc-btn-border-hover'] = bgHover
+    vars['--mc-btn-border-active'] = bgActive
+    vars['--mc-btn-ring'] = ring
+    vars['--mc-btn-ring-focus'] = ring
 
-    // neon: cor do glow = border/ring da paleta
-    vars['--mc-btn-neon-color'] = palette.ring
+    // gradient: derivado da rampa clara -> base
+    const top = c.light20 ?? bgHover
+    vars['--mc-btn-gradient'] = `linear-gradient(180deg, ${top}, ${bg})`
+    vars['--mc-btn-gradient-hover'] = `linear-gradient(180deg, ${bg}, ${bgHover})`
+    vars['--mc-btn-gradient-active'] = `linear-gradient(180deg, ${bgActive}, ${bgHover})`
 
-    // campos (switch/checkbox/radio) herdam o colorTheme
-    vars['--mc-switch-track-on'] = palette.bg
-    vars['--mc-switch-border-on'] = palette.border ?? palette.bg
-    vars['--mc-switch-ring-focus'] = palette.ring
+    // neon: glow da paleta
+    vars['--mc-btn-neon-color'] = c.light20 ?? bg
+    vars['--mc-btn-neon-glow'] = ring
+
+    // switch/checkbox/radio herdam o colorTheme
+    vars['--mc-switch-track-on'] = bg
+    vars['--mc-switch-border-on'] = bg
+    vars['--mc-switch-ring-focus'] = ring
   }
 
-  // overrides granulares (prop `tokens`) — maior precedência
+  // overrides granulares (prop `tokens`): maior precedência
   for (const key of TOKEN_PROPS) {
     const v = opts.tokens?.[key]
     if (v !== undefined) vars[`--mc-btn-${key}`] = v
