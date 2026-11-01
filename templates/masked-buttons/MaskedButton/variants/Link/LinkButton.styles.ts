@@ -1,14 +1,14 @@
-import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
-import { css, styled } from 'styled-components'
-import { BaseButton } from '../../Base/BaseButton'
-import { ButtonPosition } from '../../MaskedButton.types'
+import { transitions } from "@/utils/masked-animations/animations/transitions";
+import { css, styled } from "styled-components";
+import { BaseButton } from "../../Base/BaseButton";
+import { ButtonPosition } from "../../MaskedButton.types";
 
 type props = {
-  $isActive?: boolean
-  $isError?: boolean
-  $isDisabled?: boolean
-  $position?: ButtonPosition
-}
+  $isActive?: boolean;
+  $isError?: boolean;
+  $isDisabled?: boolean;
+  $position?: ButtonPosition;
+};
 
 const disabledStyles = css`
   color: ${({ theme }) => theme.colors.baseBlack.light40};
@@ -19,10 +19,13 @@ const disabledStyles = css`
     color: ${({ theme }) => theme.colors.baseBlack.light20};
     border-color: transparent;
   }
-`
+`;
 
 const activeStyles = css`
-  color: ${maskedTheme.colors.baseBlue.light20};
+  color: var(
+    --mc-btn-fg-active,
+    ${({ theme }) => theme.colors.baseBlue.light20}
+  );
   text-decoration: underline;
 
   svg {
@@ -30,24 +33,33 @@ const activeStyles = css`
   }
 
   &:hover {
-    color: ${maskedTheme.colors.baseBlue.light30};
+    color: var(
+      --mc-btn-fg-hover,
+      ${({ theme }) => theme.colors.baseBlue.light30}
+    );
   }
-`
+`;
 
 const errorStyles = css`
-  color: ${maskedTheme.colors.baseRed.light30};
+  color: var(
+    --mc-btn-danger-fg,
+    ${({ theme }) => theme.colors.baseRed.light30}
+  );
 
   &:hover {
-    color: ${maskedTheme.colors.baseRed.light20};
+    color: var(
+      --mc-btn-danger-fg,
+      ${({ theme }) => theme.colors.baseRed.light20}
+    );
     text-decoration: underline;
   }
-`
+`;
 
 export const LinkButtonWrapper = styled.div<props>`
   display: flex;
   align-items: center;
   justify-content: ${({ $position }) => $position};
-`
+`;
 
 export const LinkButtonContainer = styled(BaseButton)<props>`
   width: fit-content;
@@ -56,7 +68,7 @@ export const LinkButtonContainer = styled(BaseButton)<props>`
   justify-content: center;
   text-decoration: none;
 
-  color: ${maskedTheme.colors.baseBlue.base};
+  color: var(--mc-btn-fg, ${({ theme }) => theme.colors.baseBlue.base});
   background-color: transparent;
   border: none;
 
@@ -64,12 +76,14 @@ export const LinkButtonContainer = styled(BaseButton)<props>`
     background-color: transparent;
     border: none;
     text-decoration: underline;
-
-    color: ${maskedTheme.colors.baseBlue.light};
-    transition: ${maskedTheme.transition.fast};
+    color: var(
+      --mc-btn-fg-hover,
+      ${({ theme }) => theme.colors.baseBlue.light}
+    );
+    ${transitions.fast}
   }
 
   ${({ $isActive }) => $isActive && activeStyles}
-  ${({ $isError }) => $isError && errorStyles}
+  ${({ $isError }) => $isError && errorStyles}  
   ${({ $isDisabled }) => $isDisabled && disabledStyles}
-`
+`;

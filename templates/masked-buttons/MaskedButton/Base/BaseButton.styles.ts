@@ -1,11 +1,7 @@
-import { continuousAnimations } from '@/styles/MaskedAnimations/animations/continuousAnimations'
-import { transitions } from '@/styles/MaskedAnimations/animations/transitions'
-import styled, { css } from 'styled-components'
-import { ButtonShape, ButtonSize, ButtonState } from '../MaskedButton.types'
-
-/* =========================
-   SIZE DO BOTÃO
-========================= */
+import { continuousAnimations } from "@/utils/masked-animations/animations/continuousAnimations";
+import { transitions } from "@/utils/masked-animations/animations/transitions";
+import styled, { css } from "styled-components";
+import { ButtonShape, ButtonSize, ButtonState } from "../MaskedButton.types";
 
 const sizeStyles: Record<ButtonSize, ReturnType<typeof css>> = {
   sm: css`
@@ -19,12 +15,8 @@ const sizeStyles: Record<ButtonSize, ReturnType<typeof css>> = {
   lg: css`
     padding: 16px 20px;
     font-size: 18px;
-  `
-}
-
-/* =========================
-   TAMANHO DO ÍCONE
-========================= */
+  `,
+};
 
 const iconSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   sm: css`
@@ -38,12 +30,8 @@ const iconSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   lg: css`
     width: 24px;
     height: 24px;
-  `
-}
-
-/* =========================
-   CIRCLE DINÂMICO
-========================= */
+  `,
+};
 
 const circleSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   sm: css`
@@ -57,84 +45,68 @@ const circleSizes: Record<ButtonSize, ReturnType<typeof css>> = {
   lg: css`
     width: 70px;
     height: 70px;
-  `
-}
+  `,
+};
 
-const getShapeStyles = ($shape?: ButtonShape, $size: ButtonSize = 'md') => {
-  if ($shape === 'circle') {
+const getShapeStyles = ($shape?: ButtonShape, $size: ButtonSize = "md") => {
+  if ($shape === "circle") {
     return css`
       ${circleSizes[$size]}
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-
       .btn-text {
         display: none;
       }
-    `
+    `;
   }
-
-  if ($shape === 'square') {
+  if ($shape === "square")
     return css`
       border-radius: 6px;
-    `
-  }
-
+    `;
   return css`
-    border-radius: 18px;
-  `
-}
-
-/* =========================
-   ESTADOS
-========================= */
+    border-radius: var(--mc-btn-radius, 18px);
+  `;
+};
 
 const stateStyles: Record<ButtonState, ReturnType<typeof css>> = {
   loading: css`
     cursor: not-allowed;
-
     svg {
-      ${continuousAnimations.continuousSpin}
-      stroke-width: 2;
+      ${continuousAnimations.continuousSpin} stroke-width: 2;
     }
   `,
   default: css``,
   disabled: css`
     cursor: not-allowed;
+    opacity: var(--mc-btn-disabled-opacity, 1);
   `,
   error: css`
     &:hover {
       ${continuousAnimations.continuousShakeX}
     }
-  `
-}
-
-/* =========================
-   TOOLTIP
-========================= */
+  `,
+};
 
 export const LabelDiv = styled.div`
   position: absolute;
   bottom: calc(155% - 5px);
   left: 50%;
   transform: translateX(-50%) translateY(4px);
-
   padding: 8px 12px;
   background-color: ${({ theme }) => theme.colors.baseBlue.dark};
   color: white;
   border-radius: 6px;
   font-size: 12px;
   white-space: nowrap;
-
   opacity: 0;
   pointer-events: none;
-  z-index: 1;
-
+  z-index: ${({ theme }) => theme.zIndex?.tooltip ?? 700};
   ${transitions.delay}
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 87%;
     left: 50%;
@@ -143,47 +115,33 @@ export const LabelDiv = styled.div`
     height: 8px;
     background-color: ${({ theme }) => theme.colors.baseBlue.dark};
   }
-`
-
-/* =========================
-   CONTENT
-========================= */
+`;
 
 export const ButtonContent = styled.span<{ $state: ButtonState }>`
   position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
-
   ${({ $state }) =>
-    $state === 'disabled' &&
+    $state === "disabled" &&
     css`
       opacity: 0.5;
     `}
-`
-
-/* =========================
-   ICON WRAPPER
-========================= */
+`;
 
 export const IconWrapper = styled.span<{ $size?: ButtonSize }>`
   display: flex;
   align-items: center;
-
   svg {
-    ${({ $size = 'md' }) => iconSizes[$size]}
+    ${({ $size = "md" }) => iconSizes[$size]}
   }
-`
-
-/* =========================
-   BOTÃO BASE
-========================= */
+`;
 
 export const BaseButtonContainer = styled.button<{
-  $size?: ButtonSize
-  $state?: ButtonState
-  $fullWidth?: boolean
-  $shape?: ButtonShape
+  $size?: ButtonSize;
+  $state?: ButtonState;
+  $fullWidth?: boolean;
+  $shape?: ButtonShape;
 }>`
   display: inline-flex;
   align-items: center;
@@ -193,12 +151,18 @@ export const BaseButtonContainer = styled.button<{
   position: relative;
   text-decoration: none;
 
-  ${({ $size = 'md' }) => sizeStyles[$size]}
-  ${({ $fullWidth }) => $fullWidth && 'width: 100%; justify-content: center;'}
-  ${({ $state = 'default' }) => stateStyles[$state]}
-  ${({ $shape, $size }) => getShapeStyles($shape, $size)}
-
-  ${transitions.fast}
+  ${({ $size = "md" }) => sizeStyles[$size]}
+  ${({ $fullWidth }) => $fullWidth && "width: 100%; justify-content: center;"}  
+  ${({ $state = "default" }) => stateStyles[$state]}  
+  ${({ $shape, $size }) => getShapeStyles($shape, $size)}  
+  
+  ${transitions.fast}  
+  
+  &:focus-visible {
+    outline: 2px solid
+      var(--mc-btn-ring-focus, ${({ theme }) => theme.colors.baseBlue.base});
+    outline-offset: 2px;
+  }
 
   &:hover ${LabelDiv} {
     opacity: 1;
@@ -212,4 +176,4 @@ export const BaseButtonContainer = styled.button<{
   &:active {
     transform: scale(0.97);
   }
-`
+`;
