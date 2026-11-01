@@ -1,5 +1,5 @@
 import { css, styled } from 'styled-components'
-import { media } from '@/styles/MaskedThemes/MaskedThemes'
+import { maskedTheme, media } from '@/styles/MaskedThemes/MaskedThemes'
 import {
   DrawerBreakpoint,
   DrawerSide,
@@ -21,12 +21,6 @@ const getTransform = (side: DrawerSide, isOpen: boolean) => {
   }
 }
 
-/**
- * Resolve um ResponsiveSize num valor único de string pra um breakpoint.
- * String simples = mesmo valor em qualquer tela. Objeto = pega o valor do
- * breakpoint pedido, caindo pro próximo tamanho maior quando o breakpoint
- * específico não foi informado (mobile -> tablet -> desktop).
- */
 function resolveSize(
   value: ResponsiveSize | undefined,
   breakpoint: DrawerBreakpoint,
@@ -64,7 +58,7 @@ const getPosition = (
         right: 0;
         height: 100vh;
       `
-    }
+    }  
     ${
       side === 'top' &&
       css`
@@ -72,7 +66,7 @@ const getPosition = (
         left: 0;
         width: 100vw;
       `
-    }
+    }  
     ${
       side === 'bottom' &&
       css`
@@ -80,8 +74,8 @@ const getPosition = (
         left: 0;
         width: 100vw;
       `
-    }
-
+    }  
+  
     ${
       isHorizontal
         ? css`
@@ -90,8 +84,8 @@ const getPosition = (
         : css`
             height: ${desktopSize};
           `
-    }
-
+    }  
+  
     ${media.tablet} {
       ${
         isHorizontal
@@ -138,6 +132,7 @@ export const DrawerPanel = styled.div<{
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  background: var(--mc-drawer-panel-bg, transparent);
 
   ${({ $side, $size, $fallback }) =>
     getPosition(
@@ -152,10 +147,13 @@ export const DrawerPanel = styled.div<{
   pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
   transition: ${({ $transition }) => transitionMap[$transition]};
 
-  /* Trava de segurança: mesmo se alguém passar um valor absurdo (ex: 800px
-     fixo) sem pensar em mobile, o painel nunca extrapola a viewport. */
   max-width: 100vw;
   max-height: 100vh;
+
+  ${media.reducedMotion} {
+    transition: opacity 0.2s ease;
+    transform: none;
+  }
 `
 
 export const DrawerOverlay = styled.div<{
@@ -166,9 +164,13 @@ export const DrawerOverlay = styled.div<{
   position: fixed;
   inset: 0;
   z-index: ${({ $zIndex }) => $zIndex - 1};
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--mc-drawer-overlay-bg, ${maskedTheme.colors.baseBlack.light50});
   ${({ $blur }) => $blur && 'backdrop-filter: blur(4px);'}
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
   pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
   transition: opacity 0.3s ease;
+
+  ${media.reducedMotion} {
+    transition: opacity 0.15s ease;
+  }
 `

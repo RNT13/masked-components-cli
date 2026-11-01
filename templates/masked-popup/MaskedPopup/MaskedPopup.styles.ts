@@ -1,4 +1,5 @@
 import { styled } from 'styled-components'
+import { maskedTheme, media } from '@/styles/MaskedThemes/MaskedThemes'
 import { PopupTransition } from './MaskedPopup.types'
 
 const getTransform = (transition: PopupTransition, isOpen: boolean) => {
@@ -26,11 +27,15 @@ export const PopupOverlay = styled.div<{ $isOpen: boolean; $blur: boolean; $zInd
   position: fixed;
   inset: 0;
   z-index: ${({ $zIndex }) => $zIndex - 1};
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--mc-popup-overlay-bg, ${maskedTheme.colors.baseBlack.light50});
   ${({ $blur }) => $blur && 'backdrop-filter: blur(6px);'}
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
   pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
   transition: opacity 0.3s ease;
+
+  ${media.reducedMotion} {
+    transition: opacity 0.15s ease;
+  }
 `
 
 export const PopupPanel = styled.div<{
@@ -48,10 +53,17 @@ export const PopupPanel = styled.div<{
   max-width: ${({ $maxWidth }) => $maxWidth};
   max-height: 90vh;
   overflow-y: auto;
+  background: var(--mc-popup-panel-bg, transparent);
 
   transform: ${({ $transition, $isOpen }) => getTransform($transition, $isOpen)};
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
   filter: ${({ $transition, $isOpen }) => ($transition === 'blur' && !$isOpen ? 'blur(8px)' : 'blur(0px)')};
   pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
   transition: ${({ $transition }) => transitionMap[$transition]};
+
+  ${media.reducedMotion} {
+    transition: opacity 0.2s ease;
+    transform: translate(-50%, -50%);
+    filter: none;
+  }
 `
