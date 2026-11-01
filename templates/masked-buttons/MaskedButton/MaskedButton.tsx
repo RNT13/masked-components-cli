@@ -36,6 +36,7 @@ export function MaskedButton(props: ButtonProps) {
 
     // API pública de labels/handlers
     toggleLabel,
+    switchLabel,
     checkboxLabel,
     radioLabel,
 
@@ -55,8 +56,8 @@ export function MaskedButton(props: ButtonProps) {
     ...rest
   } = props;
 
-  const resolvedLinkComponent =
-    linkComponent ?? useMaskedConfig().linkComponent;
+  const config = useMaskedConfig();
+  const resolvedLinkComponent = linkComponent ?? config.linkComponent;
 
   const resolvedVariant = variant ?? $variant;
   const resolvedState: ButtonState = disabled
@@ -127,6 +128,7 @@ export function MaskedButton(props: ButtonProps) {
           checked={checked}
           defaultChecked={defaultChecked}
           onCheckedChange={onCheckedChange}
+          switchLabel={switchLabel}
         />
       );
 

@@ -140,6 +140,7 @@ export type ButtonProps = BaseButtonProps & {
 
   /* ---- toggle ---- */
   toggleLabel?: string;
+  switchLabel?: string;
   onToggle?: (active: boolean) => void;
 
   /* ---- checkbox / radio ---- */
