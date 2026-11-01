@@ -1,5 +1,6 @@
 'use client'
 
+import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
   InputIconWrapper,
@@ -19,6 +20,10 @@ export function TextInput(props: Props) {
       $radius={props.radius}
       data-error={hasError}
       $icon={!props.icon}
+      style={{
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...props.containerStyle
+      }}
     >
       {props.label && (
         <InputLabel htmlFor={props.id} $required={props.required}>

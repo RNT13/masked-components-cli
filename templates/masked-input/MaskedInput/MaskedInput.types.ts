@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactNode } from 'react'
 
 export type BaseProps = {
@@ -21,6 +20,13 @@ export type BaseProps = {
   touched?: boolean
   showError?: boolean
   required?: boolean
+
+  /** Preset/paleta registrada em colorThemes (resolve tokens --mc-input-*) */
+  colorTheme?: import('./inputTokens').InputColorTheme
+  /** Sobrescritas diretas de tokens --mc-input-* */
+  tokens?: import('./inputTokens').InputTokenOverrides
+  /** Estilo extra aplicado no container (ex.: tokens resolvidos) */
+  containerStyle?: React.CSSProperties
 }
 
 export type DateFilterKey = 'all' | 'today' | 'upcoming' | 'past'

@@ -12,7 +12,7 @@ type props = {
 }
 
 /* ============================================================
- * CONTAINER
+ * CONTAINER — todas as cores passam por var(--mc-input-*, fallback)
  * ============================================================ */
 
 export const MaskedInputContainer = styled.div<props>`
@@ -31,17 +31,17 @@ export const MaskedInputContainer = styled.div<props>`
   #masked-time-trigger {
     width: 100%;
     border-radius: ${({ $radius }) => ($radius ? `${$radius}px` : '18px')};
-    border: 2px solid ${maskedTheme.colors.baseBlue.light08};
+    border: 2px solid var(--mc-input-border, ${maskedTheme.colors.baseBlue.light08});
     font-size: ${maskedTheme.fontSize.md};
     font-weight: 800;
     line-height: 1.4;
-    color: ${maskedTheme.colors.baseBlue.base};
-    background-color: ${maskedTheme.colors.baseBlue.light40};
+    color: var(--mc-input-fg, ${maskedTheme.colors.baseBlue.base});
+    background-color: var(--mc-input-bg, ${maskedTheme.colors.baseBlue.light40});
     text-align: left;
     ${transitions.slow}
 
-    ${({ $hasToggle }) => $hasToggle && `padding-right: 44px;`}
-
+    ${({ $hasToggle }) => $hasToggle && `padding-right: 44px;`}  
+  
     input.input-hidden {
       position: absolute;
       inset: 0;
@@ -50,43 +50,43 @@ export const MaskedInputContainer = styled.div<props>`
     }
 
     &:hover {
-      border-color: ${maskedTheme.colors.baseBlue.base};
+      border-color: var(--mc-input-border-hover, ${maskedTheme.colors.baseBlue.base});
     }
 
     &:focus {
       outline: none;
-      background-color: ${maskedTheme.colors.baseBlue.light04};
-      border-color: ${maskedTheme.colors.baseBlue.light};
-      box-shadow: 0px 0px 10px 2px ${maskedTheme.colors.baseBlue.light};
-      color: ${maskedTheme.colors.baseBlue.base};
+      background-color: var(--mc-input-bg-focus, ${maskedTheme.colors.baseBlue.light04});
+      border-color: var(--mc-input-focus-ring, ${maskedTheme.colors.baseBlue.light});
+      box-shadow: 0px 0px 10px 2px var(--mc-input-focus-ring, ${maskedTheme.colors.baseBlue.light});
+      color: var(--mc-input-fg, ${maskedTheme.colors.baseBlue.base});
 
       &::placeholder {
-        color: ${maskedTheme.colors.baseBlue.light};
+        color: var(--mc-input-focus-ring, ${maskedTheme.colors.baseBlue.light});
       }
     }
 
     &:disabled {
-      background-color: ${maskedTheme.colors.baseBlue.light20};
+      background-color: var(--mc-input-disabled-bg, ${maskedTheme.colors.baseBlue.light20});
       cursor: not-allowed;
       opacity: 0.7;
     }
 
     &.error {
-      border-color: ${maskedTheme.colors.baseRed.base};
-      background-color: ${maskedTheme.colors.baseRed.light02};
-      color: ${maskedTheme.colors.baseRed.light20};
+      border-color: var(--mc-input-error-border, ${maskedTheme.colors.baseRed.base});
+      background-color: var(--mc-input-error-bg, ${maskedTheme.colors.baseRed.light02});
+      color: var(--mc-input-error-fg, ${maskedTheme.colors.baseRed.light20});
 
       &:focus {
-        box-shadow: 0 0 0 3px ${maskedTheme.colors.baseRed.light20};
+        box-shadow: 0 0 0 3px var(--mc-input-error-ring, ${maskedTheme.colors.baseRed.light20});
       }
 
       &::placeholder {
-        color: ${maskedTheme.colors.baseRed.light20};
+        color: var(--mc-input-error-fg, ${maskedTheme.colors.baseRed.light20});
       }
     }
 
     &::placeholder {
-      color: ${maskedTheme.colors.baseBlue.light08};
+      color: var(--mc-input-placeholder, ${maskedTheme.colors.baseBlue.light08});
     }
   }
 
@@ -99,15 +99,14 @@ export const MaskedInputContainer = styled.div<props>`
     line-height: 40px;
   }
 
-  /* ===================== TEXTAREA ===================== */
-
   textarea {
     padding: ${({ $icon }) => ($icon ? '12px' : '12px 12px 12px 44px')};
     min-height: 96px;
     width: 100%;
     resize: none;
     scrollbar-width: thin;
-    scrollbar-color: ${maskedTheme.colors.baseBlue.base} ${maskedTheme.colors.baseBlue.light20};
+    scrollbar-color: var(--mc-input-fg, ${maskedTheme.colors.baseBlue.base})
+      var(--mc-input-disabled-bg, ${maskedTheme.colors.baseBlue.light20});
   }
 `
 
@@ -116,10 +115,10 @@ export const MaskedInputContainer = styled.div<props>`
  * ============================================================ */
 
 export const ErrorDiv = styled.div`
-  color: ${maskedTheme.colors.baseRed.dark30};
+  color: var(--mc-input-error-fg, ${maskedTheme.colors.baseRed.dark30});
   font-size: 0.85rem;
   font-weight: 500;
-  background-color: ${maskedTheme.colors.baseRed.light20};
+  background-color: var(--mc-input-error-bg, ${maskedTheme.colors.baseRed.light20});
   padding: 6px 12px;
   border-radius: 10px;
 `
@@ -130,7 +129,7 @@ export const ErrorDiv = styled.div`
 
 export const InputLabel = styled.label<props>`
   width: 100%;
-  color: ${maskedTheme.colors.baseBlue.dark20};
+  color: var(--mc-input-label-fg, ${maskedTheme.colors.baseBlue.dark20});
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 6px;
@@ -147,7 +146,7 @@ export const InputLabel = styled.label<props>`
     css`
       &::after {
         content: '*';
-        color: ${maskedTheme.colors.baseRed.base};
+        color: var(--mc-input-error-border, ${maskedTheme.colors.baseRed.base});
         font-size: 1.2rem;
         font-weight: 700;
       }
@@ -160,7 +159,7 @@ export const InputIconWrapper = styled.div`
   top: 44px;
   background: none;
   border: none;
-  color: ${maskedTheme.colors.baseBlue.dark};
+  color: var(--mc-input-icon-fg, ${maskedTheme.colors.baseBlue.dark});
 
   svg {
     font-size: 1.5rem;

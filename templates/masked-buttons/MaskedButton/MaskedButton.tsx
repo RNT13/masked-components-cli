@@ -2,7 +2,7 @@
 
 import type { ComponentProps } from 'react'
 
-import { useMaskedConfig } from "@/components/ui/MaskedConfigProvider";
+import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 
 import { ButtonProps, ButtonState } from './MaskedButton.types'
 import DefaultButton from './variants/Default/DefaultButton'
