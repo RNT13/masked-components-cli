@@ -28,7 +28,7 @@ const activeStyles = css`
       --mc-btn-border-active,
       var(
         --mc-btn-neon-color,
-        ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+        ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
       )
     );
 
@@ -37,7 +37,7 @@ const activeStyles = css`
     0 0 13px
       var(
         --mc-btn-neon-color,
-        ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+        ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
       )
   );
 
@@ -52,7 +52,7 @@ const activeStyles = css`
       --mc-btn-border-hover,
       var(
         --mc-btn-neon-color,
-        ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+        ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
       )
     );
     box-shadow: var(
@@ -60,7 +60,7 @@ const activeStyles = css`
       0 0 10px
         var(
           --mc-btn-neon-color,
-          ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+          ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
         )
     );
   }
@@ -73,7 +73,7 @@ const errorStyles = css`
       70deg,
       var(
         --mc-btn-neon-color,
-        ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+        ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
       ),
       ${({ theme }) => theme.colors.baseRed.dark}
     )
@@ -111,10 +111,10 @@ export const NeonButtonContainer = styled(BaseButton)<props>`
     --mc-btn-gradient,
     linear-gradient(
       70deg,
-      ${({ theme }) => theme.accentTheme?.colors.accentPink?.base ?? theme.colors.baseLilac.base},
+      ${({ theme }) => theme.colors.accentPink?.base ?? theme.colors.baseLilac.base},
       var(
         --mc-btn-neon-color,
-        ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+        ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
       )
     )
   );
@@ -123,7 +123,7 @@ export const NeonButtonContainer = styled(BaseButton)<props>`
       --mc-btn-border,
       var(
         --mc-btn-neon-color,
-        ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+        ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
       )
     );
 
@@ -134,9 +134,9 @@ export const NeonButtonContainer = styled(BaseButton)<props>`
         380deg,
         var(
           --mc-btn-neon-color,
-          ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+          ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
         ),
-        ${({ theme }) => theme.accentTheme?.colors.accentPink?.base ?? theme.colors.baseLilac.base}
+        ${({ theme }) => theme.colors.accentPink?.base ?? theme.colors.baseLilac.base}
       )
     );
     color: var(--mc-btn-fg-hover, ${({ theme }) => theme.colors.baseBlue.dark50});
@@ -144,7 +144,7 @@ export const NeonButtonContainer = styled(BaseButton)<props>`
       --mc-btn-border-hover,
       var(
         --mc-btn-neon-color,
-        ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+        ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
       )
     );
     box-shadow: var(
@@ -152,7 +152,7 @@ export const NeonButtonContainer = styled(BaseButton)<props>`
       0 0 10px
         var(
           --mc-btn-neon-color,
-          ${({ theme }) => theme.accentTheme?.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
+          ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
         )
     );
   }

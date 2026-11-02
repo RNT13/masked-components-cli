@@ -13,13 +13,14 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import type { CSSProperties, DragEvent } from 'react'
+import type { ComponentType, CSSProperties, DragEvent } from 'react'
 
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 
 import { ImageIcon } from '../../icons'
 import { ErrorDiv, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
+import type { ImageComponentProps } from '../../MaskedInput.types'
 import { resolveInputTokens } from '../../inputTokens'
 import {
   FileCard,
@@ -94,11 +95,14 @@ export function FileInput(props: Props) {
     props.onSuccess?.(message) ?? config.onSuccess?.(message)
 
   // Renderizador de imagem: prop > provider > <img> nativo
-  const ImageComponent = props.imageComponent ?? config.imageComponent
+  const ImageComponent: ComponentType<ImageComponentProps> | undefined =
+    props.imageComponent ?? config.imageComponent
   const renderImage = (src: string, alt: string, style?: CSSProperties) =>
     ImageComponent ? (
       <ImageComponent src={src} alt={alt} fill style={style} />
     ) : (
+      // Fallback agnóstico de framework; em Next, injete next/image via imageComponent.
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
         alt={alt}

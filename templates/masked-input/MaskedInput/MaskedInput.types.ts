@@ -29,6 +29,19 @@ export type BaseProps = {
   containerStyle?: CSSProperties
 }
 
+/* ---- imagem injetável (H.5) ---- */
+/**
+ * Contrato mínimo para um componente de imagem injetável  
+ * (ex.: next/image). Mantido aqui — e não no provider — para  
+ * que o FileInput não dependa de import do masked-config.  
+ */
+export type ImageComponentProps = {
+  src: string
+  alt: string
+  fill?: boolean
+  style?: CSSProperties
+}
+
 export type DateFilterKey = 'all' | 'today' | 'upcoming' | 'past'
 
 export type SortDirection = 'asc' | 'desc'
@@ -81,14 +94,14 @@ export type SearchInputProps<T = any> = BaseProps & {
 
   sortOptions?: SortOption[]
   showSortOptions?: boolean
-  sortGroupLabel?: string  
-  /* ---- labels (A.6) ---- */  
-  filterGroupLabel?: string  
-  dateGroupLabel?: string  
-  resultCountFormatter?: (info: {  
-    resultCount: number  
-    total: number  
-    activeFilterCount: number  
+  sortGroupLabel?: string
+  /* ---- labels (A.6) ---- */
+  filterGroupLabel?: string
+  dateGroupLabel?: string
+  resultCountFormatter?: (info: {
+    resultCount: number
+    total: number
+    activeFilterCount: number
   }) => string
 
   getItemKey?: (item: T) => string | number
@@ -142,14 +155,11 @@ export type InputVariantMap = {
     onRemove?: () => void
 
     /* ---- imagem injetável (H.5) ---- */
-    imageComponent?:
-      | ReactNode
-      | ComponentType<{
-          src: string
-          alt: string
-          fill?: boolean
-          style?: CSSProperties
-        }>
+    /**
+     * Componente de imagem para o preview (ex.: next/image).  
+     * Prioridade: esta prop > imageComponent do MaskedConfigProvider > <img> nativo.  
+     */
+    imageComponent?: ComponentType<ImageComponentProps>
     imageIcon?: ReactNode
 
     /* ---- notificações injetáveis (K.2) ---- */
