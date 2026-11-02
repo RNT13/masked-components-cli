@@ -55,14 +55,14 @@ export const BaseCardContainer = styled.div<{
   );
   color: var(--mc-card-fg, ${maskedTheme.colors.baseBlack.dark40});
   ${({ $gapStyles = 'md' }) => gapStyles[$gapStyles]};
-  box-shadow: var(--mc-card-shadow, ${maskedTheme.boxShadow.xs});
+  box-shadow: var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()});
   transition: ${maskedTheme.transition.slow};
 
   ${({ $size = 'md' }) => sizeStyles[$size]}
   ${({ $fullWidth }) => $fullWidth && 'width: 100%;'}  
   
   &:hover {
-    box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.sm});
+    box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.sm()});
   }
 
   ${({ $clickable }) =>
@@ -77,7 +77,7 @@ export const BaseCardContainer = styled.div<{
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.md});
+        box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.md()});
       }
 
       &:active {
