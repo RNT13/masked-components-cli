@@ -135,7 +135,7 @@ export const controlledAnimations = {
     }
   `,
 
-  controlledFromLeftSoft: css<{ $isOn?: boolean }>`
+  controlledSlideFromLeftSoft: css<{ $isOn?: boolean }>`
     max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
     transform: ${({ $isOn }) => ($isOn ? 'translateX(0px)' : 'translateX(-22px)')};
@@ -143,7 +143,7 @@ export const controlledAnimations = {
     ${transitions.bounce}
   `,
 
-  controlledFromRightSoft: css<{ $isOn?: boolean }>`
+  controlledSlideFromRightSoft: css<{ $isOn?: boolean }>`
     max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
     transform: ${({ $isOn }) => ($isOn ? 'translateX(0px)' : 'translateX(22px)')};
@@ -151,7 +151,7 @@ export const controlledAnimations = {
     ${transitions.bounce}
   `,
 
-  controlledFromTopSoft: css<{ $isOn?: boolean }>`
+  controlledSlideFromTopSoft: css<{ $isOn?: boolean }>`
     max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
     transform: ${({ $isOn }) => ($isOn ? 'translateY(0px)' : 'translateY(-18px)')};
@@ -159,7 +159,7 @@ export const controlledAnimations = {
     ${transitions.bounce}
   `,
 
-  controlledFromBottomSoft: css<{ $isOn?: boolean }>`
+  controlledSlideFromBottomSoft: css<{ $isOn?: boolean }>`
     max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
     transform: ${({ $isOn }) => ($isOn ? 'translateY(0px)' : 'translateY(18px)')};
@@ -186,7 +186,7 @@ export const controlledAnimations = {
   controlledFloatTop: css<{ $isOn?: boolean }>`
     opacity: ${({ $isOn }) => ($isOn ? 1 : 0)};
     max-height: ${({ $isOn }) => ($isOn ? '600px' : '0')};
-    transform: ${({ $isOn }) => ($isOn ? 'translateY(-20px)' : 'translateY(0)')};
+    transform: ${({ $isOn }) => ($isOn ? 'translateY(0)' : 'translateY(-20px)')};
 
     ${transitions.premium}
   `,
