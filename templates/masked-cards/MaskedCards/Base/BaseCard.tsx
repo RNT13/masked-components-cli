@@ -1,6 +1,7 @@
 'use client'
 
 import { forwardRef } from 'react'
+import { useTheme } from 'styled-components'
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 import { BaseCardProps, CardSize } from '../MaskedCards.types'
 import { resolveCardTokens, CardTokenOverrides } from '../cardTokens'
@@ -30,15 +31,19 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
   },
   ref
 ) {
-  // H.5: hook incondicional; linkComponent prop-level não existe em card — provider > <a>
+  // H.5: hooks incondicionais; linkComponent prop-level não existe em card — provider > <a>
   const { linkComponent } = useMaskedConfig()
+  const theme = useTheme()
   const LinkTag = (linkComponent ?? 'a') as 'a'
 
   const clickable = !!href || !!onClick
-  const tokenStyle = resolveCardTokens({
-    colorTheme,
-    tokens: tokens as CardTokenOverrides | undefined
-  })
+  const tokenStyle = resolveCardTokens(
+    {
+      colorTheme,
+      tokens: tokens as CardTokenOverrides | undefined
+    },
+    theme
+  )
 
   const common = {
     onClick,
