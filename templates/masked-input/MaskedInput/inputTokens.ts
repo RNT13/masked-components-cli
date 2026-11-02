@@ -1,11 +1,10 @@
-// templates/masked-input/MaskedInput/inputTokens.ts
-//
 // Resolve colorTheme + overrides em CSS vars --mc-input-*.
 // Padrão F.26: --mc-<componente>-<propriedade>[-<estado>]
 // Precedência: tokens (prop) > colorTheme (registro) > fallback do CSS.
 
 import type { CSSProperties } from 'react'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
+import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 
 export const INPUT_TOKEN_PROPS = [
@@ -27,6 +26,15 @@ export const INPUT_TOKEN_PROPS = [
 
 export type InputTokenProp = (typeof INPUT_TOKEN_PROPS)[number]
 export type InputTokens = Partial<Record<InputTokenProp, string | number>>
+
+/**
+ * Alias de compatibilidade usado por MaskedInput.types.ts e variants.  
+ * Mantém os dois nomes válidos durante a 2.x.  
+ */
+export type InputTokenOverrides = InputTokens
+
+/** Tipo da prop `colorTheme` dos inputs — nome de preset, alias ou paleta. */
+export type InputColorTheme = ColorThemeName
 
 export function resolveInputTokens(opts: {
   colorTheme?: string

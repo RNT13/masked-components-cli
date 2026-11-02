@@ -16,7 +16,7 @@ export const FeatureCardContainer = styled(BaseCard)<{ $highlight?: boolean }>`
           ${maskedTheme.colors.baseBlue.light40}
         )
       );
-      box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.md});
+      box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.md()});
     `}
 `
 export const FeatureIcon = styled(CardIconBadge)``
