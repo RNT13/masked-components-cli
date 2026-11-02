@@ -716,15 +716,15 @@ export const slateTheme: DefaultTheme = {
   colors: { ...baseColors, ...slateColors }
 }
 
-export const accentTheme: DefaultTheme = {
-  ...structure,
-  colors: {
-    ...baseColors,
-    ...darkColors,
-    ...accentColors,
-    accentColor: accentColors.accentBlue.base
-  }
-}
+export const accentTheme = {  
+  ...structure,  
+  colors: {  
+    ...baseColors,  
+    ...darkColors,  
+    ...accentColors,  
+    accentColor: accentColors.accentBlue.base  
+  }  
+} satisfies DefaultTheme
 
 export const pastelTheme: DefaultTheme = {
   ...structure,
