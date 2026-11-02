@@ -6,7 +6,6 @@ import {
   glowDiagonalLoop,
   horizontalLine,
   jumpRotate,
-  lightningStrikeMove,
   pulse,
   pulseGlow,
   rocketTrajectory,
@@ -370,14 +369,6 @@ export const continuousAnimations = {
         drop-shadow(0 0 14px rgba(255, 255, 255, 0.4))
         drop-shadow(0 0 24px rgba(255, 255, 255, 0.2));
     }
-  `,
-
-  continuousRocketLaunchLoop: css`
-    animation: ${rocketTrajectory} 6s ease-in-out infinite;
-  `,
-
-  continuousLightningStrikeLoop: css`
-    animation: ${lightningStrikeMove} 5s ease-in-out infinite;
   `,
 
   continuousBackGlow: css`

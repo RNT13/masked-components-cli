@@ -284,33 +284,33 @@ export const magneticRise = keyframes`
   100% { transform: translateY(0) scale(1); }  
 `
 
-export const softRevealLeft = keyframes`  
+export const softInRight = keyframes`  
   from { opacity: 0; transform: translateX(-22px); }  
   to { opacity: 1; transform: translateX(0); }  
 `
 
-export const softRevealRight = keyframes`  
+export const softInLeft = keyframes`  
   from { opacity: 0; transform: translateX(22px); }  
   to { opacity: 1; transform: translateX(0); }  
 `
 
-export const softRevealDown = keyframes`  
+export const softInUp = keyframes`  
   from { opacity: 0; transform: translateY(22px); }  
   to { opacity: 1; transform: translateY(0); }  
 `
 
-export const softRevealUp = keyframes`  
+export const softInDown = keyframes`  
   from { opacity: 0; transform: translateY(-22px); }  
   to { opacity: 1; transform: translateY(0); }  
 `
 
-export const smoothBounceUp = keyframes`  
+export const smoothBounceDown = keyframes`  
   0% { opacity: 0; transform: translateY(-34px); }  
   70% { opacity: 1; transform: translateY(4px); }  
   100% { transform: translateY(0); }  
 `
 
-export const smoothBounceDown = keyframes`  
+export const smoothBounceUp = keyframes`  
   0% { opacity: 0; transform: translateY(34px); }  
   70% { opacity: 1; transform: translateY(-4px); }  
   100% { transform: translateY(0); }  

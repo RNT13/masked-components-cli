@@ -8,9 +8,9 @@ import { useScrollTrigger } from './animations/triggers/useScrollTrigger'
 import { MAnimationProps } from './MaskedAnimation.types'
 import './registerAnimationProperties'
 
-export type MAnimationPosition = 'left' | 'center' | 'right' | 'top' | 'bottom'
+export type MaskedAnimationPosition = 'left' | 'center' | 'right' | 'top' | 'bottom'
 
-const positionStyles: Record<MAnimationPosition, ReturnType<typeof css>> = {
+const positionStyles: Record<MaskedAnimationPosition, ReturnType<typeof css>> = {
   left: css`
     display: flex;
     justify-content: flex-start;
@@ -41,7 +41,7 @@ const positionStyles: Record<MAnimationPosition, ReturnType<typeof css>> = {
 type ContainerProps = {
   $animationCSS?: RuleSet<object>
   $delay?: number
-  $position?: MAnimationPosition
+  $position?: MaskedAnimationPosition
   $hidden?: boolean
   $hover?: RuleSet<object>
   $isOn?: boolean

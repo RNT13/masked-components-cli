@@ -1,25 +1,25 @@
 import { AnimationName } from './AnimationRegistry'
-import { MAnimationPosition } from './MaskedAnimation'
+import { MaskedAnimationPosition } from './MaskedAnimation'
 
-export type TriggerType = 'scroll' | 'hover' | 'mount' | 'controlled' | 'always'
+export type AnimationTrigger = 'scroll' | 'hover' | 'mount' | 'controlled' | 'always'
 
-export type MAnimationProps = {
+export type MaskedAnimationProps = {
   children: React.ReactNode
 
   variant: AnimationName
-  trigger?: TriggerType
+  trigger?: AnimationTrigger
 
   isOn?: boolean
-
-  position?: MAnimationPosition
-
+  position?: MaskedAnimationPosition
   delay?: number
-
   once?: boolean
-
   threshold?: number
-
   width?: string
-
   as?: React.ElementType
 }
+
+/* ----- Aliases depreciados (remover na 3.0) ----- */
+/** @deprecated use `MaskedAnimationProps` */
+export type MAnimationProps = MaskedAnimationProps
+/** @deprecated use `AnimationTrigger` */
+export type TriggerType = AnimationTrigger
