@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { ErrorDiv, InputLabel, MaskedInputContainer } from '../MaskedInput.styles'
-import { InputVariantMap } from '../MaskedInput.types'
-import { CurrencyWrapper } from './CurrencyInput/CurrencyInput.styles'
+import { ErrorDiv, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import { InputVariantMap } from '../../MaskedInput.types'
+import { CurrencyWrapper } from './CurrencyInput.styles'
 
 type Props = { variant: 'currency' } & InputVariantMap['currency']
 
@@ -11,15 +11,23 @@ export function CurrencyInput(props: Props) {
   const hasError = props.touched && Boolean(props.error)
 
   /* ============================================================
-   * CONFIGURAÇÕES DE FORMATAÇÃO DE MOEDA
+   * CONFIGURAÇÕES DE FORMATAÇÃO DE MOEDA
    * ============================================================ */
   const { currencyConfig: { symbol = 'R$', locale = 'pt-BR', currency = 'BRL' } = {} } = props
 
   /* ============================================================
    * ESTADO INTERNO (EM CENTAVOS)
-   * Inicializa UMA VEZ a partir do value
+   * Sincroniza com props.value via derive-during-render
+   * (setState durante render é o padrão recomendado pelo React
+   * para estado derivado — evita o lint react-hooks/set-state-in-effect)
    * ============================================================ */
   const [cents, setCents] = useState(() => Math.round(Number(props.value ?? 0) * 100))
+  const [prevValue, setPrevValue] = useState(props.value)
+
+  if (prevValue !== props.value) {
+    setPrevValue(props.value)
+    setCents(Math.round(Number(props.value ?? 0) * 100))
+  }
 
   /* ============================================================
    * FORMATADOR
