@@ -1,6 +1,7 @@
-import { getColorThemeTokens } from '@/styles/MaskedThemes/ColorThemes'
+// templates/masked-cards/MaskedCards/cardTokens.ts
+import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
+import type { DefaultTheme } from 'styled-components'
 
-/** Tokens CSS da família --mc-card-* consumidos pelos .styles.ts dos cards. */
 export interface CardTokenOverrides {
   bg?: string
   fg?: string
@@ -29,13 +30,27 @@ export interface ResolveCardTokensInput {
   tokens?: CardTokenOverrides
 }
 
-/** Converte overrides em CSSProperties. Overrides do usuário vencem o colorTheme. */
-export function resolveCardTokens(input: ResolveCardTokensInput): Record<string, string> {
-  const themeTokens = input.colorTheme ? (getColorThemeTokens(input.colorTheme).card ?? {}) : {}
-  const merged: Record<string, string | undefined> = {
-    ...themeTokens,
-    ...input.tokens
-  }
+/** Deriva tokens --mc-card-* do colorTheme + theme ativo; overrides do usuário vencem. */
+export function resolveCardTokens(
+  input: ResolveCardTokensInput,
+  theme: DefaultTheme
+): Record<string, string> {
+  const colors = resolveColorTheme(input.colorTheme, theme)
+
+  const themeTokens: Record<string, string | undefined> = colors
+    ? {
+        bg: colors.base,
+        fg: colors.onBase,
+        mutedFg: colors.light40,
+        border: colors.dark20,
+        accent: colors.base,
+        accentSoft: colors.light40,
+        iconBg: colors.light08,
+        iconFg: colors.onBase ?? colors.light50
+      }
+    : {}
+
+  const merged = { ...themeTokens, ...input.tokens }
   const style: Record<string, string> = {}
   for (const [key, value] of Object.entries(merged)) {
     if (value !== undefined) style[`--mc-card-${key}`] = value
