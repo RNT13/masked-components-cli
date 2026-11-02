@@ -24,22 +24,28 @@ export const PlanCardContainer = styled(BaseCard)<{ $active?: boolean }>`
         `}
 `
 
-export const PlanHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--mc-card-fg, ${({ theme }) => theme.colors.textColor.light});
-`
-
-export const PlanStatus = styled.span`
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--mc-card-accent, ${({ theme }) => theme.colors.baseBlue.light});
-`
-
-export const PlanRenewal = styled.span`
-  font-size: 12px;
-  color: var(--mc-card-muted-fg, ${({ theme }) => theme.colors.textColor.dark});
-`
-
+export const PlanHeader = styled.div`  
+  display: flex;  
+  justify-content: space-between;  
+  align-items: center;  
+  color: var(  
+    --mc-card-fg,  
+    ${({ theme }) => theme.colors.textColor ?? theme.colors.basePrimary.base}  
+  );  
+`  
+  
+export const PlanStatus = styled.span`  
+  font-size: 12px;  
+  font-weight: 600;  
+  color: var(--mc-card-accent, ${({ theme }) => theme.colors.baseBlue.light20});  
+`  
+  
+export const PlanRenewal = styled.span`  
+  font-size: 12px;  
+  color: var(  
+    --mc-card-muted-fg,  
+    ${({ theme }) => theme.colors.textMuted ?? theme.colors.baseGray.base}  
+  );  
+`  
+  
 export const PlanAction = styled.div``
