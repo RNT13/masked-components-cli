@@ -3,8 +3,8 @@ import { DefaultTheme } from 'styled-components'
 import { ThemeGradient } from '../types/MaskedTheme.types'
 import { colorHSLVariants } from '@/utils/masked-utils'
 
-/* =========================================  
-   BREAKPOINTS  
+/* =========================================    
+   BREAKPOINTS    
 ========================================= */
 export const breakpoints = {
   xs: 360,
@@ -15,8 +15,8 @@ export const breakpoints = {
   ultrawide: 1536
 } as const
 
-/* =========================================  
-   MEDIA QUERIES  
+/* =========================================    
+   MEDIA QUERIES    
 ========================================= */
 export const media = {
   xs: `@media (max-width: ${breakpoints.xs}px)`,
@@ -45,10 +45,10 @@ export const media = {
   print: `@media print`
 } as const
 
-/* =========================================  
-   PALETA BASE  
-   Cada cor gera .base, .light/.lightXX, .dark/.darkXX  
-   (via colorHSLVariants — masked-utils/color)  
+/* =========================================    
+   PALETA BASE    
+   Cada cor gera .base, .light/.lightXX, .dark/.darkXX    
+   (via colorHSLVariants — masked-utils/color)    
 ========================================= */
 const baseColors = {
   // Neutros
@@ -80,6 +80,7 @@ const baseColors = {
   baseFuchsia: colorHSLVariants(292, 80, 58),
   baseBrown: colorHSLVariants(25, 40, 35),
   baseGold: colorHSLVariants(45, 85, 48),
+  baseLilac: colorHSLVariants(272, 45, 70),
 
   // Paleta primária/secundária (nomes neutros; valores preservados)
   basePrimary: colorHSLVariants(224, 76, 33),
@@ -87,8 +88,8 @@ const baseColors = {
   baseTertiary: colorHSLVariants(258, 90, 66)
 }
 
-/* =========================================  
-   DEFAULT — cores semânticas  
+/* =========================================    
+   DEFAULT — cores semânticas    
 ========================================= */
 const defaultColors = {
   primaryColor: baseColors.basePureWhite.base,
@@ -105,8 +106,8 @@ const defaultColors = {
   infoColor: baseColors.baseSky.base
 }
 
-/* =========================================  
-   DARK THEME  
+/* =========================================    
+   DARK THEME    
 ========================================= */
 const darkColors = {
   primaryColor: '#0f1117',
@@ -123,8 +124,8 @@ const darkColors = {
   infoColor: baseColors.baseSky.base
 }
 
-/* =========================================  
-   LIGHT THEME  
+/* =========================================    
+   LIGHT THEME    
 ========================================= */
 const lightColors = {
   primaryColor: '#ffffff',
@@ -141,8 +142,8 @@ const lightColors = {
   infoColor: baseColors.baseSky.dark20
 }
 
-/* =========================================  
-   MIDNIGHT — azul escuro profundo  
+/* =========================================    
+   MIDNIGHT — azul escuro profundo    
 ========================================= */
 const midnightColors = {
   primaryColor: '#060b18',
@@ -159,8 +160,8 @@ const midnightColors = {
   infoColor: baseColors.baseSky.light20
 }
 
-/* =========================================  
-   FOREST — verde escuro orgânico  
+/* =========================================    
+   FOREST — verde escuro orgânico    
 ========================================= */
 const forestColors = {
   primaryColor: '#0a120d',
@@ -177,8 +178,8 @@ const forestColors = {
   infoColor: baseColors.baseSky.light20
 }
 
-/* =========================================  
-   AURORA — sunset base  
+/* =========================================    
+   AURORA — sunset base    
 ========================================= */
 const auroraColors = {
   primaryColor: '#12080f',
@@ -195,8 +196,8 @@ const auroraColors = {
   infoColor: baseColors.baseSky.light20
 }
 
-/* =========================================  
-   SLATE — minimal cinza frio  
+/* =========================================    
+   SLATE — minimal cinza frio    
 ========================================= */
 const slateColors = {
   primaryColor: '#f8f9fb',
@@ -213,8 +214,8 @@ const slateColors = {
   infoColor: baseColors.baseSky.dark20
 }
 
-/* =========================================  
-   ACCENT COLORS (ex-neon; nomes neutros, valores iguais)  
+/* =========================================    
+   ACCENT COLORS (ex-neon; nomes neutros, valores iguais)    
 ========================================= */
 const accentColors = {
   accentPink: {
@@ -279,8 +280,8 @@ const accentColors = {
   }
 }
 
-/* =========================================  
-   PASTEL COLORS  
+/* =========================================    
+   PASTEL COLORS    
 ========================================= */
 const pastelColors = {
   pastelPink: {
@@ -351,8 +352,8 @@ const pastelColors = {
   }
 }
 
-/* =========================================  
-   GRADIENTES — helper + presets  
+/* =========================================    
+   GRADIENTES — helper + presets    
 ========================================= */
 export const createGradient = (colors: string[], angle: number = 135): string => {
   const stops = colors
@@ -372,7 +373,7 @@ const gradient: ThemeGradient = {
   ]),
   primarySoft: createGradient([baseColors.baseBlue.light40, baseColors.baseTertiary.light40]),
   primaryVertical: createGradient([baseColors.basePrimary.base, baseColors.baseTertiary.base], 180),
-  lilac: createGradient([baseColors.baseTertiary.base, baseColors.baseBlue.light20]),
+  lilac: createGradient([baseColors.baseLilac.base, baseColors.baseLilac.light20]),
   sunset: createGradient([
     baseColors.baseOrange.base,
     baseColors.basePink.base,
@@ -382,8 +383,8 @@ const gradient: ThemeGradient = {
   forest: createGradient([baseColors.baseGreen.dark20, baseColors.baseGreen.light20])
 }
 
-/* =========================================  
-   BOX SHADOWS — função (BREAKING: boxShadow.lg -> boxShadow.lg())  
+/* =========================================    
+   BOX SHADOWS — função (BREAKING: boxShadow.lg -> boxShadow.lg())    
 ========================================= */
 type ShadowLayer = {
   inset?: boolean
@@ -418,8 +419,8 @@ const createShadow =
       .join(', ')};`
   }
 
-/* =========================================  
-   STRUCTURE  
+/* =========================================    
+   STRUCTURE    
 ========================================= */
 const structure = {
   spacing: {
@@ -678,8 +679,8 @@ const structure = {
   }
 }
 
-/* =========================================  
-   THEMES  
+/* =========================================    
+   THEMES    
 ========================================= */
 export const maskedTheme: DefaultTheme = {
   ...structure,
@@ -716,15 +717,15 @@ export const slateTheme: DefaultTheme = {
   colors: { ...baseColors, ...slateColors }
 }
 
-export const accentTheme = {  
-  ...structure,  
-  colors: {  
-    ...baseColors,  
-    ...darkColors,  
-    ...accentColors,  
-    accentColor: accentColors.accentBlue.base  
-  }  
-} satisfies DefaultTheme
+export const accentTheme: DefaultTheme = {
+  ...structure,
+  colors: {
+    ...baseColors,
+    ...darkColors,
+    ...accentColors,
+    accentColor: accentColors.accentBlue.base
+  }
+}
 
 export const pastelTheme: DefaultTheme = {
   ...structure,
@@ -736,8 +737,8 @@ export const pastelTheme: DefaultTheme = {
   }
 }
 
-/* =========================================  
-   EXPORT  
+/* =========================================    
+   EXPORT    
 ========================================= */
 export const maskedThemeConfig = {
   default: maskedTheme,
