@@ -22,7 +22,6 @@ const sanitizeInternalPath = (raw: string | null | undefined): string | null => 
   if (value.includes('\\')) return null
 
   // Caracteres de controle (quebra de linha, tab, NUL...)
-  // eslint-disable-next-line no-control-regex
   if (/[\u0000-\u001f\u007f]/.test(value)) return null
 
   // Evita espaços e caracteres suspeitos
