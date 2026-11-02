@@ -1,6 +1,6 @@
 'use client'
 
-import { MouseEvent, useEffect, useState } from 'react'
+import { MouseEvent, useState } from 'react'
 import { resolveButtonTokens } from '../../buttonTokens'
 import { ButtonVariantMap } from '../../MaskedButton.types'
 import { ToggleButtonContainer, ToggleLabel, ToggleWrapper } from './ToggleButton.styles'
@@ -19,9 +19,13 @@ export default function ToggleButton({
   colorTheme,
   tokens
 }: Props) {
-  const [active, setActive] = useState($isActive)
   // sincroniza quando controlado por fora (ex.: MaskedButtonGroup)
-  useEffect(() => setActive($isActive), [$isActive])
+  const [active, setActive] = useState($isActive)
+  const [prevActive, setPrevActive] = useState($isActive)
+  if (prevActive !== $isActive) {
+    setPrevActive($isActive)
+    setActive($isActive)
+  }
   const isDisabled = state === 'disabled' || state === 'loading'
 
   function handleClick(event: MouseEvent<HTMLButtonElement>) {

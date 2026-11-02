@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useSyncExternalStore, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
@@ -30,9 +30,12 @@ export function MaskedDrawer({
   style
 }: MaskedDrawerProps) {
   const panelRef = useRef<HTMLDivElement>(null)
-  const [mounted, setMounted] = useState(false)
 
-  useEffect(() => setMounted(true), [])
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true, // client
+    () => false // server
+  )
 
   // Escape + focus inicial + focus trap
   useEffect(() => {
