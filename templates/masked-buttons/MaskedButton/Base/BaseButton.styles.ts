@@ -102,7 +102,7 @@ export const LabelDiv = styled.div`
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  z-index: ${({ theme }) => theme.zIndex?.tooltip ?? 700};
+  z-index: ${({ theme }) => theme.zIndex?.label ?? 700};
   ${transitions.delay}
 
   &::before {

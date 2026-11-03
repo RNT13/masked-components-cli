@@ -1,6 +1,7 @@
 // templates/masked-cards/MaskedCards/cardTokens.ts
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import type { DefaultTheme } from 'styled-components'
+import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 
 export interface CardTokenOverrides {
   bg?: string
@@ -26,7 +27,7 @@ export interface CardTokenOverrides {
 }
 
 export interface ResolveCardTokensInput {
-  colorTheme?: string
+  colorTheme?: ColorThemeName
   tokens?: CardTokenOverrides
 }
 
