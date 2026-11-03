@@ -2,9 +2,10 @@
 // Padrão F.26: --mc-<componente>-<propriedade>[-<estado>]
 // Precedência: tokens (prop) > colorTheme (registro) > fallback do CSS.
 
-import type { CSSProperties } from 'react'
-import { resolveColorTheme, type ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
+import type { CSSProperties } from 'react'  
+import { resolveColorTheme, type ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'  
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
+
 
 export const INPUT_TOKEN_PROPS = [
   'bg',
@@ -25,6 +26,12 @@ export const INPUT_TOKEN_PROPS = [
 
 export type InputTokenProp = (typeof INPUT_TOKEN_PROPS)[number]
 export type InputTokens = Partial<Record<InputTokenProp, string | number>>
+
+/** Tema de cor aceito pela prop `colorTheme` dos inputs. */  
+export type InputColorTheme = ColorThemeName  
+  
+/** Overrides de tokens `--mc-input-*` aceitos pela prop `tokens`. */  
+export type InputTokenOverrides = InputTokens
 
 export function resolveInputTokens(opts: {
   colorTheme?: ColorThemeName
