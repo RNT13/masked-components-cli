@@ -33,7 +33,7 @@ export interface ColorThemeValues {
   glow?: string
 }
 
-export type PaletteColorName = keyof BaseColors
+export type PaletteColorName = Extract<keyof BaseColors, string>
 
 /** Nome de tema aceito na prop colorTheme: chaves da paleta + temas registrados. */
 export type ColorThemeName = PaletteColorName | (string & {})

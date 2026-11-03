@@ -111,7 +111,7 @@ export const NeonButtonContainer = styled(BaseButton)<props>`
     --mc-btn-gradient,
     linear-gradient(
       70deg,
-      ${({ theme }) => theme.colors.accentPink?.base ?? theme.colors.baseLilac.base},
+      ${({ theme }) => theme.colors.accentPink?.base ?? theme.colors.baseViolet.base},
       var(
         --mc-btn-neon-color,
         ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
@@ -136,7 +136,7 @@ export const NeonButtonContainer = styled(BaseButton)<props>`
           --mc-btn-neon-color,
           ${({ theme }) => theme.colors.accentBlue?.base ?? theme.colors.baseBlue.base}
         ),
-        ${({ theme }) => theme.colors.accentPink?.base ?? theme.colors.baseLilac.base}
+        ${({ theme }) => theme.colors.accentPink?.base ?? theme.colors.baseViolet.base}
       )
     );
     color: var(--mc-btn-fg-hover, ${({ theme }) => theme.colors.baseBlue.dark50});

@@ -6,6 +6,7 @@
 import type { CSSProperties } from 'react'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
+import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'  
 
 /** Paleta neutra da lib (F.25). */
 const NEUTRAL = {
@@ -66,7 +67,7 @@ export type ButtonTokensStyle = CSSProperties
  * @example <button style={resolveButtonTokens({ colorTheme: 'ruby' })} />  
  */
 export function resolveButtonTokens(opts: {
-  colorTheme?: string
+  colorTheme?: ColorThemeName
   tokens?: Record<string, string | number>
 }): ButtonTokensStyle {
   const vars: Record<string, string | number> = {}
