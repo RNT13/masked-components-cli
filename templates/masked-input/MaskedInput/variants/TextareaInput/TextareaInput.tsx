@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
@@ -13,6 +14,17 @@ type Props = { variant: 'textarea' } & InputVariantMap['textarea']
 
 export function TextareaInput(props: Props) {
   const hasError = props.touched && props.error
+
+  /* Híbrido: se `value` for passado, o componente é controlado pelo pai.
+     Se não, mantém estado interno — o campo funciona sozinho em demos. */
+  const isControlled = props.value !== undefined
+  const [internal, setInternal] = useState('')
+  const current = isControlled ? props.value : internal
+
+  const handleChange = (v: string) => {
+    if (!isControlled) setInternal(v)
+    props.onChange?.(v)
+  }
 
   return (
     <MaskedInputContainer
@@ -37,8 +49,8 @@ export function TextareaInput(props: Props) {
       <textarea
         id={props.id}
         name={props.name}
-        value={props.value ?? ''}
-        onChange={(e) => props.onChange?.(e.target.value)}
+        value={current ?? ''}
+        onChange={(e) => handleChange(e.target.value)}
         className={hasError ? 'error' : ''}
         placeholder={props.placeholder}
         aria-invalid={hasError ? 'true' : undefined}

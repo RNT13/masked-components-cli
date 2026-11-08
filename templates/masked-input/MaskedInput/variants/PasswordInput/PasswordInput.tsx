@@ -18,6 +18,17 @@ export function PasswordInput(props: Props) {
   const [show, setShow] = useState(false)
   const hasError = props.touched && props.error
 
+  /* Híbrido: se `value` for passado, o componente é controlado pelo pai.
+     Se não, mantém estado interno — o campo funciona sozinho em demos. */
+  const isControlled = props.value !== undefined
+  const [internal, setInternal] = useState('')
+  const current = isControlled ? props.value : internal
+
+  const handleChange = (v: string) => {
+    if (!isControlled) setInternal(v)
+    props.onChange?.(v)
+  }
+
   const showIcon = props.showIcon ?? <EyeIcon />
   const hideIcon = props.hideIcon ?? <EyeOffIcon />
   const toggleLabel = show
@@ -48,8 +59,8 @@ export function PasswordInput(props: Props) {
         id={props.id}
         name={props.name}
         type={show ? 'text' : 'password'}
-        value={props.value ?? ''}
-        onChange={(e) => props.onChange?.(e.target.value)}
+        value={current ?? ''}
+        onChange={(e) => handleChange(e.target.value)}
         className={hasError ? 'error' : ''}
         placeholder={props.placeholder}
         aria-invalid={hasError ? 'true' : undefined}

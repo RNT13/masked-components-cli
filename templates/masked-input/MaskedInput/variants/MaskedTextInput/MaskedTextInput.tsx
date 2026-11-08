@@ -1,6 +1,6 @@
 'use client'
 
-import type { ChangeEvent } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
@@ -50,10 +50,19 @@ function resolveMask(mask: string | ((value: string) => string), value: string) 
 export function MaskedTextInput(props: Props) {
   const hasError = props.touched && props.error
 
+  /* Híbrido: se `value` for passado, o componente é controlado pelo pai.
+     Se não, mantém estado interno — o campo funciona sozinho em demos. */
+  const isControlled = props.value !== undefined
+  const [internal, setInternal] = useState('')
+  const current = isControlled ? props.value : internal
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value
     const currentMask = resolveMask(props.mask, rawValue)
-    props.onChange?.(applyMask(rawValue, currentMask))
+    const masked = applyMask(rawValue, currentMask)
+
+    if (!isControlled) setInternal(masked)
+    props.onChange?.(masked)
   }
 
   return (
@@ -80,7 +89,7 @@ export function MaskedTextInput(props: Props) {
         id={props.id}
         name={props.name}
         inputMode="numeric"
-        value={props.value ?? ''}
+        value={current ?? ''}
         onChange={handleChange}
         placeholder={props.placeholder}
         className={hasError ? 'error' : ''}

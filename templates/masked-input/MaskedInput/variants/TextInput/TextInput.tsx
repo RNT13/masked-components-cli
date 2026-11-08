@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
@@ -13,6 +14,17 @@ type Props = { variant: 'default' } & InputVariantMap['default']
 
 export function TextInput(props: Props) {
   const hasError = props.touched && props.error
+
+  /* Híbrido: se `value` for passado, o componente é controlado pelo pai.
+     Se não, mantém estado interno — o campo funciona sozinho em demos. */
+  const isControlled = props.value !== undefined
+  const [internal, setInternal] = useState('')
+  const current = isControlled ? props.value : internal
+
+  const handleChange = (v: string) => {
+    if (!isControlled) setInternal(v)
+    props.onChange?.(v)
+  }
 
   return (
     <MaskedInputContainer
@@ -36,8 +48,8 @@ export function TextInput(props: Props) {
       <input
         id={props.id}
         type={props.type ?? 'text'}
-        value={props.value ?? ''}
-        onChange={(e) => props.onChange?.(e.target.value)}
+        value={current ?? ''}
+        onChange={(e) => handleChange(e.target.value)}
         placeholder={props.placeholder}
         className={hasError ? 'error' : ''}
         aria-invalid={hasError ? 'true' : undefined}
