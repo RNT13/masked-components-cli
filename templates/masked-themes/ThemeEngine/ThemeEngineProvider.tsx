@@ -13,17 +13,17 @@ import { ThemeProvider } from 'styled-components'
 import { maskedThemeConfig } from '../MaskedThemes/MaskedThemes'
 import type { DefaultTheme } from 'styled-components'
 
-/* ===========================================================  
-   THEME ENGINE — troca de tema em runtime, sem boilerplate.  
-  
-   Uso mínimo:  
-     <ThemeEngineProvider>  
-       <App />  
-     </ThemeEngineProvider>  
-  
-   O consumidor troca o tema com:  
-     const { themeName, setThemeName } = useThemeEngine()  
-     setThemeName('dark')  
+/* ===========================================================
+   THEME ENGINE — troca de tema em runtime, sem boilerplate.
+
+   Uso mínimo:
+     <ThemeEngineProvider>
+       <App />
+     </ThemeEngineProvider>
+
+   O consumidor troca o tema com:
+     const { themeName, setThemeName } = useThemeEngine()
+     setThemeName('dark')
 =========================================================== */
 
 export type ThemeEngineContextValue = {
@@ -43,11 +43,11 @@ const ThemeEngineContext = createContext<ThemeEngineContextValue | null>(null)
 const customThemes = new Map<string, DefaultTheme>()
 
 /**
- * Registra um tema próprio no motor. Útil para temas de marca  
- * que não fazem parte do maskedThemeConfig.  
+ * Registra um tema próprio no motor. Útil para temas de marca
+ * que não fazem parte do maskedThemeConfig.
  *
- * @example  
- * registerTheme('brand', { ...maskedThemeConfig.default, colors: { ... } })  
+ * @example
+ * registerTheme('brand', { ...maskedThemeConfig.default, colors: { ... } })
  */
 export function registerTheme(name: string, theme: DefaultTheme): void {
   customThemes.set(name, theme)
@@ -72,8 +72,8 @@ export type ThemeEngineProviderProps = {
   /** tema inicial (default: 'default') */
   defaultTheme?: string
   /**
-   * chave de localStorage para persistir a escolha.  
-   * Passe `null` para desativar persistência. Default: 'masked-theme'  
+   * chave de localStorage para persistir a escolha.
+   * Passe `null` para desativar persistência. Default: 'masked-theme'
    */
   storageKey?: string | null
 }
@@ -83,31 +83,29 @@ export function ThemeEngineProvider({
   defaultTheme = 'default',
   storageKey = 'masked-theme'
 }: ThemeEngineProviderProps) {
-  const [themeName, setThemeNameState] = useState(defaultTheme)
+  /* lê a escolha persistida na inicialização (lazy) — sem efeito de hidratação */
+  const [themeName, setThemeNameState] = useState<string>(() => {
+    if (typeof window === 'undefined' || !storageKey) return defaultTheme
+    try {
+      return window.localStorage.getItem(storageKey) ?? defaultTheme
+    } catch {
+      return defaultTheme
+    }
+  })
 
-  /* hidrata a escolha persistida (client-only, após mount) */
+  /* grava no storage quando o tema muda (estado → sistema externo) */
   useEffect(() => {
     if (!storageKey) return
     try {
-      const saved = window.localStorage.getItem(storageKey)
-      if (saved) setThemeNameState(saved)
+      window.localStorage.setItem(storageKey, themeName)
     } catch {
       /* storage indisponível — ignora */
     }
-  }, [storageKey])
+  }, [storageKey, themeName])
 
-  const setThemeName = useCallback(
-    (name: string) => {
-      setThemeNameState(name)
-      if (!storageKey) return
-      try {
-        window.localStorage.setItem(storageKey, name)
-      } catch {
-        /* storage indisponível — ignora */
-      }
-    },
-    [storageKey]
-  )
+  const setThemeName = useCallback((name: string) => {
+    setThemeNameState(name)
+  }, [])
 
   const theme = useMemo(() => resolveTheme(themeName), [themeName])
   const availableThemes = useMemo(() => listThemes(), [])
