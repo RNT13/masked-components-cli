@@ -57,6 +57,10 @@ export function TimeInput(props: Props) {
   const { hour, minute } = parseTime(props.value)
   const align = props.align ?? 'left'
 
+  // tokens --mc-input-*: o dropdown vive em um portal (fora do container),
+  // então precisa receber as mesmas variáveis no próprio style.
+  const tokenStyle = resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens })
+
   function updateDropdownPosition() {
     if (!triggerRef.current) return
     const rect = triggerRef.current.getBoundingClientRect()
@@ -96,7 +100,6 @@ export function TimeInput(props: Props) {
       window.removeEventListener('resize', updateDropdownPosition)
       window.removeEventListener('scroll', updateDropdownPosition, true)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   useEffect(() => {
@@ -142,7 +145,7 @@ export function TimeInput(props: Props) {
       $icon={!props.icon}
       $open={open}
       style={{
-        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...tokenStyle,
         ...props.containerStyle
       }}
     >
@@ -177,7 +180,12 @@ export function TimeInput(props: Props) {
         createPortal(
           <TimeDropdown
             ref={dropdownRef}
-            style={{ top: dropdownPos.top, left: dropdownPos.left, minWidth: dropdownPos.width }}
+            style={{
+              ...tokenStyle,
+              top: dropdownPos.top,
+              left: dropdownPos.left,
+              minWidth: dropdownPos.width
+            }}
           >
             <TimeColumnsRow>
               <TimeColumn>

@@ -75,7 +75,7 @@ export function PasswordInput(props: Props) {
         aria-pressed={show}
         disabled={props.disabled}
       >
-        {show ? hideIcon : showIcon}
+        {show ? showIcon : hideIcon}
       </PasswordToggle>
 
       {hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
