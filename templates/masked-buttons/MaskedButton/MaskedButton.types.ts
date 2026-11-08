@@ -11,18 +11,19 @@ export type ButtonPosition = 'left' | 'right' | 'center'
  * Variantes. 'radio' entra no grupo dos campos (toggle/checkbox/switch visual);
  * consome apenas tokens --mc-switch-* (decisão 2B/3A).
  */
-export type ButtonVariant =
-  | 'default'
-  | 'outline'
-  | 'ghost'
-  | 'link'
-  | 'gradient'
-  | 'neon'
-  | 'soft'
-  | 'toggle'
-  | 'checkbox'
-  | 'switch'
-  | 'radio'
+export type ButtonVariant =  
+  | 'default'  
+  | 'outline'  
+  | 'ghost'  
+  | 'link'  
+  | 'gradient'  
+  | 'neon'  
+  | 'soft'  
+  | 'toggle'  
+  | 'checkbox'  
+  | 'switch'  
+  | 'radio'  
+  | 'split'
 
 export type ButtonClickEvent = MouseEvent<HTMLButtonElement | HTMLAnchorElement>
 
@@ -120,6 +121,14 @@ export type ButtonVariantMap = {
     radioLabel?: string
     defaultChecked?: boolean
   }
+
+  split: WithActive & {  
+    /** opções do menu à direita */  
+    options: { value: string; label: ReactNode; description?: string }[]  
+    onOptionSelect?: (value: string) => void  
+    /** aria-label do botão de dropdown */  
+    menuLabel?: string  
+  }
 }
 
 /* ================= API PÚBLICA ================= */
@@ -163,4 +172,9 @@ export type ButtonProps = BaseButtonProps & {
   $toggleLabel?: string
   /** @deprecated use `checkboxLabel` */
   $checkboxLabel?: string
+
+  /* ---- split ---- */  
+  options?: { value: string; label: ReactNode; description?: string }[]  
+  onOptionSelect?: (value: string) => void  
+  menuLabel?: string
 }
