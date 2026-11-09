@@ -1,4 +1,5 @@
 import type { HTMLAttributeAnchorTarget, MouseEvent, ReactNode } from 'react'
+import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 
 /* ================= BASE ================= */
 
@@ -8,21 +9,21 @@ export type ButtonShape = 'rounded' | 'circle' | 'square'
 export type ButtonPosition = 'left' | 'right' | 'center'
 
 /**
- * Variantes. 'radio' entra no grupo dos campos (toggle/checkbox/switch visual);
- * consome apenas tokens --mc-switch-* (decisão 2B/3A).
+ * Variantes. 'radio' entra no grupo dos campos (toggle/checkbox/switch visual);  
+ * consome apenas tokens --mc-switch-* (decisão 2B/3A).  
  */
-export type ButtonVariant =  
-  | 'default'  
-  | 'outline'  
-  | 'ghost'  
-  | 'link'  
-  | 'gradient'  
-  | 'neon'  
-  | 'soft'  
-  | 'toggle'  
-  | 'checkbox'  
-  | 'switch'  
-  | 'radio'  
+export type ButtonVariant =
+  | 'default'
+  | 'outline'
+  | 'ghost'
+  | 'link'
+  | 'gradient'
+  | 'neon'
+  | 'soft'
+  | 'toggle'
+  | 'checkbox'
+  | 'switch'
+  | 'radio'
   | 'split'
 
 export type ButtonClickEvent = MouseEvent<HTMLButtonElement | HTMLAnchorElement>
@@ -64,15 +65,15 @@ export type BaseButtonProps = {
   /* ---- temas ---- */
 
   /**
-   * Nome de uma paleta registrada via `registerColorTheme()` (masked-themes/colorThemes).
-   * Deriva os tokens --mc-btn-bg/-fg/-border/-ring (e --mc-switch-*) do botão.
-   * 'default' ou ausente = paleta neutra da lib.
+   * Nome de uma paleta registrada via `registerColorTheme()` (masked-themes/colorThemes).  
+   * Deriva os tokens --mc-btn-bg/-fg/-border/-ring (e --mc-switch-*) do botão.  
+   * 'default' ou ausente = paleta neutra da lib.  
    */
-  colorTheme?: string
+  colorTheme?: ColorThemeName
 
   /**
-   * Overrides granulares de tokens do botão (prop > colorTheme > default).
-   * Chaves = nomes de token sem prefixo, ex.: { 'bg-hover': '#222', 'fg': '#fff' }
+   * Overrides granulares de tokens do botão (prop > colorTheme > default).  
+   * Chaves = nomes de token sem prefixo, ex.: { 'bg-hover': '#222', 'fg': '#fff' }  
    */
   tokens?: Record<string, string | number>
 }
@@ -122,12 +123,13 @@ export type ButtonVariantMap = {
     defaultChecked?: boolean
   }
 
-  split: WithActive & {  
-    /** opções do menu à direita */  
-    options: { value: string; label: ReactNode; description?: string }[]  
-    onOptionSelect?: (value: string) => void  
-    /** aria-label do botão de dropdown */  
-    menuLabel?: string  
+  /** botão duplo estilo GitHub: ação principal + menu de opções */
+  split: BaseButtonProps & {
+    /** opções do menu à direita */
+    options: { value: string; label: ReactNode; description?: string }[]
+    onOptionSelect?: (value: string) => void
+    /** aria-label do botão de dropdown */
+    menuLabel?: string
   }
 }
 
@@ -157,6 +159,12 @@ export type ButtonProps = BaseButtonProps & {
   defaultChecked?: boolean
   onCheckedChange?: (checked: boolean) => void
 
+  /* ---- split ---- */
+  /** opções do menu (variant='split') */
+  options?: { value: string; label: ReactNode; description?: string }[]
+  onOptionSelect?: (value: string) => void
+  menuLabel?: string
+
   /* ---- MaskedButtonGroup ---- */
   /** valor do botão quando usado dentro de um grupo */
   optionValue?: string
@@ -172,9 +180,4 @@ export type ButtonProps = BaseButtonProps & {
   $toggleLabel?: string
   /** @deprecated use `checkboxLabel` */
   $checkboxLabel?: string
-
-  /* ---- split ---- */  
-  options?: { value: string; label: ReactNode; description?: string }[]  
-  onOptionSelect?: (value: string) => void  
-  menuLabel?: string
 }
