@@ -97,19 +97,22 @@ export function resolveColorTheme(
 
   const alias = COLOR_THEME_ALIASES[colorTheme]
   const paletteKey = (alias ?? colorTheme) as PaletteColorName
-  const variants: ColorVariants | undefined = theme.colors[paletteKey]
+  const variants = theme.colors[paletteKey] as unknown
+  if (!variants || typeof variants !== 'object' || !('base' in variants)) return undefined
+  const v = variants as ColorVariants
+  // e use v.base, v.light08, ... no return
 
   if (!variants) return undefined
 
   return {
-    base: variants.base,
-    light08: variants.light08,
-    light20: variants.light20,
-    light40: variants.light40,
-    light50: variants.light50,
-    dark08: variants.dark08,
-    dark20: variants.dark20,
-    glow: variants.light50
+    base: v.base,
+    light08: v.light08,
+    light20: v.light20,
+    light40: v.light40,
+    light50: v.light50,
+    dark08: v.dark08,
+    dark20: v.dark20,
+    glow: v.light50
   }
 }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { ClockIcon } from '../../icons'
@@ -42,6 +42,9 @@ function parseTime(value?: string | null): { hour: string; minute: string } {
 }
 
 export function TimeInput(props: Props) {
+  const autoId = useId()
+  const triggerId = props.id ?? autoId
+
   const [open, setOpen] = useState(false)
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 })
 
@@ -161,7 +164,8 @@ export function TimeInput(props: Props) {
       <TimeTrigger
         ref={triggerRef}
         type="button"
-        id={props.id ?? 'masked-time-trigger'}
+        id={triggerId}
+        data-mc-trigger=""
         className={hasError ? 'error' : ''}
         disabled={props.disabled}
         onClick={() => !props.disabled && setOpen((o) => !o)}

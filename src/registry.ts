@@ -1,10 +1,4 @@
-type Framework = string
-type PathRoot = 'components' | 'hooks' | 'styles' | 'utils'
-
-interface NpmDep {
-  name: string
-  range: string
-}
+import type { Framework, NpmDep, PathRoot } from './types'
 
 /**
  * Registro único de tudo que a CLI instala.
@@ -89,10 +83,21 @@ export const registry: ComponentEntry[] = [
     dependencies: [STYLED]
   },
   {
+    id: 'masked-toaster',
+    label: 'Masked Toaster',
+    description:
+      'Notificações (toast) sem dependências: success/error/info/warning/loading/promise, acessível e SSR-safe',
+    templates: [{ dir: 'masked-toaster', to: 'components' }],
+    notes: [
+      'Renderize <MaskedToaster /> uma vez na raiz do app e dispare com toast.success("...").',
+      'Opcional: <MaskedConfigProvider config={maskedToastHandlers}> liga os callbacks onSuccess/onError da lib ao toaster.'
+    ]
+  },
+  {
     id: 'masked-buttons',
     label: 'Masked Buttons',
     description:
-      'default, outline, ghost, soft, link, gradient, neon, toggle, switch, checkbox, radio, group',
+      'default, outline, ghost, soft, link, gradient, neon, split, toggle, switch, checkbox, radio, group',
     templates: [{ dir: 'masked-buttons', to: 'components' }],
     requires: ['masked-animations', 'masked-themes', 'masked-config'],
     dependencies: [STYLED],

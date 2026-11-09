@@ -54,9 +54,19 @@ var registry = [
     dependencies: [STYLED]
   },
   {
+    id: "masked-toaster",
+    label: "Masked Toaster",
+    description: "Notifica\xE7\xF5es (toast) sem depend\xEAncias: success/error/info/warning/loading/promise, acess\xEDvel e SSR-safe",
+    templates: [{ dir: "masked-toaster", to: "components" }],
+    notes: [
+      'Renderize <MaskedToaster /> uma vez na raiz do app e dispare com toast.success("...").',
+      "Opcional: <MaskedConfigProvider config={maskedToastHandlers}> liga os callbacks onSuccess/onError da lib ao toaster."
+    ]
+  },
+  {
     id: "masked-buttons",
     label: "Masked Buttons",
-    description: "default, outline, ghost, soft, link, gradient, neon, toggle, switch, checkbox, radio, group",
+    description: "default, outline, ghost, soft, link, gradient, neon, split, toggle, switch, checkbox, radio, group",
     templates: [{ dir: "masked-buttons", to: "components" }],
     requires: ["masked-animations", "masked-themes", "masked-config"],
     dependencies: [STYLED],
@@ -341,6 +351,10 @@ function planInstall(info, requested) {
     }
   }
   const notes = [...new Set(ordered.flatMap((entry) => entry.notes ?? []))];
+  const reactMajor = parseMajor(info.deps["react"] ?? "");
+  if (reactMajor !== null && reactMajor < 18) {
+    warnings.push("Os templates exigem React 18 ou superior (useSyncExternalStore).");
+  }
   return {
     requested: [...new Set(requested)],
     entries: ordered,

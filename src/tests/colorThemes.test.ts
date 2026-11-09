@@ -43,8 +43,9 @@ describe('resolveColorTheme', () => {
 })
 
 describe('maskedTheme', () => {
-  it('boxShadow é função e aceita cor customizada (color-mix)', () => {
-    expect(maskedTheme.boxShadow.lg()).toContain('box-shadow:')
+  it('boxShadow é função, devolve só o valor e aceita cor customizada (color-mix)', () => {
+    expect(maskedTheme.boxShadow.lg()).not.toContain('box-shadow')
+    expect(maskedTheme.boxShadow.lg()).toContain('rgba(0,0,0,0.20)')
     expect(maskedTheme.boxShadow.lg('#ff0000')).toContain('color-mix(in srgb, #ff0000')
   })
 

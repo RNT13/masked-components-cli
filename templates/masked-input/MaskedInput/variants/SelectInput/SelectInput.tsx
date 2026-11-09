@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import {
@@ -16,11 +16,14 @@ import { SelectDropdown, SelectOption, SelectTrigger } from './SelectInput.style
 type Props = { variant: 'select' } & InputVariantMap['select']
 
 export function SelectInput(props: Props) {
+  const autoId = useId()
+  const triggerId = props.id ?? autoId
+
   const [open, setOpen] = useState(false)
 
   const containerRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
-
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const [dropdownPos, setDropdownPos] = useState({
     top: 0,
     left: 0,
@@ -58,9 +61,7 @@ export function SelectInput(props: Props) {
     function handleClickOutside(e: MouseEvent) {
       const target = e.target as Node
       const clickedInsideTrigger = containerRef.current && containerRef.current.contains(target)
-      const clickedInsideDropdown = document
-        .getElementById(`masked-select-dropdown-${props.id}`)
-        ?.contains(target)
+      const clickedInsideDropdown = dropdownRef.current && dropdownRef.current.contains(target)
 
       if (!clickedInsideTrigger && !clickedInsideDropdown) {
         setOpen(false)
@@ -93,7 +94,8 @@ export function SelectInput(props: Props) {
       {props.icon && <InputIconWrapper>{props.icon}</InputIconWrapper>}
 
       <SelectTrigger
-        id={props.id ?? 'masked-select-trigger'}
+        id={triggerId}
+        data-mc-trigger=""
         ref={triggerRef}
         type="button"
         className={`${hasError ? 'error' : ''}`}

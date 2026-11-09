@@ -115,6 +115,22 @@ export function ThemeEngineProvider({
     [themeName, setThemeName, availableThemes, theme]
   )
 
+  useEffect(() => {
+    const c = theme.colors
+    const vars: Record<string, string | undefined> = {
+      '--mc-surface': c.surfaceColor,
+      '--mc-text': c.textColor,
+      '--mc-border': c.borderColor,
+      '--mc-accent': c.accentColor,
+      '--mc-success': c.successColor,
+      '--mc-warning': c.warningColor,
+      '--mc-danger': c.dangerColor,
+      '--mc-info': c.infoColor
+    }
+    const root = document.documentElement
+    for (const [k, v] of Object.entries(vars)) if (v) root.style.setProperty(k, v)
+  }, [theme])
+
   return (
     <ThemeEngineContext.Provider value={value}>
       <ThemeProvider theme={theme}>{children}</ThemeProvider>

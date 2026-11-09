@@ -23,7 +23,7 @@ export type MaskedButtonGroupProps = {
   defaultValue?: string
   onChange?: (value: string) => void
   /** variante dos botões do grupo (padrão: 'toggle') */
-  variant?: 'toggle' | 'checkbox' | 'radio'
+  variant?: 'toggle' | 'checkbox' | 'radio' | 'switch'
   /** repassa colorTheme/tokens a todos os botões */
   colorTheme?: ColorThemeName
   tokens?: Record<string, string | number>
@@ -117,20 +117,33 @@ function GroupItem({ option }: { option: ButtonGroupOption }) {
   if (!ctx) return null
 
   const checked = ctx.value === option.value
+  const label = option.label ?? option.value
+  const textLabel =
+    typeof label === 'string' || typeof label === 'number' ? String(label) : option.value
+
+  // as variants de campo não renderizam children: o rótulo vai pela prop de cada uma
+  const labelProps =
+    ctx.variant === 'switch'
+      ? { switchLabel: textLabel }
+      : ctx.variant === 'checkbox'
+        ? { checkboxLabel: textLabel }
+        : ctx.variant === 'radio'
+          ? { radioLabel: textLabel }
+          : { toggleLabel: textLabel }
 
   return (
     <MaskedButton
       variant={ctx.variant}
       optionValue={option.value}
+      name={ctx.variant === 'radio' ? 'masked-button-group' : undefined}
       active={checked}
       checked={checked}
       colorTheme={ctx.colorTheme}
       tokens={ctx.tokens}
       onCheckedChange={() => ctx.select(option.value)}
       onToggle={() => ctx.select(option.value)}
+      {...labelProps}
       {...option.buttonProps}
-    >
-      {option.label ?? option.value}
-    </MaskedButton>
+    />
   )
 }
