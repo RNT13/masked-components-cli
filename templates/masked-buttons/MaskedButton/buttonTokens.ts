@@ -6,7 +6,7 @@
 import type { CSSProperties } from 'react'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
-import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'  
+import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 
 /** Paleta neutra da lib (F.25). */
 const NEUTRAL = {
@@ -57,6 +57,15 @@ const SWITCH_TOKEN_PROPS = [
   'border-off',
   'ring-focus'
 ] as const
+
+/**
+ * Tokens cujo valor numérico é unitless (não recebem sufixo 'px').  
+ * Qualquer outro número vira '<n>px' — ex.: radius: 999 -> '999px'.  
+ */
+const UNITLESS_TOKENS = new Set<string>(['disabled-opacity'])
+
+const toCssValue = (key: string, v: string | number): string | number =>
+  typeof v === 'number' && !UNITLESS_TOKENS.has(key) ? `${v}px` : v
 
 export type ButtonTokensStyle = CSSProperties
 
@@ -112,14 +121,15 @@ export function resolveButtonTokens(opts: {
     vars['--mc-switch-ring-focus'] = ring
   }
 
-  // overrides granulares (prop `tokens`): maior precedência
+  // overrides granulares (prop `tokens`): maior precedência.
+  // Números viram '<n>px' (exceto tokens unitless como disabled-opacity).
   for (const key of TOKEN_PROPS) {
     const v = opts.tokens?.[key]
-    if (v !== undefined) vars[`--mc-btn-${key}`] = v
+    if (v !== undefined) vars[`--mc-btn-${key}`] = toCssValue(key, v)
   }
   for (const key of SWITCH_TOKEN_PROPS) {
     const v = opts.tokens?.[`switch-${key}`]
-    if (v !== undefined) vars[`--mc-switch-${key}`] = v
+    if (v !== undefined) vars[`--mc-switch-${key}`] = toCssValue(`switch-${key}`, v)
   }
 
   return vars as ButtonTokensStyle
