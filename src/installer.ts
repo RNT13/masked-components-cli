@@ -5,7 +5,7 @@ import { resolveComponents, type ComponentEntry } from './registry'
 import type { ProjectInfo } from './utils/detectProject'
 import type { ProjectPaths } from './utils/projectPaths'
 import { copyTemplateDir, emptyReport, mergeReports, type CopyReport } from './utils/copyTemplate'
-import { classifyDeps, dedupeDeps, installPackages } from './utils/installDeps'
+import { classifyDeps, dedupeDeps, installPackages, parseMajor } from './utils/installDeps'
 import { rewriteAliasImports, type AliasMap } from './utils/rewriteImports'
 
 export interface InstallPlan {
@@ -52,6 +52,11 @@ export function planInstall(info: ProjectInfo, requested: string[]): InstallPlan
   }
 
   const notes = [...new Set(ordered.flatMap((entry) => entry.notes ?? []))]
+
+  const reactMajor = parseMajor(info.deps['react'] ?? '')
+  if (reactMajor !== null && reactMajor < 18) {
+    warnings.push('Os templates exigem React 18 ou superior (useSyncExternalStore).')
+  }
 
   return {
     requested: [...new Set(requested)],

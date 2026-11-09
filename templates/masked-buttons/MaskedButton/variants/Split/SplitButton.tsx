@@ -13,6 +13,7 @@ import {
   SplitMenuItemDescription,
   ChevronIcon
 } from './SplitButton.styles'
+import { resolveButtonTokens } from '../../buttonTokens'
 
 type Props = { $variant: 'split' } & ButtonVariantMap['split']
 
@@ -24,8 +25,14 @@ export default function SplitButton(props: Props) {
     onClick,
     children,
     state = 'default',
-    $position
+    $position,
+    $variant: _variant,
+    colorTheme,
+    tokens,
+    size,
+    ...buttonProps
   } = props
+  void _variant
 
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -61,7 +68,11 @@ export default function SplitButton(props: Props) {
     <SplitButtonWrapper $position={$position} ref={rootRef}>
       <SplitGroup>
         <SplitMainButton
-          {...props}
+          {...buttonProps}
+          colorTheme={colorTheme}
+          tokens={tokens}
+          size={size}
+          state={state}
           data-testid="split-button-main"
           onClick={onClick}
           $isError={state === 'error'}
@@ -80,11 +91,7 @@ export default function SplitButton(props: Props) {
           onClick={() => setOpen((v) => !v)}
           $isError={state === 'error'}
           $isDisabled={state === 'disabled'}
-          /* repassa tokens/colorTheme para herdar as CSS vars do grupo */
-          colorTheme={props.colorTheme}
-          tokens={props.tokens}
-          size={props.size}
-          state={state}
+          style={resolveButtonTokens({ colorTheme, tokens })}
         >
           <ChevronIcon $open={open} aria-hidden />
         </SplitMenuButton>

@@ -61,7 +61,8 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
     dateFilterLabels,
     showDateFilter,
     sortOptions,
-    getItemKey
+    getItemKey,
+    initialSearch: typeof props.value === 'string' ? props.value : ''
   })
 
   const {
@@ -108,7 +109,11 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
           id={id}
           type="search"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value)
+            props.onChange?.(e.target.value)
+            props.onSearch?.(e.target.value)
+          }}
           placeholder={placeholder}
           disabled={disabled}
           aria-invalid={hasError ? 'true' : undefined}

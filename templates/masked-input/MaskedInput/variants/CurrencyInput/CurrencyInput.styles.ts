@@ -10,12 +10,15 @@ export const CurrencyWrapper = styled.div<{ $symbolPosition?: 'prefix' | 'suffix
     transform: translateY(-50%);
     font-weight: 900;
     font-size: 1.2rem;
+    pointer-events: none;
     color: var(--mc-input-icon-fg, ${maskedTheme.colors.baseBlue.dark});
     ${({ $symbolPosition }) => ($symbolPosition === 'suffix' ? 'right: 12px;' : 'left: 12px;')}
   }
 
-  input {
+  && input {
     ${({ $symbolPosition }) =>
-      $symbolPosition === 'suffix' ? 'padding-right: 44px;' : 'padding-left: 44px;'}
+      $symbolPosition === 'suffix'
+        ? 'padding-left: 12px; padding-right: var(--mc-currency-pad, 44px);'
+        : 'padding-right: 12px; padding-left: var(--mc-currency-pad, 44px);'}
   }
 `

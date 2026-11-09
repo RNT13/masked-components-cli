@@ -70,4 +70,10 @@ describe('registry', () => {
     ]
     expect(() => resolveComponents(['a'], 'next', entries)).toThrow(/circular/)
   })
+
+  it('masked-toaster é autônomo (sem dependências internas nem pacotes npm)', () => {
+    const { ordered } = resolveComponents(['masked-toaster'], 'vite')
+    expect(ordered.map((e) => e.id)).toEqual(['masked-toaster'])
+    expect(ordered[0].dependencies ?? []).toEqual([])
+  })
 })

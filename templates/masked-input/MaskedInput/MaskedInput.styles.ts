@@ -27,8 +27,7 @@ export const MaskedInputContainer = styled.div<props>`
   input,
   textarea,
   select,
-  #masked-select-trigger,
-  #masked-time-trigger {
+  [data-mc-trigger] {
     width: 100%;
     border-radius: ${({ $radius }) => ($radius ? `${$radius}px` : '18px')};
     border: 2px solid var(--mc-input-border, ${maskedTheme.colors.baseBlue.light08});
@@ -92,8 +91,7 @@ export const MaskedInputContainer = styled.div<props>`
 
   input,
   select,
-  #masked-select-trigger,
-  #masked-time-trigger {
+  [data-mc-trigger] {
     min-height: 44px;
     padding: ${({ $icon }) => ($icon ? '0 12px' : '0 12px 0 44px')};
     line-height: 40px;
