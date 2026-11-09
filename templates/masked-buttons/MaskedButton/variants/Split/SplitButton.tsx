@@ -1,19 +1,19 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { resolveButtonTokens } from '../../buttonTokens'
 import { ButtonVariantMap } from '../../MaskedButton.types'
 import {
+  ChevronIcon,
   SplitButtonWrapper,
   SplitGroup,
   SplitMainButton,
-  SplitMenuButton,
   SplitMenu,
+  SplitMenuButton,
   SplitMenuItem,
-  SplitMenuItemLabel,
   SplitMenuItemDescription,
-  ChevronIcon
+  SplitMenuItemLabel
 } from './SplitButton.styles'
-import { resolveButtonTokens } from '../../buttonTokens'
 
 type Props = { $variant: 'split' } & ButtonVariantMap['split']
 

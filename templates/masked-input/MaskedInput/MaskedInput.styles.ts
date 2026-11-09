@@ -1,5 +1,4 @@
 import { transitions } from '@/styles/MaskedAnimations/animations/transitions'
-import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 import styled, { css } from 'styled-components'
 
 type props = {
@@ -12,7 +11,7 @@ type props = {
 }
 
 /* ============================================================
- * CONTAINER — todas as cores passam por var(--mc-input-*, fallback)
+ * CONTAINER — todas as cores passam por var(--mc-input-*, fallback do tema)
  * ============================================================ */
 
 export const MaskedInputContainer = styled.div<props>`
@@ -30,62 +29,66 @@ export const MaskedInputContainer = styled.div<props>`
   [data-mc-trigger] {
     width: 100%;
     border-radius: ${({ $radius }) => ($radius ? `${$radius}px` : '18px')};
-    border: 2px solid var(--mc-input-border, ${maskedTheme.colors.baseBlue.light08});
-    font-size: ${maskedTheme.fontSize.md};
+    border: 2px solid var(--mc-input-border, ${({ theme }) => theme.colors.baseBlue.light08});
+    font-family: inherit;
+    font-size: ${({ theme }) => theme.fontSize.md};
     font-weight: 800;
     line-height: 1.4;
-    color: var(--mc-input-fg, ${maskedTheme.colors.baseBlue.base});
-    background-color: var(--mc-input-bg, ${maskedTheme.colors.baseBlue.light40});
+    color: var(--mc-input-fg, ${({ theme }) => theme.colors.baseBlue.base});
+    background-color: var(--mc-input-bg, ${({ theme }) => theme.colors.baseBlue.light40});
     text-align: left;
     ${transitions.slow}
 
-    ${({ $hasToggle }) => $hasToggle && `padding-right: 44px;`}  
-  
-    input.input-hidden {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
+    ${({ $hasToggle }) => $hasToggle && `padding-right: 44px;`}
 
     &:hover {
-      border-color: var(--mc-input-border-hover, ${maskedTheme.colors.baseBlue.base});
+      border-color: var(--mc-input-border-hover, ${({ theme }) => theme.colors.baseBlue.base});
     }
 
     &:focus {
       outline: none;
-      background-color: var(--mc-input-bg-focus, ${maskedTheme.colors.baseBlue.light04});
-      border-color: var(--mc-input-focus-ring, ${maskedTheme.colors.baseBlue.light});
-      box-shadow: 0px 0px 10px 2px var(--mc-input-focus-ring, ${maskedTheme.colors.baseBlue.light});
-      color: var(--mc-input-fg, ${maskedTheme.colors.baseBlue.base});
+      background-color: var(--mc-input-bg-focus, ${({ theme }) => theme.colors.baseBlue.light04});
+      border-color: var(--mc-input-focus-ring, ${({ theme }) => theme.colors.baseBlue.light});
+      box-shadow: 0px 0px 10px 2px
+        var(--mc-input-focus-ring, ${({ theme }) => theme.colors.baseBlue.light});
+      color: var(--mc-input-fg, ${({ theme }) => theme.colors.baseBlue.base});
 
       &::placeholder {
-        color: var(--mc-input-focus-ring, ${maskedTheme.colors.baseBlue.light});
+        color: var(--mc-input-focus-ring, ${({ theme }) => theme.colors.baseBlue.light});
       }
     }
 
+    &:focus-visible {
+      outline: 2px solid var(--mc-input-focus-ring, ${({ theme }) => theme.colors.baseBlue.light});
+      outline-offset: 2px;
+    }
+
     &:disabled {
-      background-color: var(--mc-input-disabled-bg, ${maskedTheme.colors.baseBlue.light20});
+      background-color: var(
+        --mc-input-disabled-bg,
+        ${({ theme }) => theme.colors.baseBlue.light20}
+      );
       cursor: not-allowed;
       opacity: 0.7;
     }
 
     &.error {
-      border-color: var(--mc-input-error-border, ${maskedTheme.colors.baseRed.base});
-      background-color: var(--mc-input-error-bg, ${maskedTheme.colors.baseRed.light02});
-      color: var(--mc-input-error-fg, ${maskedTheme.colors.baseRed.light20});
+      border-color: var(--mc-input-error-border, ${({ theme }) => theme.colors.baseRed.base});
+      background-color: var(--mc-input-error-bg, ${({ theme }) => theme.colors.baseRed.light02});
+      color: var(--mc-input-error-fg, ${({ theme }) => theme.colors.baseRed.light20});
 
       &:focus {
-        box-shadow: 0 0 0 3px var(--mc-input-error-ring, ${maskedTheme.colors.baseRed.light20});
+        box-shadow: 0 0 0 3px
+          var(--mc-input-error-ring, ${({ theme }) => theme.colors.baseRed.light20});
       }
 
       &::placeholder {
-        color: var(--mc-input-error-fg, ${maskedTheme.colors.baseRed.light20});
+        color: var(--mc-input-error-fg, ${({ theme }) => theme.colors.baseRed.light20});
       }
     }
 
     &::placeholder {
-      color: var(--mc-input-placeholder, ${maskedTheme.colors.baseBlue.light08});
+      color: var(--mc-input-placeholder, ${({ theme }) => theme.colors.baseBlue.light08});
     }
   }
 
@@ -103,8 +106,8 @@ export const MaskedInputContainer = styled.div<props>`
     width: 100%;
     resize: none;
     scrollbar-width: thin;
-    scrollbar-color: var(--mc-input-fg, ${maskedTheme.colors.baseBlue.base})
-      var(--mc-input-disabled-bg, ${maskedTheme.colors.baseBlue.light20});
+    scrollbar-color: var(--mc-input-fg, ${({ theme }) => theme.colors.baseBlue.base})
+      var(--mc-input-disabled-bg, ${({ theme }) => theme.colors.baseBlue.light20});
   }
 `
 
@@ -113,21 +116,25 @@ export const MaskedInputContainer = styled.div<props>`
  * ============================================================ */
 
 export const ErrorDiv = styled.div`
-  color: var(--mc-input-error-fg, ${maskedTheme.colors.baseRed.dark30});
+  color: var(--mc-input-error-fg, ${({ theme }) => theme.colors.baseRed.dark30});
   font-size: 0.85rem;
   font-weight: 500;
-  background-color: var(--mc-input-error-bg, ${maskedTheme.colors.baseRed.light20});
+  background-color: var(--mc-input-error-bg, ${({ theme }) => theme.colors.baseRed.light20});
   padding: 6px 12px;
   border-radius: 10px;
 `
 
 /* ============================================================
- * LABEL
+ * LABEL — fica sobre o fundo da PÁGINA (fora do campo), então
+ * segue a cor de texto do tema ativo
  * ============================================================ */
 
 export const InputLabel = styled.label<props>`
   width: 100%;
-  color: var(--mc-input-label-fg, ${maskedTheme.colors.baseBlue.dark20});
+  color: var(
+    --mc-input-label-fg,
+    ${({ theme }) => theme.colors.textColor ?? theme.colors.baseBlue.dark20}
+  );
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 6px;
@@ -144,7 +151,7 @@ export const InputLabel = styled.label<props>`
     css`
       &::after {
         content: '*';
-        color: var(--mc-input-error-border, ${maskedTheme.colors.baseRed.base});
+        color: var(--mc-input-error-border, ${({ theme }) => theme.colors.baseRed.base});
         font-size: 1.2rem;
         font-weight: 700;
       }
@@ -157,7 +164,7 @@ export const InputIconWrapper = styled.div`
   top: 44px;
   background: none;
   border: none;
-  color: var(--mc-input-icon-fg, ${maskedTheme.colors.baseBlue.dark});
+  color: var(--mc-input-icon-fg, ${({ theme }) => theme.colors.baseBlue.dark});
 
   svg {
     font-size: 1.5rem;

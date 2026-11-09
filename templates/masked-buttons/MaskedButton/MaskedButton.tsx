@@ -48,15 +48,16 @@ export function MaskedButton(props: ButtonProps) {
     onCheckedChange,
     name, // radio: agrupa inputs do mesmo name
 
+    // split
+    options,
+    onOptionSelect,
+    menuLabel,
+
     // linkComponent: prop > provider > <a> nativo (H.5)
     linkComponent,
 
     // colorTheme compartilhado (G.h) — derivado nos estilos
     colorTheme,
-
-    options,  
-    onOptionSelect,  
-    menuLabel,
 
     ...rest
   } = props
@@ -80,14 +81,14 @@ export function MaskedButton(props: ButtonProps) {
   }
 
   switch (resolvedVariant) {
-    case 'split':  
-      return (  
-        <SplitButton  
-          {...(internal as ComponentProps<typeof SplitButton>)}  
-          options={options ?? []}  
-          onOptionSelect={onOptionSelect}  
-          menuLabel={menuLabel}  
-        />  
+    case 'split':
+      return (
+        <SplitButton
+          {...(internal as unknown as ComponentProps<typeof SplitButton>)}
+          options={options ?? []}
+          onOptionSelect={onOptionSelect}
+          menuLabel={menuLabel}
+        />
       )
     case 'default':
       return <DefaultButton {...(internal as ComponentProps<typeof DefaultButton>)} />
