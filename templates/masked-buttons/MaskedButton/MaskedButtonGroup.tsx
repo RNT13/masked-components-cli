@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, type ReactNode } from 'react'
 import { styled } from 'styled-components'
+import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 import { MaskedButton } from './MaskedButton'
 import type { ButtonProps } from './MaskedButton.types'
 
@@ -24,7 +25,7 @@ export type MaskedButtonGroupProps = {
   /** variante dos botões do grupo (padrão: 'toggle') */
   variant?: 'toggle' | 'checkbox' | 'radio'
   /** repassa colorTheme/tokens a todos os botões */
-  colorTheme?: string
+  colorTheme?: ColorThemeName
   tokens?: Record<string, string | number>
   fullWidth?: boolean
   className?: string
@@ -39,7 +40,7 @@ const GroupContext = createContext<{
   value?: string
   select: (v: string) => void
   variant: NonNullable<MaskedButtonGroupProps['variant']>
-  colorTheme?: string
+  colorTheme?: ColorThemeName
   tokens?: Record<string, string | number>
 } | null>(null)
 
@@ -51,7 +52,7 @@ const GroupContainer = styled.div<{ $fullWidth?: boolean }>`
   gap: 0;
   ${({ $fullWidth }) => $fullWidth && 'width: 100%;'}
 
-  /* botões adjacentes compartilham borda (segmented control) */  
+  /* botões adjacentes compartilham borda (segmented control) */    
   & > *:not(:first-child) {
     margin-left: -1px;
   }

@@ -16,6 +16,7 @@ import SwitchButton from './variants/Switch/SwitchButton'
 import SoftButton from './variants/Soft/SoftButton'
 import CheckboxButton from './variants/Checkbox/CheckboxButton'
 import RadioButton from './variants/Radio/RadioButton'
+import SplitButton from './variants/Split/SplitButton'
 
 export function MaskedButton(props: ButtonProps) {
   const {
@@ -53,6 +54,10 @@ export function MaskedButton(props: ButtonProps) {
     // colorTheme compartilhado (G.h) — derivado nos estilos
     colorTheme,
 
+    options,  
+    onOptionSelect,  
+    menuLabel,
+
     ...rest
   } = props
 
@@ -75,6 +80,15 @@ export function MaskedButton(props: ButtonProps) {
   }
 
   switch (resolvedVariant) {
+    case 'split':  
+      return (  
+        <SplitButton  
+          {...(internal as ComponentProps<typeof SplitButton>)}  
+          options={options ?? []}  
+          onOptionSelect={onOptionSelect}  
+          menuLabel={menuLabel}  
+        />  
+      )
     case 'default':
       return <DefaultButton {...(internal as ComponentProps<typeof DefaultButton>)} />
     case 'outline':

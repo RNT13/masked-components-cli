@@ -29,7 +29,8 @@ export function EyeIcon(props: SVGProps<SVGSVGElement>) {
 export function EyeOffIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg {...base(props)}>
-      <path d="M2 12s3.5-7 10-7c2 0 3.7.6 5.2 1.5M22 12s-3.5 7-10 7c-2 0-3.7-.6-5.2-1.5" />
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+      <circle cx="12" cy="12" r="3" />
       <path d="M3 3l18 18" />
     </svg>
   )

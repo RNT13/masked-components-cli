@@ -1,4 +1,5 @@
 import { CSSProperties, ReactNode } from 'react'
+import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 import { CardTokenOverrides } from './cardTokens'
 
 export type CardSize = 'sm' | 'md' | 'lg' | 'xl'
@@ -18,7 +19,7 @@ export type BaseCardProps = {
   children?: ReactNode
 
   /** Paleta registrada em colorThemes (ex.: 'ruby'). Deriva os tokens --mc-card-*. */
-  colorTheme?: string
+  colorTheme?: ColorThemeName
   /** Overrides diretos de tokens --mc-card-*. */
   tokens?: CardTokenOverrides
 }

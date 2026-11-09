@@ -1,8 +1,9 @@
 /* ============================================================
  * TIME
+ * Cores via tokens --mc-input-* (colorTheme/tokens), com fallback
+ * na paleta do tema ativo — mesmo padrão do SelectInput.
  * ============================================================ */
 
-import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 import styled from 'styled-components'
 
 export const TimeTrigger = styled.button`
@@ -10,10 +11,10 @@ export const TimeTrigger = styled.button`
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  gap: ${maskedTheme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing.xs};
 
   &:hover:not(:disabled) {
-    border-color: ${maskedTheme.colors.baseBlue.base};
+    border-color: var(--mc-input-border-hover, ${({ theme }) => theme.colors.baseBlue.base});
   }
 
   &:disabled {
@@ -22,13 +23,16 @@ export const TimeTrigger = styled.button`
   }
 
   &.error {
-    border-color: ${maskedTheme.colors.baseRed.base};
+    border-color: var(--mc-input-error-border, ${({ theme }) => theme.colors.baseRed.base});
   }
 `
 
 export const TimeTriggerValue = styled.span<{ $isPlaceholder?: boolean }>`
   font-weight: 800;
-  color: ${({ $isPlaceholder }) => ($isPlaceholder ? maskedTheme.colors.baseBlue.light08 : maskedTheme.colors.baseBlue.base)};
+  color: ${({ $isPlaceholder, theme }) =>
+    $isPlaceholder
+      ? `var(--mc-input-placeholder, ${theme.colors.baseBlue.light08})`
+      : `var(--mc-input-fg, ${theme.colors.baseBlue.base})`};
 `
 
 export const TimeDropdown = styled.div`
@@ -37,12 +41,12 @@ export const TimeDropdown = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border-radius: ${maskedTheme.radius.lg};
-  padding: ${maskedTheme.spacing.xs};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  padding: ${({ theme }) => theme.spacing.xs};
   overflow: hidden;
-  background: ${maskedTheme.colors.baseBlue.light30};
-  border: 2px solid ${maskedTheme.colors.baseBlue.base};
-  z-index: ${maskedTheme.zIndex.tooltip};
+  background: var(--mc-input-bg, ${({ theme }) => theme.colors.baseBlue.light30});
+  border: 2px solid var(--mc-input-border-hover, ${({ theme }) => theme.colors.baseBlue.base});
+  z-index: ${({ theme }) => theme.zIndex.tooltip};
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
 
   animation: timeFade 0.18s ease;
@@ -72,15 +76,15 @@ export const TimeColumn = styled.div`
   max-height: 220px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: ${maskedTheme.colors.baseBlue.light20} transparent;
+  scrollbar-color: var(--mc-input-border, ${({ theme }) => theme.colors.baseBlue.light20}) transparent;
 `
 
 export const TimeColumnLabel = styled.span`
   padding: 6px 0 8px 0;
   text-align: center;
-  font-size: ${maskedTheme.fontSize.sm};
-  font-weight: ${maskedTheme.fontWeight.bold};
-  color: ${maskedTheme.colors.baseBlue.light20};
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-weight: ${({ theme }) => theme.fontWeight.bold};
+  color: var(--mc-input-label-fg, ${({ theme }) => theme.colors.baseBlue.dark20});
   text-transform: uppercase;
   letter-spacing: 0.06em;
 `
@@ -90,22 +94,31 @@ export const TimeOption = styled.button<{ $selected?: boolean }>`
   padding: 8px 0;
   border-radius: 14px;
   margin-bottom: 4px;
-  background: ${({ $selected }) => ($selected ? maskedTheme.colors.baseBlue.dark20 : maskedTheme.colors.baseBlue.light02)};
-  color: ${({ $selected }) => ($selected ? maskedTheme.colors.baseBlue.light50 : maskedTheme.colors.baseBlue.dark40)};
+  background: ${({ $selected, theme }) =>
+    $selected
+      ? `var(--mc-input-icon-fg, ${theme.colors.baseBlue.dark20})`
+      : theme.colors.baseBlue.light02};
+  color: ${({ $selected, theme }) =>
+    $selected
+      ? theme.colors.baseBlue.light50
+      : `var(--mc-input-label-fg, ${theme.colors.baseBlue.dark40})`};
   border: 2px solid
-    ${({ $selected }) => ($selected ? maskedTheme.colors.baseBlue.light02 : maskedTheme.colors.baseBlue.dark20)};
+    ${({ $selected, theme }) =>
+      $selected
+        ? theme.colors.baseBlue.light02
+        : `var(--mc-input-border, ${theme.colors.baseBlue.dark20})`};
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  transition: ${maskedTheme.transition.default};
+  transition: ${({ theme }) => theme.transition.default};
 
   &:hover {
-    background: ${maskedTheme.colors.baseBlue.dark08};
-    color: ${maskedTheme.colors.baseBlue.light50};
-    border-color: ${maskedTheme.colors.baseBlue.dark20};
+    background: var(--mc-input-icon-fg, ${({ theme }) => theme.colors.baseBlue.dark08});
+    color: ${({ theme }) => theme.colors.baseBlue.light50};
+    border-color: var(--mc-input-border, ${({ theme }) => theme.colors.baseBlue.dark20});
   }
 `
 
@@ -114,7 +127,7 @@ export const TimeSeparator = styled.span`
   padding-top: 22px;
   font-size: 1.4rem;
   font-weight: 900;
-  color: ${maskedTheme.colors.baseBlue.light20};
+  color: var(--mc-input-label-fg, ${({ theme }) => theme.colors.baseBlue.dark20});
 `
 
 export const TimeDropdownFooter = styled.div`
@@ -126,16 +139,16 @@ export const TimeClearButton = styled.button`
   padding: 8px;
   border-radius: 14px;
   background: transparent;
-  border: 2px solid ${maskedTheme.colors.baseRed.light};
-  color: ${maskedTheme.colors.baseRed.light};
-  font-weight: ${maskedTheme.fontWeight.bold};
-  font-size: ${maskedTheme.fontSize.sm};
+  border: 2px solid var(--mc-input-error-border, ${({ theme }) => theme.colors.baseRed.dark});
+  color: var(--mc-input-error-border, ${({ theme }) => theme.colors.baseRed.dark});
+  font-weight: ${({ theme }) => theme.fontWeight.bold};
+  font-size: ${({ theme }) => theme.fontSize.sm};
   cursor: pointer;
-  transition: ${maskedTheme.transition.default};
+  transition: ${({ theme }) => theme.transition.default};
 
   &:hover {
-    border-color: ${maskedTheme.colors.baseRed.base};
-    background: ${maskedTheme.colors.baseRed.light02};
-    color: ${maskedTheme.colors.baseRed.base};
+    border-color: var(--mc-input-error-border, ${({ theme }) => theme.colors.baseRed.base});
+    background: ${({ theme }) => theme.colors.baseRed.light02};
+    color: var(--mc-input-error-border, ${({ theme }) => theme.colors.baseRed.base});
   }
 `
