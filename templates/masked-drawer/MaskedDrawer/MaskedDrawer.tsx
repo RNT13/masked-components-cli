@@ -6,6 +6,7 @@ import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import { DrawerOverlay, DrawerPanel } from './MaskedDrawer.styles'
 import { MaskedDrawerProps } from './MaskedDrawer.types'
+import { readableTextOn } from '@/utils/masked-utils'
 
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
@@ -32,7 +33,7 @@ export function MaskedDrawer({
   const panelRef = useRef<HTMLDivElement>(null)
 
   const mounted = useSyncExternalStore(
-    () => () => {},
+    () => () => { },
     () => true, // client
     () => false // server
   )
@@ -92,7 +93,12 @@ export function MaskedDrawer({
   const themeVars = resolveColorTheme(colorTheme, maskedTheme)
 
   const vars = {
-    ...(themeVars?.base ? { '--mc-drawer-overlay-bg': themeVars.base } : {}),
+    ...(themeVars?.base
+      ? {
+        '--mc-drawer-panel-bg': themeVars.base,
+        '--mc-drawer-panel-fg': themeVars.onBase ?? readableTextOn(themeVars.base)
+      }
+      : {}),
     ...(tokens?.overlayBg ? { '--mc-drawer-overlay-bg': tokens.overlayBg } : {}),
     ...(tokens?.panelBg ? { '--mc-drawer-panel-bg': tokens.panelBg } : {})
   } as CSSProperties

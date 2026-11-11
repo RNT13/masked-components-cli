@@ -1,6 +1,10 @@
-import { styled } from 'styled-components'
-import { maskedTheme, media } from '@/styles/MaskedThemes/MaskedThemes'
+import { styled, type DefaultTheme } from 'styled-components'
+import { media } from '@/styles/MaskedThemes/MaskedThemes'
 import { PopupTransition } from './MaskedPopup.types'
+
+const surface = (t: DefaultTheme) => t.colors?.surfaceColor ?? '#ffffff'
+const textColor = (t: DefaultTheme) => t.colors?.textColor ?? '#111111'
+const borderColor = (t: DefaultTheme) => t.colors?.borderColor ?? 'rgba(128, 128, 128, 0.35)'
 
 const getTransform = (transition: PopupTransition, isOpen: boolean) => {
   if (isOpen) return 'translate(-50%, -50%) scale(1)'
@@ -27,7 +31,8 @@ export const PopupOverlay = styled.div<{ $isOpen: boolean; $blur: boolean; $zInd
   position: fixed;
   inset: 0;
   z-index: ${({ $zIndex }) => $zIndex - 1};
-  background: var(--mc-popup-overlay-bg, ${maskedTheme.colors.baseBlack.light50});
+  /* translúcido: o conteúdo da página continua visível por trás */
+  background: var(--mc-popup-overlay-bg, rgba(0, 0, 0, 0.45));
   ${({ $blur }) => $blur && 'backdrop-filter: blur(6px);'}
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
   pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
@@ -49,11 +54,19 @@ export const PopupPanel = styled.div<{
   top: 50%;
   left: 50%;
   z-index: ${({ $zIndex }) => $zIndex};
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   width: ${({ $width }) => $width};
   max-width: ${({ $maxWidth }) => $maxWidth};
   max-height: 90vh;
   overflow-y: auto;
-  background: var(--mc-popup-panel-bg, transparent);
+  padding: var(--mc-popup-padding, 1.75rem);
+  border-radius: var(--mc-popup-radius, 20px);
+  border: 1px solid ${({ theme }) => borderColor(theme)};
+  background: var(--mc-popup-panel-bg, ${({ theme }) => surface(theme)});
+  color: var(--mc-popup-panel-fg, ${({ theme }) => textColor(theme)});
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
 
   transform: ${({ $transition, $isOpen }) => getTransform($transition, $isOpen)};
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};

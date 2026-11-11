@@ -13,6 +13,7 @@ export default function RadioButton({
   onCheckedChange,
   onClick,
   radioLabel,
+  deselectable = false,
   name,
   value,
   optionValue,
@@ -28,7 +29,17 @@ export default function RadioButton({
   const isDisabled = state === 'disabled' || state === 'loading'
 
   function handleClick(event: MouseEvent<HTMLButtonElement>) {
-    if (isDisabled || isChecked) return // radio não desmarca
+    if (isDisabled) return
+
+    if (isChecked) {
+      // radio de grupo não desmarca; radio avulso pode (deselectable)
+      if (!deselectable) return
+      if (!isControlled) setInternal(false)
+      onCheckedChange?.(false)
+      onClick?.(event)
+      return
+    }
+
     if (!isControlled) setInternal(true)
     onCheckedChange?.(true)
     onClick?.(event)

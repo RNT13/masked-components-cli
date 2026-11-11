@@ -25,6 +25,7 @@ const errorStyles = css`
   border-color: var(--mc-btn-danger-border, ${({ theme }) => theme.colors.baseRed.light08});
 `
 
+/* o wrapper recebe as CSS vars --mc-btn-*, então o menu também as enxerga */
 export const SplitButtonWrapper = styled.div<Props>`
   position: relative;
   display: inline-flex;
@@ -37,7 +38,7 @@ export const SplitGroup = styled.div`
   align-items: stretch;
 `
 
-/* lado esquerdo: ação principal — border-radius só à esquerda */
+/* lado esquerdo: ação principal — raio só à esquerda */
 export const SplitMainButton = styled(BaseButton)<Props>`
   color: var(--mc-btn-fg, ${({ theme }) => theme.colors.baseBlue.dark20});
   background-color: var(--mc-btn-bg, ${({ theme }) => theme.colors.baseBlue.light20});
@@ -56,20 +57,20 @@ export const SplitMainButton = styled(BaseButton)<Props>`
   ${({ $isDisabled }) => $isDisabled && disabledStyles}
 `
 
-/* lado direito: trigger do menu — border-radius só à direita.
-   As CSS vars --mc-btn-* chegam pelo `style` aplicado em SplitButton.tsx. */
+/* lado direito: seta do menu — raio só à direita (igual ao do botão base) */
 export const SplitMenuButton = styled.button<Props>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 44px;
   padding: 0 ${({ theme }) => theme.spacing.sm};
   cursor: pointer;
   color: var(--mc-btn-fg, ${({ theme }) => theme.colors.baseBlue.dark20});
   background-color: var(--mc-btn-bg, ${({ theme }) => theme.colors.baseBlue.light20});
   border: 2px solid var(--mc-btn-border, ${({ theme }) => theme.colors.baseBlue.dark20});
   border-left-width: 1px;
-  border-top-right-radius: var(--mc-btn-radius, ${({ theme }) => theme.radius.md});
-  border-bottom-right-radius: var(--mc-btn-radius, ${({ theme }) => theme.radius.md});
+  border-top-right-radius: var(--mc-btn-radius, 18px);
+  border-bottom-right-radius: var(--mc-btn-radius, 18px);
   transition:
     background-color 0.15s ease,
     color 0.15s ease;
@@ -80,7 +81,7 @@ export const SplitMenuButton = styled.button<Props>`
   }
 
   &:focus-visible {
-    outline: 2px solid var(--mc-btn-ring, ${({ theme }) => theme.colors.baseBlue.base});
+    outline: 2px solid var(--mc-btn-ring-focus, ${({ theme }) => theme.colors.baseBlue.base});
     outline-offset: 2px;
   }
 
@@ -105,48 +106,75 @@ export const ChevronIcon = styled.span<{ $open?: boolean }>`
 
 export const SplitMenu = styled.div`
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 6px);
   right: 0;
-  min-width: 200px;
+  min-width: 260px;
+  max-width: min(340px, 90vw);
   z-index: ${({ theme }) => theme.zIndex.dropdown};
   display: flex;
   flex-direction: column;
+  gap: 2px;
   padding: ${({ theme }) => theme.spacing.xs};
   background: ${({ theme }) => theme.colors.surfaceColor ?? theme.colors.baseBlack.light08};
   border: 1px solid ${({ theme }) => theme.colors.borderColor ?? theme.colors.baseBlack.light20};
   border-radius: ${({ theme }) => theme.radius.md};
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 `
 
-export const SplitMenuItem = styled.button`
+export const SplitMenuItem = styled.button<{ $selected?: boolean }>`
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: flex-start;
+  gap: 8px;
   width: 100%;
+  min-height: 44px;
   padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-  background: transparent;
   border: none;
   border-radius: ${({ theme }) => theme.radius.sm};
   cursor: pointer;
   text-align: left;
-  color: ${({ theme }) => theme.colors.textColor ?? theme.colors.baseBlack.light40};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  background: ${({ $selected, theme }) => ($selected ? `var(--mc-btn-bg, ${theme.colors.baseBlue.base})` : 'transparent')};
+  color: ${({ $selected, theme }) =>
+    $selected ? `var(--mc-btn-fg, ${theme.colors.baseBlue.light50})` : (theme.colors.textColor ?? theme.colors.baseBlack.light40)};
 
-  &:hover {
-    background: ${({ theme }) => theme.colors.baseBlack.light08};
+  &:hover,
+  &:focus-visible {
+    background: ${({ $selected, theme }) =>
+      $selected ? `var(--mc-btn-bg-hover, ${theme.colors.baseBlue.base})` : (theme.colors.tertiaryColor ?? theme.colors.baseBlack.light08)};
+    outline: none;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--mc-btn-ring, ${({ theme }) => theme.colors.baseBlue.base});
-    outline-offset: -2px;
+    box-shadow: inset 0 0 0 2px var(--mc-btn-ring-focus, ${({ theme }) => theme.colors.baseBlue.base});
   }
 `
 
+export const SplitMenuCheck = styled.span`
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 20px;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+`
+
+export const SplitMenuText = styled.span`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+`
+
 export const SplitMenuItemLabel = styled.span`
-  font-weight: 500;
+  font-weight: 600;
 `
 
 export const SplitMenuItemDescription = styled.span`
   font-size: ${({ theme }) => theme.fontSize.xs};
-  color: ${({ theme }) => theme.colors.textMuted ?? theme.colors.baseGray.base};
+  opacity: 0.8;
 `

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { resolveButtonTokens } from '../../buttonTokens'
 import { ButtonVariantMap } from '../../MaskedButton.types'
 import {
@@ -10,17 +10,36 @@ import {
   SplitMainButton,
   SplitMenu,
   SplitMenuButton,
+  SplitMenuCheck,
   SplitMenuItem,
   SplitMenuItemDescription,
-  SplitMenuItemLabel
+  SplitMenuItemLabel,
+  SplitMenuText
 } from './SplitButton.styles'
 
 type Props = { $variant: 'split' } & ButtonVariantMap['split']
+
+const ITEM_SELECTOR = '[role="menuitem"], [role="menuitemradio"]'
+
+function CheckGlyph() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M3 8.5l3.2 3L13 4.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
 
 export default function SplitButton(props: Props) {
   const {
     options,
     onOptionSelect,
+    selectedValue,
     menuLabel = 'More options',
     onClick,
     children,
@@ -36,19 +55,25 @@ export default function SplitButton(props: Props) {
 
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
-  const isDisabled = state === 'disabled' || state === 'loading'
+  const menuRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
 
-  /* fecha ao clicar fora / Escape */
+  const isDisabled = state === 'disabled' || state === 'loading'
+  const hasSelection = selectedValue !== undefined
+  const itemRole = hasSelection ? 'menuitemradio' : 'menuitem'
+
+  /* fecha ao clicar fora / Escape (e devolve o foco ao botão da seta) */
   useEffect(() => {
     if (!open) return
 
     const onPointerDown = (e: PointerEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false)
     }
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false)
+    const onKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        triggerRef.current?.focus()
+      }
     }
 
     document.addEventListener('pointerdown', onPointerDown)
@@ -59,13 +84,44 @@ export default function SplitButton(props: Props) {
     }
   }, [open])
 
+  /* ao abrir, foca o item marcado (ou o primeiro) */
+  useEffect(() => {
+    if (!open) return
+    const items = [...(menuRef.current?.querySelectorAll<HTMLElement>(ITEM_SELECTOR) ?? [])]
+    const target = items.find((el) => el.getAttribute('aria-checked') === 'true') ?? items[0]
+    target?.focus()
+  }, [open])
+
+  function onMenuKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    const items = [...(menuRef.current?.querySelectorAll<HTMLElement>(ITEM_SELECTOR) ?? [])]
+    if (items.length === 0) return
+    const current = items.indexOf(document.activeElement as HTMLElement)
+
+    let next: number | null = null
+    if (e.key === 'ArrowDown') next = (current + 1) % items.length
+    else if (e.key === 'ArrowUp') next = (current - 1 + items.length) % items.length
+    else if (e.key === 'Home') next = 0
+    else if (e.key === 'End') next = items.length - 1
+    else if (e.key === 'Tab') setOpen(false)
+
+    if (next !== null) {
+      e.preventDefault()
+      items[next]?.focus()
+    }
+  }
+
   const select = (value: string) => {
     setOpen(false)
     onOptionSelect?.(value)
+    triggerRef.current?.focus()
   }
 
   return (
-    <SplitButtonWrapper $position={$position} ref={rootRef}>
+    <SplitButtonWrapper
+      $position={$position}
+      ref={rootRef}
+      style={resolveButtonTokens({ colorTheme, tokens })}
+    >
       <SplitGroup>
         <SplitMainButton
           {...buttonProps}
@@ -82,6 +138,7 @@ export default function SplitButton(props: Props) {
         </SplitMainButton>
 
         <SplitMenuButton
+          ref={triggerRef}
           type="button"
           data-testid="split-button-menu"
           aria-label={menuLabel}
@@ -91,27 +148,34 @@ export default function SplitButton(props: Props) {
           onClick={() => setOpen((v) => !v)}
           $isError={state === 'error'}
           $isDisabled={state === 'disabled'}
-          style={resolveButtonTokens({ colorTheme, tokens })}
         >
           <ChevronIcon $open={open} aria-hidden />
         </SplitMenuButton>
       </SplitGroup>
 
       {open && (
-        <SplitMenu role="menu">
-          {options.map((opt) => (
-            <SplitMenuItem
-              key={opt.value}
-              type="button"
-              role="menuitem"
-              onClick={() => select(opt.value)}
-            >
-              <SplitMenuItemLabel>{opt.label}</SplitMenuItemLabel>
-              {opt.description && (
-                <SplitMenuItemDescription>{opt.description}</SplitMenuItemDescription>
-              )}
-            </SplitMenuItem>
-          ))}
+        <SplitMenu ref={menuRef} role="menu" aria-label={menuLabel} onKeyDown={onMenuKeyDown}>
+          {options.map((opt) => {
+            const selected = hasSelection && opt.value === selectedValue
+            return (
+              <SplitMenuItem
+                key={opt.value}
+                type="button"
+                role={itemRole}
+                aria-checked={hasSelection ? selected : undefined}
+                $selected={selected}
+                onClick={() => select(opt.value)}
+              >
+                <SplitMenuCheck aria-hidden>{selected ? <CheckGlyph /> : null}</SplitMenuCheck>
+                <SplitMenuText>
+                  <SplitMenuItemLabel>{opt.label}</SplitMenuItemLabel>
+                  {opt.description && (
+                    <SplitMenuItemDescription>{opt.description}</SplitMenuItemDescription>
+                  )}
+                </SplitMenuText>
+              </SplitMenuItem>
+            )
+          })}
         </SplitMenu>
       )}
     </SplitButtonWrapper>

@@ -8,10 +8,6 @@ export type ButtonState = 'default' | 'disabled' | 'loading' | 'error'
 export type ButtonShape = 'rounded' | 'circle' | 'square'
 export type ButtonPosition = 'left' | 'right' | 'center'
 
-/**
- * Variantes. 'radio' entra no grupo dos campos (toggle/checkbox/switch visual);  
- * consome apenas tokens --mc-switch-* (decisão 2B/3A).  
- */
 export type ButtonVariant =
   | 'default'
   | 'outline'
@@ -45,7 +41,7 @@ export type BaseButtonProps = {
   label?: string
   /** nome acessível — essencial para botões só com ícone */
   ariaLabel?: string
-  /** texto exibido no estado loading (default vem do dicionário/locale, J) */
+  /** texto exibido no estado loading */
   loadingText?: string
 
   leftIcon?: ReactNode
@@ -65,15 +61,15 @@ export type BaseButtonProps = {
   /* ---- temas ---- */
 
   /**
-   * Nome de uma paleta registrada via `registerColorTheme()` (masked-themes/colorThemes).  
-   * Deriva os tokens --mc-btn-bg/-fg/-border/-ring (e --mc-switch-*) do botão.  
-   * 'default' ou ausente = paleta neutra da lib.  
+   * Nome de uma paleta registrada via `registerColorTheme()` ou chave da paleta.
+   * Deriva os tokens --mc-btn-bg/-fg/-border/-ring (e --mc-switch-*).
+   * 'default' ou ausente = paleta padrão da lib.
    */
   colorTheme?: ColorThemeName
 
   /**
-   * Overrides granulares de tokens do botão (prop > colorTheme > default).  
-   * Chaves = nomes de token sem prefixo, ex.: { 'bg-hover': '#222', 'fg': '#fff' }  
+   * Overrides granulares de tokens do botão (prop > colorTheme > default).
+   * Chaves = nomes de token sem prefixo, ex.: { 'bg-hover': '#222', 'fg': '#fff' }
    */
   tokens?: Record<string, string | number>
 }
@@ -86,6 +82,8 @@ type FieldButtonProps = WithActive & {
   /** valor quando usado dentro de MaskedButtonGroup */
   optionValue?: string
 }
+
+export type SplitOption = { value: string; label: ReactNode; description?: string }
 
 export type ButtonVariantMap = {
   default: WithActive
@@ -121,12 +119,15 @@ export type ButtonVariantMap = {
     onCheckedChange?: (checked: boolean) => void
     radioLabel?: string
     defaultChecked?: boolean
+    /** permite desmarcar clicando de novo (radio avulso). Padrão: false */
+    deselectable?: boolean
   }
 
   /** botão duplo estilo GitHub: ação principal + menu de opções */
   split: BaseButtonProps & {
-    /** opções do menu à direita */
-    options: { value: string; label: ReactNode; description?: string }[]
+    options: SplitOption[]
+    /** opção marcada no menu (mostra o check e destaca o item) */
+    selectedValue?: string
     onOptionSelect?: (value: string) => void
     /** aria-label do botão de dropdown */
     menuLabel?: string
@@ -158,10 +159,12 @@ export type ButtonProps = BaseButtonProps & {
   checked?: boolean
   defaultChecked?: boolean
   onCheckedChange?: (checked: boolean) => void
+  /** radio avulso pode ser desmarcado (padrão: false) */
+  deselectable?: boolean
 
   /* ---- split ---- */
-  /** opções do menu (variant='split') */
-  options?: { value: string; label: ReactNode; description?: string }[]
+  options?: SplitOption[]
+  selectedValue?: string
   onOptionSelect?: (value: string) => void
   menuLabel?: string
 
