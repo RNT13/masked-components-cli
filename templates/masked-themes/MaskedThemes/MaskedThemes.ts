@@ -481,17 +481,29 @@ const pastelColors = {
    GRADIENTES — helper + presets
 ========================================= */
 export const createGradient = (colors: string[], angle: number = 135): string => {
-  const stops = colors.map((color, index) => `${color} ${Math.round((index / Math.max(colors.length - 1, 1)) * 100)}%`).join(', ')
+  const stops = colors
+    .map(
+      (color, index) => `${color} ${Math.round((index / Math.max(colors.length - 1, 1)) * 100)}%`
+    )
+    .join(', ')
 
   return `linear-gradient(${angle}deg, ${stops})`
 }
 
 const gradient: ThemeGradient = {
-  primary: createGradient([baseColors.basePrimary.base, baseColors.baseBlue.base, baseColors.baseTertiary.light]),
+  primary: createGradient([
+    baseColors.basePrimary.base,
+    baseColors.baseBlue.base,
+    baseColors.baseTertiary.light
+  ]),
   primarySoft: createGradient([baseColors.baseBlue.light40, baseColors.baseTertiary.light40]),
   primaryVertical: createGradient([baseColors.basePrimary.base, baseColors.baseTertiary.base], 180),
   lilac: createGradient([baseColors.baseLilac.base, baseColors.baseLilac.light20]),
-  sunset: createGradient([baseColors.baseOrange.base, baseColors.basePink.base, baseColors.basePurple.base]),
+  sunset: createGradient([
+    baseColors.baseOrange.base,
+    baseColors.basePink.base,
+    baseColors.basePurple.base
+  ]),
   ocean: createGradient([baseColors.baseCyan.base, baseColors.baseBlue.dark20]),
   forest: createGradient([baseColors.baseGreen.dark20, baseColors.baseGreen.light20])
 }
@@ -521,13 +533,13 @@ const createShadow =
       return resolvedColor
     }
 
-    return `box-shadow: ${layers
-      .map(layer => {
+    return layers
+      .map((layer) => {
         const resolvedColor = customColor ?? layer.defaultColor
         const shadowColor = colorWithOpacity(resolvedColor, layer.opacity)
         return `${layer.inset ? 'inset ' : ''}${layer.x} ${layer.y} ${layer.blur}${layer.spread ? ` ${layer.spread}` : ''} ${shadowColor}`
       })
-      .join(', ')};`
+      .join(', ')
   }
 
 /* =========================================
