@@ -7,48 +7,25 @@ import {
   useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
   type ReactNode
 } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { maskedThemeConfig } from '../MaskedThemes/MaskedThemes'
 import type { DefaultTheme } from 'styled-components'
 
-/* ===========================================================
-   THEME ENGINE — troca de tema em runtime, sem boilerplate.
-
-   Uso mínimo:
-     <ThemeEngineProvider>
-       <App />
-     </ThemeEngineProvider>
-
-   O consumidor troca o tema com:
-     const { themeName, setThemeName } = useThemeEngine()
-     setThemeName('dark')
-=========================================================== */
-
 export type ThemeEngineContextValue = {
-  /** nome do tema ativo (chave de maskedThemeConfig ou registrada via registerTheme) */
   themeName: string
-  /** troca o tema ativo; persiste em localStorage quando `storageKey` está definido */
   setThemeName: (name: string) => void
-  /** lista de temas disponíveis (registry + maskedThemeConfig) */
   availableThemes: string[]
-  /** objeto de tema resolvido (o que vai para o ThemeProvider) */
   theme: DefaultTheme
 }
 
 const ThemeEngineContext = createContext<ThemeEngineContextValue | null>(null)
 
-/* ---- registry de temas customizados ---- */
 const customThemes = new Map<string, DefaultTheme>()
 
-/**
- * Registra um tema próprio no motor. Útil para temas de marca
- * que não fazem parte do maskedThemeConfig.
- *
- * @example
- * registerTheme('brand', { ...maskedThemeConfig.default, colors: { ... } })
- */
+/** Registra um tema próprio (ex.: tema de marca). */
 export function registerTheme(name: string, theme: DefaultTheme): void {
   customThemes.set(name, theme)
 }
@@ -56,25 +33,41 @@ export function registerTheme(name: string, theme: DefaultTheme): void {
 function resolveTheme(name: string): DefaultTheme {
   const custom = customThemes.get(name)
   if (custom) return custom
-
   const fromConfig = (maskedThemeConfig as Record<string, DefaultTheme>)[name]
-  if (fromConfig) return fromConfig
-
-  return maskedThemeConfig.default
+  return fromConfig ?? maskedThemeConfig.default
 }
 
 function listThemes(): string[] {
   return [...Object.keys(maskedThemeConfig), ...customThemes.keys()]
 }
 
+/* ---- storage como store externo: o servidor e a hidratação usam o tema padrão;
+   o tema salvo entra logo depois, sem hydration mismatch ---- */
+const storageListeners = new Set<() => void>()
+
+function subscribeStorage(callback: () => void) {
+  storageListeners.add(callback)
+  window.addEventListener('storage', callback)
+  return () => {
+    storageListeners.delete(callback)
+    window.removeEventListener('storage', callback)
+  }
+}
+
+function readStored(key: string | null): string | null {
+  if (!key) return null
+  try {
+    return window.localStorage.getItem(key)
+  } catch {
+    return null
+  }
+}
+
 export type ThemeEngineProviderProps = {
   children: ReactNode
   /** tema inicial (default: 'default') */
   defaultTheme?: string
-  /**
-   * chave de localStorage para persistir a escolha.
-   * Passe `null` para desativar persistência. Default: 'masked-theme'
-   */
+  /** chave de localStorage; `null` desativa a persistência. Default: 'masked-theme' */
   storageKey?: string | null
 }
 
@@ -83,29 +76,28 @@ export function ThemeEngineProvider({
   defaultTheme = 'default',
   storageKey = 'masked-theme'
 }: ThemeEngineProviderProps) {
-  /* lê a escolha persistida na inicialização (lazy) — sem efeito de hidratação */
-  const [themeName, setThemeNameState] = useState<string>(() => {
-    if (typeof window === 'undefined' || !storageKey) return defaultTheme
-    try {
-      return window.localStorage.getItem(storageKey) ?? defaultTheme
-    } catch {
-      return defaultTheme
-    }
-  })
+  const [session, setSession] = useState<string | null>(null)
+  const stored = useSyncExternalStore(
+    subscribeStorage,
+    () => readStored(storageKey),
+    () => null
+  )
 
-  /* grava no storage quando o tema muda (estado → sistema externo) */
-  useEffect(() => {
-    if (!storageKey) return
-    try {
-      window.localStorage.setItem(storageKey, themeName)
-    } catch {
-      /* storage indisponível — ignora */
-    }
-  }, [storageKey, themeName])
+  const themeName = session ?? stored ?? defaultTheme
 
-  const setThemeName = useCallback((name: string) => {
-    setThemeNameState(name)
-  }, [])
+  const setThemeName = useCallback(
+    (name: string) => {
+      setSession(name)
+      if (!storageKey) return
+      try {
+        window.localStorage.setItem(storageKey, name)
+      } catch {
+        /* storage indisponível */
+      }
+      storageListeners.forEach((listener) => listener())
+    },
+    [storageKey]
+  )
 
   const theme = useMemo(() => resolveTheme(themeName), [themeName])
   const availableThemes = useMemo(() => listThemes(), [])
@@ -115,6 +107,7 @@ export function ThemeEngineProvider({
     [themeName, setThemeName, availableThemes, theme]
   )
 
+  /* variáveis --mc-* para componentes sem styled-components (ex.: MaskedToaster) */
   useEffect(() => {
     const c = theme.colors
     const vars: Record<string, string | undefined> = {
@@ -128,8 +121,9 @@ export function ThemeEngineProvider({
       '--mc-info': c.infoColor
     }
     const root = document.documentElement
-    for (const [k, v] of Object.entries(vars)) if (v) root.style.setProperty(k, v)
-  }, [theme])
+    for (const [key, val] of Object.entries(vars)) if (val) root.style.setProperty(key, val)
+    root.dataset.mcTheme = themeName
+  }, [theme, themeName])
 
   return (
     <ThemeEngineContext.Provider value={value}>
@@ -140,8 +134,6 @@ export function ThemeEngineProvider({
 
 export function useThemeEngine(): ThemeEngineContextValue {
   const ctx = useContext(ThemeEngineContext)
-  if (!ctx) {
-    throw new Error('useThemeEngine deve ser usado dentro de <ThemeEngineProvider>')
-  }
+  if (!ctx) throw new Error('useThemeEngine deve ser usado dentro de <ThemeEngineProvider>')
   return ctx
 }
