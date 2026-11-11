@@ -1,4 +1,3 @@
-// templates/masked-input/MaskedInput/icons.tsx
 // Ícones fallback sem dependência externa. Sempre sobrescrevíveis por props.
 import type { SVGProps } from 'react'
 
@@ -17,6 +16,9 @@ function base(props: SVGProps<SVGSVGElement>) {
   }
 }
 
+/** Risco do "olho cortado": "\" (padrão Lucide/Feather). Para "/" use 'M20 4L4 20'. */
+const SLASH = 'M4 4L20 20'
+
 export function EyeIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg {...base(props)}>
@@ -31,7 +33,7 @@ export function EyeOffIcon(props: SVGProps<SVGSVGElement>) {
     <svg {...base(props)}>
       <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
       <circle cx="12" cy="12" r="3" />
-      <path d="M3 3l18 18" />
+      <path d={SLASH} />
     </svg>
   )
 }

@@ -54,10 +54,6 @@ export function MaskedButton(props: ButtonProps) {
     // colorTheme compartilhado (G.h) — derivado nos estilos
     colorTheme,
 
-    options,  
-    onOptionSelect,  
-    menuLabel,
-
     ...rest
   } = props
 
@@ -80,15 +76,6 @@ export function MaskedButton(props: ButtonProps) {
   }
 
   switch (resolvedVariant) {
-    case 'split':  
-      return (  
-        <SplitButton  
-          {...(internal as ComponentProps<typeof SplitButton>)}  
-          options={options ?? []}  
-          onOptionSelect={onOptionSelect}  
-          menuLabel={menuLabel}  
-        />  
-      )
     case 'default':
       return <DefaultButton {...(internal as ComponentProps<typeof DefaultButton>)} />
     case 'outline':
@@ -103,6 +90,19 @@ export function MaskedButton(props: ButtonProps) {
       return <NeonButton {...(internal as ComponentProps<typeof NeonButton>)} />
     case 'soft':
       return <SoftButton {...(internal as ComponentProps<typeof SoftButton>)} />
+
+    case 'split':
+      return (
+        <SplitButton
+          {...{
+            ...(internal as ComponentProps<typeof SplitButton>),
+            options: rest.options ?? [],
+            selectedValue: rest.selectedValue,
+            onOptionSelect: rest.onOptionSelect,
+            menuLabel: rest.menuLabel
+          }}
+        />
+      )
 
     case 'toggle':
       return (

@@ -1,11 +1,10 @@
-// templates/masked-buttons/MaskedButton/buttonTokens.ts
-//
 // Resolve colorTheme + overrides em CSS vars --mc-btn-*/--mc-switch-*.
 // Padrão F.26: --mc-<componente>-<propriedade>[-<estado>]
 
 import type { CSSProperties } from 'react'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
+import { readableTextOn } from '@/utils/masked-utils'
 import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 
 /** Paleta neutra da lib (F.25). */
@@ -59,21 +58,22 @@ const SWITCH_TOKEN_PROPS = [
 ] as const
 
 /**
- * Tokens cujo valor numérico é unitless (não recebem sufixo 'px').  
- * Qualquer outro número vira '<n>px' — ex.: radius: 999 -> '999px'.  
+ * Tokens cujo valor numérico é unitless (não recebem sufixo 'px').
+ * Qualquer outro número vira '<n>px' — ex.: radius: 999 -> '999px'.
  */
 const UNITLESS_TOKENS = new Set<string>(['disabled-opacity'])
 
-const toCssValue = (key: string, v: string | number): string | number =>
-  typeof v === 'number' && !UNITLESS_TOKENS.has(key) ? `${v}px` : v
+const toCssValue = (key: string, value: string | number): string | number =>
+  typeof value === 'number' && !UNITLESS_TOKENS.has(key) ? `${value}px` : value
 
 export type ButtonTokensStyle = CSSProperties
 
 /**
- * Gera o objeto de style com as CSS vars do botão.  
- * Precedência: tokens (prop) > colorTheme (registro) > nada (CSS usa fallback do tema).  
+ * Gera o objeto de style com as CSS vars do botão.
+ * Precedência: tokens (prop) > colorTheme (registro) > nada (CSS usa fallback do tema).
+ * O texto sobre `bg` é escolhido por contraste (WCAG) quando o tema não define `onBase`.
  *
- * @example <button style={resolveButtonTokens({ colorTheme: 'ruby' })} />  
+ * @example <button style={resolveButtonTokens({ colorTheme: 'ruby' })} />
  */
 export function resolveButtonTokens(opts: {
   colorTheme?: ColorThemeName
@@ -90,7 +90,7 @@ export function resolveButtonTokens(opts: {
     const bg = c.base
     const bgHover = c.dark08 ?? c.base
     const bgActive = c.dark20 ?? bgHover
-    const fg = c.onBase ?? NEUTRAL.fg
+    const fg = c.onBase ?? readableTextOn(bg)
     const ring = c.glow ?? c.light50 ?? c.base
 
     vars['--mc-btn-bg'] = bg

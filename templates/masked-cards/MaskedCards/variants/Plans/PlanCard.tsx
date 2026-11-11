@@ -5,7 +5,9 @@ import { CardVariantMap } from '../../MaskedCards.types'
 import {
   PlanAction,
   PlanCardContainer,
+  PlanDescription,
   PlanHeader,
+  PlanName,
   PlanRenewal,
   PlanStatus
 } from './PlanCard.styles'
@@ -47,14 +49,16 @@ export default function PlanCard({
       style={style}
     >
       <PlanHeader>
-        <CardIconBadge $bg={iconBgColor} $color={iconTextColor} $iconSize={iconSize}>
-          {icon}
-        </CardIconBadge>
-
-        {planName}
+        {icon && (
+          <CardIconBadge $bg={iconBgColor} $color={iconTextColor} $iconSize={iconSize}>
+            {icon}
+          </CardIconBadge>
+        )}
+        <PlanName>{planName}</PlanName>
       </PlanHeader>
+
       {statusLabel && <PlanStatus>{statusLabel}</PlanStatus>}
-      {description && <p>{description}</p>}
+      {description && <PlanDescription>{description}</PlanDescription>}
       {renewalDate && (
         <PlanRenewal>
           {renewalLabel} {renewalDate}

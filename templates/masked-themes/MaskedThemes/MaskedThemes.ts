@@ -3,8 +3,8 @@ import { DefaultTheme } from 'styled-components'
 import { ThemeGradient } from '../types/MaskedTheme.types'
 import { colorHSLVariants } from '@/utils/masked-utils'
 
-/* =========================================      
-   BREAKPOINTS      
+/* =========================================
+   BREAKPOINTS
 ========================================= */
 export const breakpoints = {
   xs: 360,
@@ -15,8 +15,8 @@ export const breakpoints = {
   ultrawide: 1536
 } as const
 
-/* =========================================      
-   MEDIA QUERIES      
+/* =========================================
+   MEDIA QUERIES
 ========================================= */
 export const media = {
   xs: `@media (max-width: ${breakpoints.xs}px)`,
@@ -45,10 +45,10 @@ export const media = {
   print: `@media print`
 } as const
 
-/* =========================================      
-   PALETA BASE      
-   Cada cor gera .base, .light/.lightXX, .dark/.darkXX      
-   (via colorHSLVariants — masked-utils/color)      
+/* =========================================
+   PALETA BASE
+   Cada cor gera .base, .light/.lightXX, .dark/.darkXX
+   (via colorHSLVariants — masked-utils/color)
 ========================================= */
 const baseColors = {
   // Neutros
@@ -88,8 +88,8 @@ const baseColors = {
   baseTertiary: colorHSLVariants(258, 90, 66)
 }
 
-/* =========================================      
-   DEFAULT — cores semânticas      
+/* =========================================
+   DEFAULT — cores semânticas
 ========================================= */
 const defaultColors = {
   primaryColor: baseColors.basePureWhite.base,
@@ -97,7 +97,7 @@ const defaultColors = {
   tertiaryColor: baseColors.baseGlass.base,
   surfaceColor: baseColors.basePureWhite.base,
   textColor: baseColors.basePrimary.base,
-  textMuted: baseColors.baseGray.base,
+  textMuted: baseColors.baseGray.dark20,
   borderColor: baseColors.baseGlass.dark02,
   accentColor: baseColors.baseBlue.base,
   successColor: baseColors.baseGreen.base,
@@ -106,10 +106,41 @@ const defaultColors = {
   infoColor: baseColors.baseSky.base
 }
 
-/* =========================================      
-   DARK THEME      
+/* =========================================
+   TEMAS — paletas semânticas
 ========================================= */
-const darkColors = {
+type SemanticSet = {
+  primaryColor: string
+  secondaryColor: string
+  tertiaryColor: string
+  surfaceColor: string
+  textColor: string
+  textMuted: string
+  borderColor: string
+  accentColor: string
+  successColor: string
+  warningColor: string
+  dangerColor: string
+  infoColor: string
+}
+
+/* cores de status legíveis em fundo escuro / claro */
+const statusOnDark = {
+  successColor: baseColors.baseGreen.light20,
+  warningColor: baseColors.baseAmber.light20,
+  dangerColor: baseColors.baseRed.light20,
+  infoColor: baseColors.baseSky.light20
+}
+const statusOnLight = {
+  successColor: baseColors.baseGreen.dark20,
+  warningColor: baseColors.baseAmber.dark20,
+  dangerColor: baseColors.baseRed.dark20,
+  infoColor: baseColors.baseSky.dark20
+}
+
+/* ---------- escuros ---------- */
+
+const darkColors: SemanticSet = {
   primaryColor: '#0f1117',
   secondaryColor: '#1a1d26',
   tertiaryColor: '#242836',
@@ -118,52 +149,61 @@ const darkColors = {
   textMuted: '#8b90a4',
   borderColor: '#2e3347',
   accentColor: baseColors.baseSecondary.base,
-  successColor: baseColors.baseGreen.base,
-  warningColor: baseColors.baseAmber.base,
-  dangerColor: baseColors.baseRed.base,
-  infoColor: baseColors.baseSky.base
+  ...statusOnDark
 }
 
-/* =========================================      
-   LIGHT THEME      
-========================================= */
-const lightColors = {
-  primaryColor: '#ffffff',
-  secondaryColor: '#f4f6fa',
-  tertiaryColor: '#e8ecf4',
-  surfaceColor: '#dde2ee',
-  textColor: '#1a1d26',
-  textMuted: '#6b7280',
-  borderColor: '#dde2ee',
-  accentColor: baseColors.baseBlue.base,
-  successColor: baseColors.baseGreen.dark20,
-  warningColor: baseColors.baseAmber.dark20,
-  dangerColor: baseColors.baseRed.dark20,
-  infoColor: baseColors.baseSky.dark20
+/* aço: cinza-azulado de tom médio (bem mais claro que o dark) */
+const slateColors: SemanticSet = {
+  primaryColor: '#242b36',
+  secondaryColor: '#2c3441',
+  tertiaryColor: '#343d4c',
+  surfaceColor: '#3d4757',
+  textColor: '#eef2f7',
+  textMuted: '#a6b0c0',
+  borderColor: '#465164',
+  accentColor: '#7aa2f7',
+  ...statusOnDark
 }
 
-/* =========================================      
-   MIDNIGHT — azul escuro profundo      
-========================================= */
-const midnightColors = {
-  primaryColor: '#060b18',
-  secondaryColor: '#0d1424',
-  tertiaryColor: '#111c33',
-  surfaceColor: '#172240',
-  textColor: '#c8d8f0',
-  textMuted: '#5a7aaa',
-  borderColor: '#1e2e4a',
-  accentColor: '#3d6ef5',
-  successColor: baseColors.baseGreen.light20,
-  warningColor: baseColors.baseAmber.light20,
-  dangerColor: baseColors.baseRed.light20,
-  infoColor: baseColors.baseSky.light20
+/* azul-índigo profundo e saturado */
+const midnightColors: SemanticSet = {
+  primaryColor: '#070a1f',
+  secondaryColor: '#0e1330',
+  tertiaryColor: '#151c42',
+  surfaceColor: '#1d2756',
+  textColor: '#d6dcff',
+  textMuted: '#8c9bd6',
+  borderColor: '#2a3570',
+  accentColor: '#6d83ff',
+  ...statusOnDark
 }
 
-/* =========================================      
-   FOREST — verde escuro orgânico      
-========================================= */
-const forestColors = {
+/* preto puro + ciano neon (usado pelo accentTheme) */
+const accentSemantic: SemanticSet = {
+  primaryColor: '#05060a',
+  secondaryColor: '#0b0d14',
+  tertiaryColor: '#12151f',
+  surfaceColor: '#181c29',
+  textColor: '#f2f6ff',
+  textMuted: '#8a93b2',
+  borderColor: '#232a3d',
+  accentColor: '#00e5ff',
+  ...statusOnDark
+}
+
+const oceanColors: SemanticSet = {
+  primaryColor: '#04161c',
+  secondaryColor: '#08222b',
+  tertiaryColor: '#0d2f3b',
+  surfaceColor: '#123b4a',
+  textColor: '#d8f4f7',
+  textMuted: '#74aab5',
+  borderColor: '#19485a',
+  accentColor: '#38bdf8',
+  ...statusOnDark
+}
+
+const forestColors: SemanticSet = {
   primaryColor: '#0a120d',
   secondaryColor: '#111a14',
   tertiaryColor: '#162219',
@@ -172,16 +212,10 @@ const forestColors = {
   textMuted: '#5a8262',
   borderColor: '#243328',
   accentColor: '#3db85a',
-  successColor: baseColors.baseGreen.light30,
-  warningColor: baseColors.baseAmber.light20,
-  dangerColor: baseColors.baseRed.light20,
-  infoColor: baseColors.baseSky.light20
+  ...statusOnDark
 }
 
-/* =========================================      
-   AURORA — sunset base      
-========================================= */
-const auroraColors = {
+const auroraColors: SemanticSet = {
   primaryColor: '#12080f',
   secondaryColor: '#1c0f1a',
   tertiaryColor: '#261525',
@@ -190,32 +224,123 @@ const auroraColors = {
   textMuted: '#9a6898',
   borderColor: '#3e2040',
   accentColor: '#d45ab8',
-  successColor: baseColors.baseGreen.light20,
-  warningColor: baseColors.baseAmber.light20,
-  dangerColor: baseColors.baseRed.light20,
-  infoColor: baseColors.baseSky.light20
+  ...statusOnDark
 }
 
-/* =========================================      
-   SLATE — minimal cinza frio      
-========================================= */
-const slateColors = {
-  primaryColor: '#f8f9fb',
-  secondaryColor: '#edf0f5',
-  tertiaryColor: '#e1e6ef',
-  surfaceColor: '#d4dae8',
-  textColor: '#1e2533',
-  textMuted: '#64748b',
-  borderColor: '#cbd5e1',
-  accentColor: '#3b5bdb',
-  successColor: baseColors.baseGreen.dark20,
-  warningColor: baseColors.baseAmber.dark20,
-  dangerColor: baseColors.baseRed.dark20,
-  infoColor: baseColors.baseSky.dark20
+const sunsetColors: SemanticSet = {
+  primaryColor: '#1a0f0d',
+  secondaryColor: '#241512',
+  tertiaryColor: '#2f1b16',
+  surfaceColor: '#3b231c',
+  textColor: '#ffe8dc',
+  textMuted: '#c49a88',
+  borderColor: '#4a2d24',
+  accentColor: '#ff7a45',
+  ...statusOnDark
 }
 
-/* =========================================      
-   ACCENT COLORS (ex-neon; nomes neutros, valores iguais)      
+const mochaColors: SemanticSet = {
+  primaryColor: '#16110e',
+  secondaryColor: '#1f1814',
+  tertiaryColor: '#2a211b',
+  surfaceColor: '#352a22',
+  textColor: '#f1e6dc',
+  textMuted: '#a89280',
+  borderColor: '#43352b',
+  accentColor: '#d4a373',
+  ...statusOnDark
+}
+
+const draculaColors: SemanticSet = {
+  primaryColor: '#1e1f29',
+  secondaryColor: '#282a36',
+  tertiaryColor: '#303241',
+  surfaceColor: '#44475a',
+  textColor: '#f8f8f2',
+  textMuted: '#a9afd1',
+  borderColor: '#44475a',
+  accentColor: '#bd93f9',
+  ...statusOnDark
+}
+
+const cyberpunkColors: SemanticSet = {
+  primaryColor: '#0a0a0f',
+  secondaryColor: '#12121c',
+  tertiaryColor: '#1b1b2b',
+  surfaceColor: '#24243a',
+  textColor: '#f5f5ff',
+  textMuted: '#9a9ac0',
+  borderColor: '#2f2f4d',
+  accentColor: '#fcee0c',
+  ...statusOnDark
+}
+
+/* ---------- claros ---------- */
+
+/* cinza-claro neutro com acento índigo (o `default` é branco puro com azul) */
+const lightColors: SemanticSet = {
+  primaryColor: '#f3f4f6',
+  secondaryColor: '#ffffff',
+  tertiaryColor: '#e9ecf1',
+  surfaceColor: '#ffffff',
+  textColor: '#111827',
+  textMuted: '#5b6472',
+  borderColor: '#d7dbe3',
+  accentColor: '#4f46e5',
+  ...statusOnLight
+}
+
+/* lavanda (usado pelo pastelTheme) */
+const pastelSemantic: SemanticSet = {
+  primaryColor: '#fdf8ff',
+  secondaryColor: '#f6edfb',
+  tertiaryColor: '#eddcf6',
+  surfaceColor: '#ffffff',
+  textColor: '#3b2a4d',
+  textMuted: '#6f5d82',
+  borderColor: '#e2cdee',
+  accentColor: '#8b5cf6',
+  ...statusOnLight
+}
+
+const sandColors: SemanticSet = {
+  primaryColor: '#fbf6ee',
+  secondaryColor: '#f5ecdd',
+  tertiaryColor: '#ecdfc9',
+  surfaceColor: '#ffffff',
+  textColor: '#3d2f1f',
+  textMuted: '#7d6b55',
+  borderColor: '#e1d2b8',
+  accentColor: '#c2410c',
+  ...statusOnLight
+}
+
+const roseColors: SemanticSet = {
+  primaryColor: '#fff5f7',
+  secondaryColor: '#ffe9ee',
+  tertiaryColor: '#ffd9e2',
+  surfaceColor: '#ffffff',
+  textColor: '#4a1424',
+  textMuted: '#8d5565',
+  borderColor: '#f5c2cf',
+  accentColor: '#e11d48',
+  ...statusOnLight
+}
+
+const mintColors: SemanticSet = {
+  primaryColor: '#f2fbf6',
+  secondaryColor: '#e3f6ec',
+  tertiaryColor: '#cfeedd',
+  surfaceColor: '#ffffff',
+  textColor: '#12372a',
+  textMuted: '#437060',
+  borderColor: '#bfe3cf',
+  accentColor: '#059669',
+  ...statusOnLight
+}
+
+/* =========================================
+   ACCENT COLORS (ex-neon; nomes neutros, valores iguais)
 ========================================= */
 const accentColors = {
   accentPink: {
@@ -280,8 +405,8 @@ const accentColors = {
   }
 }
 
-/* =========================================      
-   PASTEL COLORS      
+/* =========================================
+   PASTEL COLORS
 ========================================= */
 const pastelColors = {
   pastelPink: {
@@ -352,39 +477,27 @@ const pastelColors = {
   }
 }
 
-/* =========================================      
-   GRADIENTES — helper + presets      
+/* =========================================
+   GRADIENTES — helper + presets
 ========================================= */
 export const createGradient = (colors: string[], angle: number = 135): string => {
-  const stops = colors
-    .map(
-      (color, index) => `${color} ${Math.round((index / Math.max(colors.length - 1, 1)) * 100)}%`
-    )
-    .join(', ')
+  const stops = colors.map((color, index) => `${color} ${Math.round((index / Math.max(colors.length - 1, 1)) * 100)}%`).join(', ')
 
   return `linear-gradient(${angle}deg, ${stops})`
 }
 
 const gradient: ThemeGradient = {
-  primary: createGradient([
-    baseColors.basePrimary.base,
-    baseColors.baseBlue.base,
-    baseColors.baseTertiary.light
-  ]),
+  primary: createGradient([baseColors.basePrimary.base, baseColors.baseBlue.base, baseColors.baseTertiary.light]),
   primarySoft: createGradient([baseColors.baseBlue.light40, baseColors.baseTertiary.light40]),
   primaryVertical: createGradient([baseColors.basePrimary.base, baseColors.baseTertiary.base], 180),
   lilac: createGradient([baseColors.baseLilac.base, baseColors.baseLilac.light20]),
-  sunset: createGradient([
-    baseColors.baseOrange.base,
-    baseColors.basePink.base,
-    baseColors.basePurple.base
-  ]),
+  sunset: createGradient([baseColors.baseOrange.base, baseColors.basePink.base, baseColors.basePurple.base]),
   ocean: createGradient([baseColors.baseCyan.base, baseColors.baseBlue.dark20]),
   forest: createGradient([baseColors.baseGreen.dark20, baseColors.baseGreen.light20])
 }
 
-/* =========================================      
-   BOX SHADOWS — função (BREAKING: boxShadow.lg -> boxShadow.lg())      
+/* =========================================
+   BOX SHADOWS — função (BREAKING: boxShadow.lg -> boxShadow.lg())
 ========================================= */
 type ShadowLayer = {
   inset?: boolean
@@ -408,19 +521,17 @@ const createShadow =
       return resolvedColor
     }
 
-    return layers
-      .map((layer) => {
+    return `box-shadow: ${layers
+      .map(layer => {
         const resolvedColor = customColor ?? layer.defaultColor
         const shadowColor = colorWithOpacity(resolvedColor, layer.opacity)
-        return `${layer.inset ? 'inset ' : ''}${layer.x} ${layer.y} ${layer.blur}${
-          layer.spread ? ` ${layer.spread}` : ''
-        } ${shadowColor}`
+        return `${layer.inset ? 'inset ' : ''}${layer.x} ${layer.y} ${layer.blur}${layer.spread ? ` ${layer.spread}` : ''} ${shadowColor}`
       })
-      .join(', ')
+      .join(', ')};`
   }
 
-/* =========================================      
-   STRUCTURE      
+/* =========================================
+   STRUCTURE
 ========================================= */
 const structure = {
   spacing: {
@@ -449,7 +560,7 @@ const structure = {
   },
 
   boxShadow: {
-    none: () => 'none',
+    none: () => 'box-shadow: none;',
     xs: createShadow([
       {
         x: '0',
@@ -679,53 +790,41 @@ const structure = {
   }
 }
 
-/* =========================================      
-   THEMES      
-   - Temas sem cores extras: `: DefaultTheme` (tipo público genérico)  
-   - accentTheme/pastelTheme: `satisfies DefaultTheme` — valida contra o  
-    tipo sem apagar as chaves accent e pastel do objeto literal, então
-     `accentTheme.colors.accentBlue.base` compila sem `?.`/`??`  
+/* =========================================
+   THEMES
+   - makeTheme: junta a estrutura comum + paleta + cores do tema
+   - accentTheme/pastelTheme: `satisfies DefaultTheme` preserva as chaves accent/pastel
 ========================================= */
+const makeTheme = (semantic: SemanticSet): DefaultTheme => ({
+  ...structure,
+  colors: { ...baseColors, ...semantic }
+})
+
 export const maskedTheme: DefaultTheme = {
   ...structure,
   colors: { ...baseColors, ...defaultColors }
 }
 
-export const darkTheme: DefaultTheme = {
-  ...structure,
-  colors: { ...baseColors, ...darkColors }
-}
-
-export const lightTheme: DefaultTheme = {
-  ...structure,
-  colors: { ...baseColors, ...lightColors }
-}
-
-export const midnightTheme: DefaultTheme = {
-  ...structure,
-  colors: { ...baseColors, ...midnightColors }
-}
-
-export const forestTheme: DefaultTheme = {
-  ...structure,
-  colors: { ...baseColors, ...forestColors }
-}
-
-export const auroraTheme: DefaultTheme = {
-  ...structure,
-  colors: { ...baseColors, ...auroraColors }
-}
-
-export const slateTheme: DefaultTheme = {
-  ...structure,
-  colors: { ...baseColors, ...slateColors }
-}
+export const darkTheme = makeTheme(darkColors)
+export const lightTheme = makeTheme(lightColors)
+export const slateTheme = makeTheme(slateColors)
+export const midnightTheme = makeTheme(midnightColors)
+export const oceanTheme = makeTheme(oceanColors)
+export const forestTheme = makeTheme(forestColors)
+export const mintTheme = makeTheme(mintColors)
+export const auroraTheme = makeTheme(auroraColors)
+export const roseTheme = makeTheme(roseColors)
+export const sunsetTheme = makeTheme(sunsetColors)
+export const mochaTheme = makeTheme(mochaColors)
+export const sandTheme = makeTheme(sandColors)
+export const draculaTheme = makeTheme(draculaColors)
+export const cyberpunkTheme = makeTheme(cyberpunkColors)
 
 export const accentTheme = {
   ...structure,
   colors: {
     ...baseColors,
-    ...darkColors,
+    ...accentSemantic,
     ...accentColors,
     accentColor: accentColors.accentBlue.base
   }
@@ -735,24 +834,32 @@ export const pastelTheme = {
   ...structure,
   colors: {
     ...baseColors,
-    ...lightColors,
+    ...pastelSemantic,
     ...pastelColors,
-    accentColor: pastelColors.pastelBlue.base
+    accentColor: pastelSemantic.accentColor
   }
 } satisfies DefaultTheme
 
-/* =========================================      
-   EXPORT      
+/* =========================================
+   EXPORT — ordem = ordem do ThemeSwitcher e da grade de temas
 ========================================= */
 export const maskedThemeConfig = {
   default: maskedTheme,
   dark: darkTheme,
   light: lightTheme,
-  midnight: midnightTheme,
-  forest: forestTheme,
-  aurora: auroraTheme,
   slate: slateTheme,
+  midnight: midnightTheme,
   accent: accentTheme,
+  ocean: oceanTheme,
+  forest: forestTheme,
+  mint: mintTheme,
+  aurora: auroraTheme,
+  rose: roseTheme,
+  sunset: sunsetTheme,
+  mocha: mochaTheme,
+  sand: sandTheme,
+  dracula: draculaTheme,
+  cyberpunk: cyberpunkTheme,
   pastel: pastelTheme
 } as const
 
