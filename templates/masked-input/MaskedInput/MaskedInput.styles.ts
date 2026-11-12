@@ -13,6 +13,7 @@ type props = {
 
 /* ============================================================
  * CONTAINER — todas as cores passam por var(--mc-input-*, fallback)
+ * Os triggers de Select/Time são <button data-mc-trigger> (não usam id).
  * ============================================================ */
 
 export const MaskedInputContainer = styled.div<props>`
@@ -27,8 +28,7 @@ export const MaskedInputContainer = styled.div<props>`
   input,
   textarea,
   select,
-  #masked-select-trigger,
-  #masked-time-trigger {
+  [data-mc-trigger] {
     width: 100%;
     border-radius: ${({ $radius }) => ($radius ? `${$radius}px` : '18px')};
     border: 2px solid var(--mc-input-border, ${maskedTheme.colors.baseBlue.light08});
@@ -40,8 +40,8 @@ export const MaskedInputContainer = styled.div<props>`
     text-align: left;
     ${transitions.slow}
 
-    ${({ $hasToggle }) => $hasToggle && `padding-right: 44px;`}
-
+    ${({ $hasToggle }) => $hasToggle && `padding-right: 44px;`}  
+  
     input.input-hidden {
       position: absolute;
       inset: 0;
@@ -92,8 +92,7 @@ export const MaskedInputContainer = styled.div<props>`
 
   input,
   select,
-  #masked-select-trigger,
-  #masked-time-trigger {
+  [data-mc-trigger] {
     min-height: 44px;
     padding: ${({ $icon }) => ($icon ? '0 12px' : '0 12px 0 44px')};
     line-height: 40px;
@@ -105,7 +104,8 @@ export const MaskedInputContainer = styled.div<props>`
     width: 100%;
     resize: none;
     scrollbar-width: thin;
-    scrollbar-color: var(--mc-input-fg, ${maskedTheme.colors.baseBlue.base}) var(--mc-input-disabled-bg, ${maskedTheme.colors.baseBlue.light20});
+    scrollbar-color: var(--mc-input-fg, ${maskedTheme.colors.baseBlue.base})
+      var(--mc-input-disabled-bg, ${maskedTheme.colors.baseBlue.light20});
   }
 `
 

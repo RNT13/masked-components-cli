@@ -22,7 +22,7 @@
     "prepublishOnly": "npm run typecheck && npm test && npm run build",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"templates/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"templates/**/*.{ts,tsx}\"",
-    "lint": "eslint src templates --ext .ts,.tsx"
+    "lint": "eslint src templates"
   },
   "keywords": [
     "masked",

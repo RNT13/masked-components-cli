@@ -33,7 +33,7 @@ function makeTemplates(root: string): string {
     "import '../animations/nao-existe'\n"
   )
   fs.outputFileSync(
-    path.join(t, 'masked-config/MaskedConfig/MaskedConfigProvider.tsx'),
+    path.join(t, 'masked-config/MaskedConfigProvider.tsx'),
     'export const MaskedConfigProvider = () => null\n'
   )
   fs.outputFileSync(

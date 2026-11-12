@@ -1,3 +1,5 @@
-node_modules
-REPORT.md
+node_modules  
+dist  
+.tmp-typecheck-*  
+REPORT.md  
 repomix-output.xml

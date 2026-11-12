@@ -38,7 +38,7 @@ const getPosition = (side: DrawerSide, desktopSize: string, tabletSize: string, 
     css`
       top: 0;
       left: 0;
-      height: 100vh;
+      height: 100dvh; 
     `}
     ${side === 'right' &&
     css`
@@ -124,7 +124,7 @@ export const DrawerPanel = styled.div<{
   transition: ${({ $transition }) => transitionMap[$transition]};
 
   max-width: 100vw;
-  max-height: 100vh;
+  max-height: 100dvh;
 
   ${media.reducedMotion} {
     transition: opacity 0.2s ease;

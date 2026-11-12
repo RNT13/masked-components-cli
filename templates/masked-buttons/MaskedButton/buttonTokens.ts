@@ -58,8 +58,8 @@ const SWITCH_TOKEN_PROPS = [
 ] as const
 
 /**
- * Tokens cujo valor numérico é unitless (não recebem sufixo 'px').
- * Qualquer outro número vira '<n>px' — ex.: radius: 999 -> '999px'.
+ * Tokens cujo valor numérico é unitless (não recebem sufixo 'px').  
+ * Qualquer outro número vira '<n>px' — ex.: radius: 999 -> '999px'.  
  */
 const UNITLESS_TOKENS = new Set<string>(['disabled-opacity'])
 
@@ -69,11 +69,11 @@ const toCssValue = (key: string, value: string | number): string | number =>
 export type ButtonTokensStyle = CSSProperties
 
 /**
- * Gera o objeto de style com as CSS vars do botão.
- * Precedência: tokens (prop) > colorTheme (registro) > nada (CSS usa fallback do tema).
- * O texto sobre `bg` é escolhido por contraste (WCAG) quando o tema não define `onBase`.
+ * Gera o objeto de style com as CSS vars do botão.  
+ * Precedência: tokens (prop) > colorTheme (registro) > nada (CSS usa fallback do tema).  
+ * O texto sobre `bg` é escolhido por contraste (WCAG) quando o tema não define `onBase`.  
  *
- * @example <button style={resolveButtonTokens({ colorTheme: 'ruby' })} />
+ * @example <button style={resolveButtonTokens({ colorTheme: 'ruby' })} />  
  */
 export function resolveButtonTokens(opts: {
   colorTheme?: ColorThemeName

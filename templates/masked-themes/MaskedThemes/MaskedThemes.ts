@@ -146,7 +146,7 @@ const darkColors: SemanticSet = {
   tertiaryColor: '#242836',
   surfaceColor: '#2e3347',
   textColor: '#e8eaf0',
-  textMuted: '#8b90a4',
+  textMuted: '#9ba1b5',
   borderColor: '#2e3347',
   accentColor: baseColors.baseSecondary.base,
   ...statusOnDark
@@ -159,7 +159,7 @@ const slateColors: SemanticSet = {
   tertiaryColor: '#343d4c',
   surfaceColor: '#3d4757',
   textColor: '#eef2f7',
-  textMuted: '#a6b0c0',
+  textMuted: '#b4bdc9',
   borderColor: '#465164',
   accentColor: '#7aa2f7',
   ...statusOnDark
@@ -209,7 +209,7 @@ const forestColors: SemanticSet = {
   tertiaryColor: '#162219',
   surfaceColor: '#1e2e22',
   textColor: '#c4dcc8',
-  textMuted: '#5a8262',
+  textMuted: '#7aa87e',
   borderColor: '#243328',
   accentColor: '#3db85a',
   ...statusOnDark
@@ -221,7 +221,7 @@ const auroraColors: SemanticSet = {
   tertiaryColor: '#261525',
   surfaceColor: '#321c32',
   textColor: '#f0d4ec',
-  textMuted: '#9a6898',
+  textMuted: '#b07aae',
   borderColor: '#3e2040',
   accentColor: '#d45ab8',
   ...statusOnDark
@@ -257,7 +257,7 @@ const draculaColors: SemanticSet = {
   tertiaryColor: '#303241',
   surfaceColor: '#44475a',
   textColor: '#f8f8f2',
-  textMuted: '#a9afd1',
+  textMuted: '#bcc2e8',
   borderColor: '#44475a',
   accentColor: '#bd93f9',
   ...statusOnDark
@@ -572,7 +572,7 @@ const structure = {
   },
 
   boxShadow: {
-    none: () => 'box-shadow: none;',
+    none: () => 'none',
     xs: createShadow([
       {
         x: '0',
