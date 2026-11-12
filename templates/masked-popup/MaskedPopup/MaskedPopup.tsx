@@ -32,8 +32,11 @@ export function MaskedPopup({
   const panelRef = useRef<HTMLDivElement>(null)
 
   /* onClose via ref: trocar a callback não re-executa o efeito de foco */
+  /* onClose via ref: trocar a callback não re-executa o efeito de foco */
   const onCloseRef = useRef(onClose)
-  onCloseRef.current = onClose
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
 
   const mounted = useSyncExternalStore(
     () => () => {},
