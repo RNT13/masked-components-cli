@@ -31,10 +31,14 @@ export function MaskedPopup({
 }: MaskedPopupProps) {
   const panelRef = useRef<HTMLDivElement>(null)
 
+  /* onClose via ref: trocar a callback não re-executa o efeito de foco */
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+
   const mounted = useSyncExternalStore(
-    () => () => { },
-    () => true,      // client
-    () => false      // server
+    () => () => {},
+    () => true, // client
+    () => false // server
   )
 
   useEffect(() => {
@@ -46,7 +50,7 @@ export function MaskedPopup({
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && closeOnEscape) {
-        onClose()
+        onCloseRef.current()
         return
       }
       if (e.key !== 'Tab' || !panel) return
@@ -72,7 +76,7 @@ export function MaskedPopup({
       document.removeEventListener('keydown', onKeyDown)
       prevActive?.focus?.()
     }
-  }, [isOpen, closeOnEscape, onClose])
+  }, [isOpen, closeOnEscape])
 
   useEffect(() => {
     if (!isOpen || !lockScroll) return
@@ -85,15 +89,16 @@ export function MaskedPopup({
 
   const themeVars = resolveColorTheme(colorTheme, maskedTheme)
 
+  /* prefixo --mc-popup-* (o styles lê --mc-popup-*); aplicado no overlay E no painel */
   const vars = {
     ...(themeVars?.base
       ? {
-        '--mc-drawer-panel-bg': themeVars.base,
-        '--mc-drawer-panel-fg': themeVars.onBase ?? readableTextOn(themeVars.base)
-      }
+          '--mc-popup-panel-bg': themeVars.base,
+          '--mc-popup-panel-fg': themeVars.onBase ?? readableTextOn(themeVars.base)
+        }
       : {}),
-    ...(tokens?.overlayBg ? { '--mc-drawer-overlay-bg': tokens.overlayBg } : {}),
-    ...(tokens?.panelBg ? { '--mc-drawer-panel-bg': tokens.panelBg } : {})
+    ...(tokens?.overlayBg ? { '--mc-popup-overlay-bg': tokens.overlayBg } : {}),
+    ...(tokens?.panelBg ? { '--mc-popup-panel-bg': tokens.panelBg } : {})
   } as CSSProperties
 
   const content = (
@@ -102,12 +107,16 @@ export function MaskedPopup({
         $isOpen={isOpen}
         $blur={overlayBlur}
         $zIndex={zIndex}
-        onClick={closeOnOverlay ? onClose : undefined}
+        style={vars}
+        aria-hidden="true"
+        onClick={closeOnOverlay ? () => onCloseRef.current() : undefined}
       />
       <PopupPanel
         ref={panelRef}
         role="dialog"
         aria-modal="true"
+        aria-hidden={!isOpen}
+        inert={!isOpen}
         $isOpen={isOpen}
         $width={width}
         $maxWidth={maxWidth}

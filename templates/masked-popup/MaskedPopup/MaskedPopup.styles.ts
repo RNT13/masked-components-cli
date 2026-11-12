@@ -59,7 +59,7 @@ export const PopupPanel = styled.div<{
   gap: 0.75rem;
   width: ${({ $width }) => $width};
   max-width: ${({ $maxWidth }) => $maxWidth};
-  max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
   padding: var(--mc-popup-padding, 1.75rem);
   border-radius: var(--mc-popup-radius, 20px);

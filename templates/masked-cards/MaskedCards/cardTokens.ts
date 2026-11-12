@@ -37,8 +37,8 @@ function toKebab(key: string): string {
 }
 
 /**
- * Deriva tokens --mc-card-* do colorTheme + theme ativo; overrides do usuário vencem.
- * O texto sobre o fundo é escolhido por contraste (WCAG) quando o tema não define `onBase`.
+ * Deriva tokens --mc-card-* do colorTheme + theme ativo; overrides do usuário vencem.  
+ * O texto sobre o fundo é escolhido por contraste (WCAG) quando o tema não define `onBase`.  
  */
 export function resolveCardTokens(
   input: ResolveCardTokensInput,
