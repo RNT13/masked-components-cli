@@ -12,7 +12,7 @@ export function readOwnVersion(
     if (fs.existsSync(file)) {
       try {
         const pkg = JSON.parse(fs.readFileSync(file, 'utf8')) as { name?: string; version?: string }
-        if (pkg.name === 'masked-components-cli' && pkg.version) return pkg.version
+        if (pkg.name === 'masked-components' && pkg.version) return pkg.version
       } catch {
         // package.json ilegível: segue subindo
       }

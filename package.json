@@ -1,11 +1,11 @@
 {
-  "name": "masked-components-cli",
-  "version": "1.7.0",
+  "name": "masked-components",
+  "version": "2.0.0",
   "type": "module",
   "description": "Instala componentes React + TypeScript (copy-in) direto no seu projeto: botões, inputs, cards, drawer, popup, skeleton, temas, animações, hooks e utils.",
   "bin": {
-    "masked-components-cli": "./dist/cli.js",
-    "masked-components": "./dist/cli.js"
+    "masked-components": "dist/cli.js",
+    "masked-components-cli": "dist/cli.js"
   },
   "files": [
     "dist",
