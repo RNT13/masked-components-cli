@@ -2,9 +2,10 @@
 // Padrão F.26: --mc-<componente>-<propriedade>[-<estado>]
 
 import type { CSSProperties } from 'react'
+import type { DefaultTheme } from 'styled-components'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
-import { readableTextOn } from '@/utils/masked-utils'
+import { pickReadable, readableTextOn } from '@/utils/masked-utils'
 import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 
 /** Paleta neutra da lib (F.25). */
@@ -60,8 +61,8 @@ const SWITCH_TOKEN_PROPS = [
 ] as const
 
 /**
- * Tokens cujo valor numérico é unitless (não recebem sufixo 'px').
- * Qualquer outro número vira '<n>px' — ex.: radius: 999 -> '999px'.
+ * Tokens cujo valor numérico é unitless (não recebem sufixo 'px').  
+ * Qualquer outro número vira '<n>px' — ex.: radius: 999 -> '999px'.  
  */
 const UNITLESS_TOKENS = new Set<string>(['disabled-opacity'])
 
@@ -71,15 +72,17 @@ const toCssValue = (key: string, value: string | number): string | number =>
 export type ButtonTokensStyle = CSSProperties
 
 /**
- * Gera o objeto de style com as CSS vars do botão.
- * Precedência: tokens (prop) > colorTheme (registro) > nada (CSS usa fallback do tema).
- * O texto sobre `bg` é escolhido por contraste (WCAG) quando o tema não define `onBase`.
+ * Gera o objeto de style com as CSS vars do botão.  
+ * Precedência: tokens (prop) > colorTheme (registro) > nada (CSS usa fallback do tema).  
+ * O texto sobre `bg` é escolhido por contraste (WCAG): quando `theme` é passado,  
+ * as cores semânticas do tema ativo entram como candidatas antes de branco/preto.  
  *
- * @example <button style={resolveButtonTokens({ colorTheme: 'ruby' })} />
+ * @example <button style={resolveButtonTokens({ colorTheme: 'ruby' })} />  
  */
 export function resolveButtonTokens(opts: {
   colorTheme?: ColorThemeName
   tokens?: Record<string, string | number>
+  theme?: DefaultTheme
 }): ButtonTokensStyle {
   const vars: Record<string, string | number> = {}
 
@@ -92,7 +95,14 @@ export function resolveButtonTokens(opts: {
     const bg = c.base
     const bgHover = c.dark08 ?? c.base
     const bgActive = c.dark20 ?? bgHover
-    const fg = c.onBase ?? readableTextOn(bg)
+    const fg =
+      c.onBase ??
+      pickReadable(bg, [
+        opts.theme?.colors.primaryColor,
+        opts.theme?.colors.textColor,
+        '#ffffff',
+        '#111111'
+      ])
     const ring = c.glow ?? c.light50 ?? c.base
 
     vars['--mc-btn-bg'] = bg
@@ -106,7 +116,6 @@ export function resolveButtonTokens(opts: {
     vars['--mc-btn-border-active'] = bgActive
     vars['--mc-btn-ring'] = ring
     vars['--mc-btn-ring-focus'] = ring
-    vars['--mc-btn-bg-dark'] = c.dark20 ?? c.dark08 ?? c.base
     vars['--mc-btn-bg-dark'] = c.dark20 ?? c.dark08 ?? bg
     vars['--mc-btn-border-dark'] = c.dark20 ?? c.dark08 ?? bg
 
