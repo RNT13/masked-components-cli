@@ -121,6 +121,9 @@ export interface ThemeSemanticColors {
   warningColor?: string
   dangerColor?: string
   infoColor?: string
+  primaryGradient?: string
+  surfaceGradient?: string
+  accentGradient?: string
 }
 
 /* =========================================    
@@ -153,7 +156,13 @@ export interface ThemeBoxShadow {
 ========================================= */
 declare module 'styled-components' {
   export interface DefaultTheme {
-    colors: BaseColors & Partial<AccentColors> & Partial<PastelColors> & ThemeSemanticColors
+    colors: BaseColors &
+      Partial<AccentColors> &
+      Partial<PastelColors> &
+      ThemeSemanticColors & {
+        /** todas as cores que variam por tema, agrupadas */
+        semantic?: ThemeSemanticColors
+      }
 
     spacing: {
       '2xs': string

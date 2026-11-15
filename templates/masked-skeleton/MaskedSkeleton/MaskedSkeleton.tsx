@@ -1,6 +1,7 @@
+
 'use client'
 
-import { forwardRef } from 'react'
+import { forwardRef, type HTMLAttributes } from 'react'
 import { css, styled } from 'styled-components'
 
 /* ---------------------------------------------------------------
@@ -8,10 +9,13 @@ import { css, styled } from 'styled-components'
  *   --mc-skeleton-base        -> cor de fundo do bloco
  *   --mc-skeleton-highlight   -> faixa do shimmer
  *   --mc-skeleton-duration    -> velocidade (default 1.35s)
- * Defaults: rgba branco (visual atual do Zandry, pensado para dark).
- * Para fundo claro, defina no wrapper ou no :root:
- *   --mc-skeleton-base: rgba(0,0,0,0.08);
- *   --mc-skeleton-highlight: rgba(0,0,0,0.12);
+ *
+ * Defaults:
+ *   - Base: theme.colors.tertiaryColor
+ *   - Highlight: theme.colors.borderColor
+ *
+ * Fallbacks neutros para quando as cores não estiverem disponíveis.
+ * Os tokens CSS têm prioridade sobre as cores do tema.
  * --------------------------------------------------------------- */
 
 type SkeletonBoxProps = {
@@ -29,6 +33,7 @@ const mcSkeletonPulse = css`
     100% {
       opacity: 0.72;
     }
+
     50% {
       opacity: 1;
     }
@@ -40,6 +45,7 @@ const mcSkeletonShimmer = css`
     0% {
       transform: translateX(-120%);
     }
+
     100% {
       transform: translateX(120%);
     }
@@ -51,19 +57,30 @@ const SkeletonBox = styled.div<SkeletonBoxProps>`
   overflow: hidden;
   isolation: isolate;
 
-  width: ${({ $width }) => (typeof $width === 'number' ? `${$width}px` : ($width ?? '100%'))};
-  height: ${({ $height }) => (typeof $height === 'number' ? `${$height}px` : ($height ?? '16px'))};
+  width: ${({ $width }) =>
+    typeof $width === 'number' ? `${$width}px` : ($width ?? '100%')};
+
+  height: ${({ $height }) =>
+    typeof $height === 'number' ? `${$height}px` : ($height ?? '16px')};
+
   border-radius: ${({ $radius }) =>
     typeof $radius === 'number' ? `${$radius}px` : ($radius ?? '12px')};
 
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)),
-    linear-gradient(
-      90deg,
-      var(--mc-skeleton-base, rgba(255, 255, 255, 0.04)) 0%,
-      var(--mc-skeleton-highlight, rgba(255, 255, 255, 0.16)) 50%,
-      var(--mc-skeleton-base, rgba(255, 255, 255, 0.04)) 100%
-    );
+  background: linear-gradient(
+    90deg,
+    var(
+      --mc-skeleton-base,
+      ${({ theme }) => theme.colors.tertiaryColor ?? 'rgba(0,0,0,0.06)'}
+    ) 0%,
+    var(
+      --mc-skeleton-highlight,
+      ${({ theme }) => theme.colors.borderColor ?? 'rgba(0,0,0,0.12)'}
+    ) 50%,
+    var(
+      --mc-skeleton-base,
+      ${({ theme }) => theme.colors.tertiaryColor ?? 'rgba(0,0,0,0.06)'}
+    ) 100%
+  );
 
   ${({ $animation }) => $animation === 'pulse' && mcSkeletonPulse}
 
@@ -71,16 +88,22 @@ const SkeletonBox = styled.div<SkeletonBoxProps>`
     content: '';
     position: absolute;
     inset: 0;
+
     background: linear-gradient(
       90deg,
       transparent 0%,
-      var(--mc-skeleton-highlight, rgba(255, 255, 255, 0.22)) 50%,
+      var(
+        --mc-skeleton-highlight,
+        ${({ theme }) => theme.colors.borderColor ?? 'rgba(0,0,0,0.14)'}
+      ) 50%,
       transparent 100%
     );
+
     animation: ${({ $animation }) =>
       $animation === 'shimmer'
         ? 'mcSkeletonShimmer var(--mc-skeleton-duration, 1.35s) ease-in-out infinite'
         : 'none'};
+
     pointer-events: none;
   }
 
@@ -88,35 +111,52 @@ const SkeletonBox = styled.div<SkeletonBoxProps>`
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
+
     &::before {
       animation: none;
     }
   }
 `
 
-export interface MaskedSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface MaskedSkeletonProps extends HTMLAttributes<HTMLDivElement> {
   /** Largura (número = px). Default: '100%'. */
   width?: string | number
+
   /** Altura (número = px). Default: 16. */
   height?: string | number
+
   /** Raio de borda (número = px). Ignorado quando `circle`. Default: 12. */
   radius?: string | number
+
   /** Atalho para um círculo (use width=height para o diâmetro). */
   circle?: boolean
-  /** Tipo de animação. 'shimmer' (faixa varrendo) | 'pulse' | 'none'. Default: 'shimmer'. */
+
+  /** Tipo de animação. 'shimmer' | 'pulse' | 'none'. Default: 'shimmer'. */
   animation?: 'shimmer' | 'pulse' | 'none'
 }
 
 /**
  * Placeholder de carregamento autossuficiente (sem deps externas).
+ *
+ * As cores são herdadas do tema ativo do styled-components,
+ * podendo ser sobrescritas pelos tokens CSS.
+ *
  * Componha com `flex`/`gap` para simular o layout real.
- * @example <MaskedSkeleton height={20} width="60%" />                 // linha de texto
- * @example <MaskedSkeleton circle width={48} height={48} />          // avatar
- * @example <MaskedSkeleton height={200} radius={16} animation="pulse" /> // imagem
+ *
+ * @example <MaskedSkeleton height={20} width="60%" />
+ * @example <MaskedSkeleton circle width={48} height={48} />
+ * @example <MaskedSkeleton height={200} radius={16} animation="pulse" />
  */
 export const MaskedSkeleton = forwardRef<HTMLDivElement, MaskedSkeletonProps>(
   (
-    { width = '100%', height = 16, radius = 12, circle = false, animation = 'shimmer', ...rest },
+    {
+      width = '100%',
+      height = 16,
+      radius = 12,
+      circle = false,
+      animation = 'shimmer',
+      ...rest
+    },
     ref
   ) => (
     <SkeletonBox
@@ -130,4 +170,5 @@ export const MaskedSkeleton = forwardRef<HTMLDivElement, MaskedSkeletonProps>(
     />
   )
 )
+
 MaskedSkeleton.displayName = 'MaskedSkeleton'

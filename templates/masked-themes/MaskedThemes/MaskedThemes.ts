@@ -103,7 +103,10 @@ const defaultColors = {
   successColor: baseColors.baseGreen.base,
   warningColor: baseColors.baseAmber.base,
   dangerColor: baseColors.baseRed.base,
-  infoColor: baseColors.baseSky.base
+  infoColor: baseColors.baseSky.base,
+  primaryGradient: `linear-gradient(135deg, ${baseColors.basePureWhite.base} 0%, ${baseColors.baseGlass.light20} 55%, ${baseColors.baseGlass.base} 100%)`,
+  surfaceGradient: `linear-gradient(180deg, ${baseColors.basePureWhite.base} 0%, ${baseColors.baseGlass.light20} 100%)`,
+  accentGradient: `linear-gradient(135deg, ${baseColors.baseBlue.base} 0%, ${baseColors.baseTertiary.base} 100%)`
 }
 
 /* =========================================
@@ -122,7 +125,26 @@ type SemanticSet = {
   warningColor: string
   dangerColor: string
   infoColor: string
+  /** gradiente de fundo da página (default: primary -> tertiary) */
+  primaryGradient?: string
+  /** gradiente de superfícies/cards (default: surface -> secondary) */
+  surfaceGradient?: string
+  /** gradiente de destaque/brand (default: accent -> info) */
+  accentGradient?: string
 }
+
+/** Preenche os gradientes que o tema não definiu, derivando das cores semânticas. */
+const withGradients = (set: SemanticSet): SemanticSet => ({
+  ...set,
+  primaryGradient:
+    set.primaryGradient ??
+    `linear-gradient(135deg, ${set.primaryColor} 0%, ${set.tertiaryColor} 100%)`,
+  surfaceGradient:
+    set.surfaceGradient ??
+    `linear-gradient(180deg, ${set.surfaceColor} 0%, ${set.secondaryColor} 100%)`,
+  accentGradient:
+    set.accentGradient ?? `linear-gradient(135deg, ${set.accentColor} 0%, ${set.infoColor} 100%)`
+})
 
 /* cores de status legíveis em fundo escuro / claro */
 const statusOnDark = {
@@ -149,6 +171,9 @@ const darkColors: SemanticSet = {
   textMuted: '#9ba1b5',
   borderColor: '#2e3347',
   accentColor: baseColors.baseSecondary.base,
+  primaryGradient: 'linear-gradient(135deg, #0f1117 0%, #1a1d26 55%, #242836 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #2e3347 0%, #242836 100%)',
+  accentGradient: 'linear-gradient(135deg, #4da3ff 0%, #8b5cf6 100%)',
   ...statusOnDark
 }
 
@@ -162,6 +187,9 @@ const slateColors: SemanticSet = {
   textMuted: '#b4bdc9',
   borderColor: '#465164',
   accentColor: '#7aa2f7',
+  primaryGradient: 'linear-gradient(160deg, #242b36 0%, #343d4c 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #46506a 0%, #3d4757 100%)',
+  accentGradient: 'linear-gradient(135deg, #7aa2f7 0%, #5eead4 100%)',
   ...statusOnDark
 }
 
@@ -175,6 +203,9 @@ const midnightColors: SemanticSet = {
   textMuted: '#8c9bd6',
   borderColor: '#2a3570',
   accentColor: '#6d83ff',
+  primaryGradient: 'linear-gradient(180deg, #070a1f 0%, #0e1330 50%, #151c42 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #243064 0%, #1d2756 100%)',
+  accentGradient: 'linear-gradient(135deg, #6d83ff 0%, #a78bfa 100%)',
   ...statusOnDark
 }
 
@@ -188,6 +219,9 @@ const accentSemantic: SemanticSet = {
   textMuted: '#8a93b2',
   borderColor: '#232a3d',
   accentColor: '#00e5ff',
+  primaryGradient: 'linear-gradient(135deg, #05060a 0%, #0b0d14 60%, #12151f 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #1d2233 0%, #181c29 100%)',
+  accentGradient: 'linear-gradient(135deg, #00e5ff 0%, #b026ff 100%)',
   ...statusOnDark
 }
 
@@ -200,6 +234,9 @@ const oceanColors: SemanticSet = {
   textMuted: '#74aab5',
   borderColor: '#19485a',
   accentColor: '#38bdf8',
+  primaryGradient: 'linear-gradient(180deg, #04161c 0%, #08222b 55%, #0d2f3b 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #164557 0%, #123b4a 100%)',
+  accentGradient: 'linear-gradient(135deg, #38bdf8 0%, #2dd4bf 100%)',
   ...statusOnDark
 }
 
@@ -212,6 +249,9 @@ const forestColors: SemanticSet = {
   textMuted: '#7aa87e',
   borderColor: '#243328',
   accentColor: '#3db85a',
+  primaryGradient: 'linear-gradient(160deg, #0a120d 0%, #111a14 50%, #162219 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #243628 0%, #1e2e22 100%)',
+  accentGradient: 'linear-gradient(135deg, #3db85a 0%, #a3e635 100%)',
   ...statusOnDark
 }
 
@@ -224,6 +264,9 @@ const auroraColors: SemanticSet = {
   textMuted: '#b07aae',
   borderColor: '#3e2040',
   accentColor: '#d45ab8',
+  primaryGradient: 'linear-gradient(135deg, #12080f 0%, #1c0f1a 45%, #261525 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #3b2139 0%, #321c32 100%)',
+  accentGradient: 'linear-gradient(135deg, #d45ab8 0%, #6d83ff 55%, #2dd4bf 100%)',
   ...statusOnDark
 }
 
@@ -236,6 +279,9 @@ const sunsetColors: SemanticSet = {
   textMuted: '#c49a88',
   borderColor: '#4a2d24',
   accentColor: '#ff7a45',
+  primaryGradient: 'linear-gradient(180deg, #1a0f0d 0%, #241512 50%, #3a1a1a 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #45291f 0%, #3b231c 100%)',
+  accentGradient: 'linear-gradient(135deg, #ff7a45 0%, #e11d48 100%)',
   ...statusOnDark
 }
 
@@ -248,6 +294,9 @@ const mochaColors: SemanticSet = {
   textMuted: '#a89280',
   borderColor: '#43352b',
   accentColor: '#d4a373',
+  primaryGradient: 'linear-gradient(160deg, #16110e 0%, #1f1814 50%, #2a211b 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #3d3128 0%, #352a22 100%)',
+  accentGradient: 'linear-gradient(135deg, #d4a373 0%, #f2c48d 100%)',
   ...statusOnDark
 }
 
@@ -260,6 +309,9 @@ const draculaColors: SemanticSet = {
   textMuted: '#bcc2e8',
   borderColor: '#44475a',
   accentColor: '#bd93f9',
+  primaryGradient: 'linear-gradient(135deg, #1e1f29 0%, #282a36 55%, #303241 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #4d5066 0%, #44475a 100%)',
+  accentGradient: 'linear-gradient(135deg, #bd93f9 0%, #ff79c6 100%)',
   ...statusOnDark
 }
 
@@ -272,6 +324,9 @@ const cyberpunkColors: SemanticSet = {
   textMuted: '#9a9ac0',
   borderColor: '#2f2f4d',
   accentColor: '#fcee0c',
+  primaryGradient: 'linear-gradient(135deg, #0a0a0f 0%, #12121c 50%, #1b1b2b 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #2b2b46 0%, #24243a 100%)',
+  accentGradient: 'linear-gradient(135deg, #fcee0c 0%, #00e5ff 100%)',
   ...statusOnDark
 }
 
@@ -287,6 +342,9 @@ const lightColors: SemanticSet = {
   textMuted: '#5b6472',
   borderColor: '#d7dbe3',
   accentColor: '#4f46e5',
+  primaryGradient: 'linear-gradient(180deg, #f3f4f6 0%, #e9ecf1 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #ffffff 0%, #f3f4f6 100%)',
+  accentGradient: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
   ...statusOnLight
 }
 
@@ -300,6 +358,9 @@ const pastelSemantic: SemanticSet = {
   textMuted: '#6f5d82',
   borderColor: '#e2cdee',
   accentColor: '#8b5cf6',
+  primaryGradient: 'linear-gradient(135deg, #fdf8ff 0%, #f6edfb 50%, #eddcf6 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #ffffff 0%, #f6edfb 100%)',
+  accentGradient: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',
   ...statusOnLight
 }
 
@@ -312,6 +373,9 @@ const sandColors: SemanticSet = {
   textMuted: '#7d6b55',
   borderColor: '#e1d2b8',
   accentColor: '#c2410c',
+  primaryGradient: 'linear-gradient(160deg, #fbf6ee 0%, #f5ecdd 55%, #ecdfc9 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #ffffff 0%, #f5ecdd 100%)',
+  accentGradient: 'linear-gradient(135deg, #c2410c 0%, #d97706 100%)',
   ...statusOnLight
 }
 
@@ -324,6 +388,9 @@ const roseColors: SemanticSet = {
   textMuted: '#8d5565',
   borderColor: '#f5c2cf',
   accentColor: '#e11d48',
+  primaryGradient: 'linear-gradient(135deg, #fff5f7 0%, #ffe9ee 50%, #ffd9e2 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #ffffff 0%, #ffe9ee 100%)',
+  accentGradient: 'linear-gradient(135deg, #e11d48 0%, #f97316 100%)',
   ...statusOnLight
 }
 
@@ -336,6 +403,9 @@ const mintColors: SemanticSet = {
   textMuted: '#437060',
   borderColor: '#bfe3cf',
   accentColor: '#059669',
+  primaryGradient: 'linear-gradient(160deg, #f2fbf6 0%, #e3f6ec 55%, #cfeedd 100%)',
+  surfaceGradient: 'linear-gradient(180deg, #ffffff 0%, #e3f6ec 100%)',
+  accentGradient: 'linear-gradient(135deg, #059669 0%, #0891b2 100%)',
   ...statusOnLight
 }
 
@@ -509,7 +579,9 @@ const gradient: ThemeGradient = {
 }
 
 /* =========================================
-   BOX SHADOWS — função (BREAKING: boxShadow.lg -> boxShadow.lg())
+   BOX SHADOWS — função que devolve SÓ o valor
+   (use: box-shadow: ${theme.boxShadow.lg()};)
+   BREAKING: boxShadow.lg (string) -> boxShadow.lg() (função)
 ========================================= */
 type ShadowLayer = {
   inset?: boolean
@@ -804,17 +876,17 @@ const structure = {
 
 /* =========================================
    THEMES
-   - makeTheme: junta a estrutura comum + paleta + cores do tema
+   - makeTheme: estrutura comum + paleta + cores semânticas (já com gradientes)
    - accentTheme/pastelTheme: `satisfies DefaultTheme` preserva as chaves accent/pastel
 ========================================= */
-const makeTheme = (semantic: SemanticSet): DefaultTheme => ({
+const makeTheme = (set: SemanticSet): DefaultTheme => ({
   ...structure,
-  colors: { ...baseColors, ...semantic }
+  colors: { ...baseColors, ...withGradients(set) }
 })
 
 export const maskedTheme: DefaultTheme = {
   ...structure,
-  colors: { ...baseColors, ...defaultColors }
+  colors: { ...baseColors, ...withGradients(defaultColors) }
 }
 
 export const darkTheme = makeTheme(darkColors)
@@ -836,7 +908,7 @@ export const accentTheme = {
   ...structure,
   colors: {
     ...baseColors,
-    ...accentSemantic,
+    ...withGradients(accentSemantic),
     ...accentColors,
     accentColor: accentColors.accentBlue.base
   }
@@ -846,7 +918,7 @@ export const pastelTheme = {
   ...structure,
   colors: {
     ...baseColors,
-    ...pastelSemantic,
+    ...withGradients(pastelSemantic),
     ...pastelColors,
     accentColor: pastelSemantic.accentColor
   }

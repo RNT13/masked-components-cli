@@ -66,6 +66,11 @@ export function TimeInput(props: Props) {
   const { hour, minute } = parseTime(current)
   const align = props.align ?? 'left'
 
+  const timeRef = useRef({ hour, minute })
+  useEffect(() => {
+    timeRef.current = { hour, minute }
+  })
+
   // o dropdown vive em um portal (fora do container): recebe as mesmas variáveis
   const tokenStyle = resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens })
 
@@ -103,8 +108,9 @@ export function TimeInput(props: Props) {
     if (!open) return
 
     updateDropdownPosition()
-    hourRefs.current[hour]?.scrollIntoView({ block: 'center' })
-    minuteRefs.current[minute]?.scrollIntoView({ block: 'center' })
+    const { hour: h, minute: m } = timeRef.current
+    hourRefs.current[h]?.scrollIntoView({ block: 'center' })
+    minuteRefs.current[m]?.scrollIntoView({ block: 'center' })
 
     window.addEventListener('resize', updateDropdownPosition)
     window.addEventListener('scroll', updateDropdownPosition, true)
