@@ -1,6 +1,7 @@
 'use client'
 
 import { forwardRef, MouseEvent } from 'react'
+import { useTheme } from 'styled-components'
 import { resolveButtonTokens } from '../buttonTokens'
 import { BaseButtonProps, ButtonClickEvent } from '../MaskedButton.types'
 import { BaseButtonContainer, ButtonContent, IconWrapper, LabelDiv } from './BaseButton.styles'
@@ -35,10 +36,13 @@ export const BaseButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Base
   ) {
     const isDisabled = state === 'disabled' || state === 'loading'
 
+    /* tema ativo (undefined sem provider): alimenta os candidatos do pickReadable */
+    const theme = useTheme()
+
     // linkComponent (provider/prop) > <a> nativo; sem href sempre <button>
     const Component = href ? (linkComponent ?? 'a') : 'button'
     const accessibleName = ariaLabel ?? label
-    const tokenStyle = resolveButtonTokens({ colorTheme, tokens })
+    const tokenStyle = resolveButtonTokens({ colorTheme, tokens, theme })
 
     function handleClick(event: ButtonClickEvent) {
       if (isDisabled) {

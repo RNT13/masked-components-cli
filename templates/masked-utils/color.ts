@@ -75,8 +75,10 @@ function hslToRgb(h: number, s: number, l: number): Rgb {
   }
 }
 
-const HSL_RE = /^hsla?\(\s*(-?[\d.]+)(?:deg)?\s*[, ]\s*([\d.]+)%\s*[, ]\s*([\d.]+)%(?:\s*[,/]\s*[\d.]+%?)?\s*\)$/i
-const RGB_RE = /^rgba?\(\s*([\d.]+)\s*[, ]\s*([\d.]+)\s*[, ]\s*([\d.]+)(?:\s*[,/]\s*[\d.]+%?)?\s*\)$/i
+const HSL_RE =
+  /^hsla?\(\s*(-?[\d.]+)(?:deg)?\s*[, ]\s*([\d.]+)%\s*[, ]\s*([\d.]+)%(?:\s*[,/]\s*[\d.]+%?)?\s*\)$/i
+const RGB_RE =
+  /^rgba?\(\s*([\d.]+)\s*[, ]\s*([\d.]+)\s*[, ]\s*([\d.]+)(?:\s*[,/]\s*[\d.]+%?)?\s*\)$/i
 
 /**
  * Lê `#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb()/rgba()` e `hsl()/hsla()`.
@@ -91,7 +93,7 @@ export function parseColor(input: string): Rgb | null {
     if (hex.length === 3 || hex.length === 4) {
       hex = hex
         .split('')
-        .map(c => c + c)
+        .map((c) => c + c)
         .join('')
     }
     if (!/^[0-9a-f]{6}([0-9a-f]{2})?$/i.test(hex)) return null
@@ -143,7 +145,10 @@ export function contrastRatio(a: string, b: string): number | null {
  * @example readableTextOn('hsl(220, 80%, 50%)') // '#ffffff'
  * @example readableTextOn('#ffffff')             // '#111111'
  */
-export function readableTextOn(background: string, options: { light?: string; dark?: string } = {}): string {
+export function readableTextOn(
+  background: string,
+  options: { light?: string; dark?: string } = {}
+): string {
   const { light = '#ffffff', dark = '#111111' } = options
   const bg = parseColor(background)
   if (!bg) return dark
@@ -158,4 +163,32 @@ export function readableTextOn(background: string, options: { light?: string; da
   const onLight = ratio(light, { r: 255, g: 255, b: 255 })
   const onDark = ratio(dark, { r: 17, g: 17, b: 17 })
   return onLight >= onDark ? light : dark
+}
+
+/**
+ * Escolhe a primeira cor de `candidates` que atinge `minRatio` de contraste (WCAG)  
+ * sobre `background`. Se nenhuma atingir, devolve a de maior contraste.  
+ * Use a ordem para expressar preferência: cores do tema primeiro, preto/branco por último.  
+ * @example pickReadable('#e11d48', ['#4a1424', '#fff5f7', '#ffffff', '#111111']) // '#fff5f7'  
+ */
+export function pickReadable(
+  background: string,
+  candidates: Array<string | undefined>,
+  minRatio = 4.5
+): string {
+  const list = candidates.filter((c): c is string => Boolean(c))
+  if (list.length === 0) return '#111111'
+
+  let best = list[0]
+  let bestRatio = -1
+  for (const color of list) {
+    const ratio = contrastRatio(background, color)
+    if (ratio === null) continue
+    if (ratio >= minRatio) return color
+    if (ratio > bestRatio) {
+      best = color
+      bestRatio = ratio
+    }
+  }
+  return best
 }
