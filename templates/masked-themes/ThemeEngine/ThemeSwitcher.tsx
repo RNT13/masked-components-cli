@@ -7,7 +7,7 @@ import { useThemeEngine } from './ThemeEngineProvider'
 
 const Root = styled.div`
   position: relative;
-  display: inline-flex;
+  display: inline-block;
 `
 
 const SplitRoot = styled.div`
@@ -62,11 +62,11 @@ const ChevronButton = styled.button<{ $open: boolean }>`
 
 const Menu = styled.ul`
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   right: 0;
-  z-index: ${({ theme }) => theme.zIndex?.dropdown ?? 100};
+  z-index: ${({ theme }) => theme.zIndex?.dropdown ?? 1000};
   min-width: 180px;
-  max-height: 320px;
+  max-height: 280px;
   overflow-y: auto;
   margin: 0;
   padding: 6px;
