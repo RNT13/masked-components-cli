@@ -139,56 +139,124 @@ export function contrastRatio(a: string, b: string): number | null {
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05)
 }
 
+/* ──────────────── texto legível ──────────────── */
+
+function toHex({ r, g, b }: Rgb): string {
+  const h = (n: number) =>
+    Math.min(255, Math.max(0, Math.round(n)))
+      .toString(16)
+      .padStart(2, '0')
+  return `#${h(r)}${h(g)}${h(b)}`
+}
+
 /**
- * Escolhe, entre `light` e `dark`, a cor de texto mais legível sobre `background`.
+ * Escurece `color` misturando-a com preto.
+ * `amount` = peso do preto (0 = cor intacta, 1 = preto puro).
+ * Preserva o matiz da cor original — é o que gera o "rosa bem escuro".
+ */
+export function darken(color: string, amount: number): string | null {
+  const c = parseColor(color)
+  if (!c) return null
+  const t = Math.min(1, Math.max(0, amount))
+  return toHex({ r: c.r * (1 - t), g: c.g * (1 - t), b: c.b * (1 - t) })
+}
+
+export interface ReadableTextOptions {
+  /** candidato claro (default '#ffffff') */
+  light?: string
+  /** candidato escuro neutro (default '#111111') */
+  dark?: string
+  /**
+   * Quando true (default), um terceiro candidato entra na disputa:
+   * o próprio `background` escurecido ~78% (preserva o matiz — ex.: rosa
+   * vira rosa-escuro). A escolha final continua sendo o maior contraste
+   * WCAG, então em fundos escuros o `light` segue vencendo.
+   * Passe `tintedDark: false` para voltar ao comportamento antigo.
+   */
+  tintedDark?: boolean
+  /** peso do preto no candidato tingido (default 0.78) */
+  tintAmount?: number
+}
+
+/**
+ * Escolhe a cor de texto mais legível sobre `background`.
+ * Candidatos: `light`, `dark` e (opcional) o background escurecido —
+ * este último produz texto "da cor do tema, bem escura" em temas claros.
  * Fundo inválido (ex.: `var(--x)`) -> `dark`.
  * @example readableTextOn('hsl(220, 80%, 50%)') // '#ffffff'
+ * @example readableTextOn('#e11d48')             // rosa bem escuro
  * @example readableTextOn('#ffffff')             // '#111111'
  */
-export function readableTextOn(
-  background: string,
-  options: { light?: string; dark?: string } = {}
-): string {
-  const { light = '#ffffff', dark = '#111111' } = options
+export function readableTextOn(background: string, options: ReadableTextOptions = {}): string {
+  const { light = '#ffffff', dark = '#111111', tintedDark = true, tintAmount = 0.78 } = options
   const bg = parseColor(background)
   if (!bg) return dark
 
+  const l1 = relativeLuminance(bg)
   const ratio = (fgColor: string, fallback: Rgb): number => {
     const fg = parseColor(fgColor) ?? fallback
-    const l1 = relativeLuminance(bg)
     const l2 = relativeLuminance(fg)
     return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)
   }
 
-  const onLight = ratio(light, { r: 255, g: 255, b: 255 })
-  const onDark = ratio(dark, { r: 17, g: 17, b: 17 })
-  return onLight >= onDark ? light : dark
+  const candidates: Array<{ color: string; score: number }> = [
+    { color: light, score: ratio(light, { r: 255, g: 255, b: 255 }) },
+    { color: dark, score: ratio(dark, { r: 17, g: 17, b: 17 }) }
+  ]
+
+  if (tintedDark) {
+    const tinted = toHex({
+      r: bg.r * (1 - tintAmount),
+      g: bg.g * (1 - tintAmount),
+      b: bg.b * (1 - tintAmount)
+    })
+    candidates.push({ color: tinted, score: ratio(tinted, bg) })
+  }
+
+  candidates.sort((a, b) => b.score - a.score)
+  return candidates[0].color
 }
 
 /**
- * Escolhe a primeira cor de `candidates` que atinge `minRatio` de contraste (WCAG)  
- * sobre `background`. Se nenhuma atingir, devolve a de maior contraste.  
- * Use a ordem para expressar preferência: cores do tema primeiro, preto/branco por último.  
- * @example pickReadable('#e11d48', ['#4a1424', '#fff5f7', '#ffffff', '#111111']) // '#fff5f7'  
+ * Escolhe a cor de texto mais legível sobre `background` entre `candidates`.  
+ * Ordem de decisão:  
+ *  1. primeiro candidato que atinge AA (4.5:1) — respeita a ordem da lista;  
+ *  2. se nenhum atingir, o de maior contraste (light/dark entram no pool  
+ *     como rede de segurança);  
+ *  3. fundo inválido (ex.: `var(--x)`) -> primeiro candidato válido;  
+ *  4. lista vazia/sem válidos -> `dark`.  
+ * @example pickReadable('#111111', ['#fff5f7', '#ffffff']) // '#fff5f7'  
  */
 export function pickReadable(
   background: string,
   candidates: Array<string | undefined>,
-  minRatio = 4.5
+  options: { light?: string; dark?: string } = {}
 ): string {
-  const list = candidates.filter((c): c is string => Boolean(c))
-  if (list.length === 0) return '#111111'
+  const { light = '#ffffff', dark = '#111111' } = options
 
-  let best = list[0]
-  let bestRatio = -1
-  for (const color of list) {
-    const ratio = contrastRatio(background, color)
-    if (ratio === null) continue
-    if (ratio >= minRatio) return color
-    if (ratio > bestRatio) {
-      best = color
-      bestRatio = ratio
-    }
-  }
-  return best
+  const valid = candidates.filter(
+    (c): c is string => typeof c === 'string' && parseColor(c) !== null
+  )
+
+  const bg = parseColor(background)
+  if (!bg) return valid[0] ?? dark
+  if (valid.length === 0) return dark
+
+    /* 1) primeiro que atinge AA — light/dark entram como rede de segurança */  
+  for (const color of [...valid, light, dark]) {  
+    const ratio = contrastRatio(color, background)  
+    if (ratio !== null && ratio >= 4.5) return color  
+  }  
+  
+  /* 2) nenhum atingiu AA -> maior contraste APENAS entre os candidatos */  
+  let best = valid[0]  
+  let bestRatio = -1  
+  for (const color of valid) {  
+    const ratio = contrastRatio(color, background)  
+    if (ratio !== null && ratio > bestRatio) {  
+      bestRatio = ratio  
+      best = color  
+    }  
+  }  
+  return best  
 }

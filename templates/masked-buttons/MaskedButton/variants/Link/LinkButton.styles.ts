@@ -11,18 +11,18 @@ type props = {
 }
 
 const disabledStyles = css`
-  color: ${({ theme }) => theme.colors.baseBlack.light40};
+  color: ${({ theme }) => theme.colors.textMuted ?? theme.colors.baseBlack.light40};
   background-color: transparent;
 
   &:hover {
     background-color: transparent;
-    color: ${({ theme }) => theme.colors.baseBlack.light20};
+    color: ${({ theme }) => theme.colors.textMuted ?? theme.colors.baseBlack.light20};
     border-color: transparent;
   }
 `
 
 const activeStyles = css`
-  color: var(--mc-btn-fg-active, ${({ theme }) => theme.colors.baseBlue.light20});
+  color: var(--mc-btn-bg-dark, ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.base});
   text-decoration: underline;
 
   svg {
@@ -30,15 +30,15 @@ const activeStyles = css`
   }
 
   &:hover {
-    color: var(--mc-btn-fg-hover, ${({ theme }) => theme.colors.baseBlue.light30});
+    color: var(--mc-btn-bg, ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.light20});
   }
 `
 
 const errorStyles = css`
-  color: var(--mc-btn-danger-fg, ${({ theme }) => theme.colors.baseRed.light30});
+  color: var(--mc-btn-danger-fg, ${({ theme }) => theme.colors.dangerColor ?? theme.colors.baseRed.light30});
 
   &:hover {
-    color: var(--mc-btn-danger-fg, ${({ theme }) => theme.colors.baseRed.light20});
+    color: var(--mc-btn-danger-fg, ${({ theme }) => theme.colors.dangerColor ?? theme.colors.baseRed.light20});
     text-decoration: underline;
   }
 `
@@ -49,6 +49,11 @@ export const LinkButtonWrapper = styled.div<props>`
   justify-content: ${({ $position }) => $position};
 `
 
+/*
+ * Link tem fundo transparente: o texto usa a rampa do acento
+ * (--mc-btn-bg-dark / --mc-btn-bg), NUNCA --mc-btn-fg — esse token é o
+ * "texto sobre o fundo preenchido" e fica claro demais em temas claros.
+ */
 export const LinkButtonContainer = styled(BaseButton)<props>`
   width: fit-content;
   display: flex;
@@ -56,7 +61,7 @@ export const LinkButtonContainer = styled(BaseButton)<props>`
   justify-content: center;
   text-decoration: none;
 
-  color: var(--mc-btn-fg, ${({ theme }) => theme.colors.baseBlue.base});
+  color: var(--mc-btn-bg-dark, ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.base});
   background-color: transparent;
   border: none;
 
@@ -64,11 +69,11 @@ export const LinkButtonContainer = styled(BaseButton)<props>`
     background-color: transparent;
     border: none;
     text-decoration: underline;
-    color: var(--mc-btn-fg-hover, ${({ theme }) => theme.colors.baseBlue.light});
+    color: var(--mc-btn-bg, ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.light20});
     ${transitions.fast}
   }
 
   ${({ $isActive }) => $isActive && activeStyles}
-  ${({ $isError }) => $isError && errorStyles}  
+  ${({ $isError }) => $isError && errorStyles}
   ${({ $isDisabled }) => $isDisabled && disabledStyles}
 `
