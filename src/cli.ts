@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /* ============================================================
- * masked-components-cli — entrypoint
+ * masked-components — entrypoint
  *
  * Fluxo geral:
  *   1. Parse das flags e posicionais
@@ -55,12 +55,12 @@ const ALIAS_MODES: AliasMode[] = ['auto', 'keep', 'relative']
  * ============================================================ */
 
 const HELP = `  
-${paint.bold('masked-components-cli')} — instala componentes React + TypeScript no seu projeto  
+${paint.bold('masked-components')} — instala componentes React + TypeScript no seu projeto  
   
 ${paint.bold('Uso')}  
-  npx masked-components-cli                       escolhe os componentes de forma interativa  
-  npx masked-components-cli masked-buttons ...    instala componentes específicos  
-  npx masked-components-cli --all                 instala tudo  
+  npx masked-components                       escolhe os componentes de forma interativa  
+  npx masked-components masked-buttons ...    instala componentes específicos  
+  npx masked-components --all                 instala tudo  
   
 ${paint.bold('Opções')}  
   -l, --list           lista os componentes disponíveis  
@@ -200,7 +200,7 @@ async function main(): Promise<number> {
   const { values } = parsed
 
   // "add" como primeiro posicional é açúcar sintático:
-  // `masked-components-cli add masked-buttons` ≡ `... masked-buttons`
+  // `masked-components add masked-buttons` ≡ `... masked-buttons`
   const positionals = parsed.positionals.filter((item, index) => !(index === 0 && item === 'add'))
 
   /* ---------- 2. Atalhos que encerram cedo ---------- */

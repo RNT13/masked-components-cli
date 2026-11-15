@@ -583,7 +583,7 @@ function readOwnVersion(startDir = path5.dirname(fileURLToPath2(import.meta.url)
     if (fs4.existsSync(file)) {
       try {
         const pkg = JSON.parse(fs4.readFileSync(file, "utf8"));
-        if (pkg.name === "masked-components-cli" && pkg.version) return pkg.version;
+        if (pkg.name === "masked-components" && pkg.version) return pkg.version;
       } catch {
       }
     }
@@ -640,12 +640,12 @@ function resolveProjectPaths(info, config = null) {
 var PACKAGE_MANAGERS = ["npm", "pnpm", "yarn", "bun"];
 var ALIAS_MODES = ["auto", "keep", "relative"];
 var HELP = `  
-${paint.bold("masked-components-cli")} \u2014 instala componentes React + TypeScript no seu projeto  
+${paint.bold("masked-components")} \u2014 instala componentes React + TypeScript no seu projeto  
   
 ${paint.bold("Uso")}  
-  npx masked-components-cli                       escolhe os componentes de forma interativa  
-  npx masked-components-cli masked-buttons ...    instala componentes espec\xEDficos  
-  npx masked-components-cli --all                 instala tudo  
+  npx masked-components                       escolhe os componentes de forma interativa  
+  npx masked-components masked-buttons ...    instala componentes espec\xEDficos  
+  npx masked-components --all                 instala tudo  
   
 ${paint.bold("Op\xE7\xF5es")}  
   -l, --list           lista os componentes dispon\xEDveis  

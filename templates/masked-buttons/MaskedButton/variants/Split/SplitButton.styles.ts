@@ -104,22 +104,22 @@ export const ChevronIcon = styled.span<{ $open?: boolean }>`
   transform: ${({ $open }) => ($open ? 'rotate(180deg)' : 'none')};
 `
 
-export const SplitMenu = styled.div`
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  min-width: 260px;
-  max-width: min(340px, 90vw);
-  z-index: ${({ theme }) => theme.zIndex.dropdown};
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: ${({ theme }) => theme.spacing.xs};
-  background: ${({ theme }) => theme.colors.surfaceColor ?? theme.colors.baseBlack.light08};
-  border: 1px solid ${({ theme }) => theme.colors.borderColor ?? theme.colors.baseBlack.light20};
-  border-radius: ${({ theme }) => theme.radius.md};
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-`
+export const SplitMenu = styled.div`  
+  position: fixed;              /* portal no body: fixed, não absolute */  
+  top: 0;  
+  left: 0;  
+  min-width: 260px;  
+  max-width: min(340px, 90vw);  
+  z-index: ${({ theme }) => theme.zIndex?.popover ?? theme.zIndex?.dropdown ?? 1000};  
+  display: flex;  
+  flex-direction: column;  
+  gap: 2px;  
+  padding: ${({ theme }) => theme.spacing.xs};  
+  background: ${({ theme }) => theme.colors.surfaceColor ?? theme.colors.baseBlack.light08};  
+  border: 1px solid ${({ theme }) => theme.colors.borderColor ?? theme.colors.baseBlack.light20};  
+  border-radius: ${({ theme }) => theme.radius.md};  
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);  
+`  
 
 export const SplitMenuItem = styled.button<{ $selected?: boolean }>`
   display: flex;

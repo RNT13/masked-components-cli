@@ -3,7 +3,7 @@
 Componentes **React + TypeScript** no modelo _copy-in_. O CLI **copia o código-fonte para dentro do seu projeto** (como o shadcn/ui): os arquivos passam a ser seus, você edita o que quiser e não existe dependência de runtime deste pacote.
 
 ```bash
-npx masked-components-cli
+npx masked-components
 ```
 
 Escolha os componentes. O CLI descobre o que mais eles precisam, instala os pacotes npm que faltam com o **seu** gerenciador (npm, pnpm, yarn ou bun) e copia os arquivos.
@@ -36,7 +36,7 @@ Diferentemente de bibliotecas tradicionais, os componentes são copiados para de
 
 - **Copy-in:** o código-fonte vai direto para o seu projeto.
 - **Controle total:** edite, personalize e adapte qualquer componente.
-- **Sem dependência em runtime:** depois da instalação, nada depende do pacote `masked-components-cli`.
+- **Sem dependência em runtime:** depois da instalação, nada depende do pacote `masked-components`.
 - **Instalação inteligente:** o CLI resolve as dependências internas (ex.: botões precisam de tema, animações e config).
 - **Gerenciador de pacotes:** instala os pacotes npm com o que o seu projeto já usa.
 - **Independentes:** cada componente é instalável sozinho, com imports sempre por arquivo.
@@ -72,7 +72,7 @@ Apenas o `masked-hooks-next` (`useSafeReturn`) depende de `next`, e por isso só
 Na raiz do seu projeto:
 
 ```bash
-npx masked-components-cli
+npx masked-components
 ```
 
 O CLI abre uma lista interativa. Marque com `espaço` e confirme com `enter`.
@@ -81,23 +81,23 @@ O CLI abre uma lista interativa. Marque com `espaço` e confirme com `enter`.
 
 ```bash
 # Execução interativa
-npx masked-components-cli
+npx masked-components
 
 # Componentes específicos (o prefixo "add" é opcional)
-npx masked-components-cli masked-buttons masked-cards
-npx masked-components-cli add masked-toaster
+npx masked-components masked-buttons masked-cards
+npx masked-components add masked-toaster
 
 # Instalar tudo (ignora o que é de outro framework)
-npx masked-components-cli --all
+npx masked-components --all
 
 # Listar componentes e suas dependências
-npx masked-components-cli --list
+npx masked-components --list
 
 # Simular, sem escrever nada
-npx masked-components-cli masked-input --dry-run
+npx masked-components masked-input --dry-run
 
 # Instalar ignorando o package.json (só copia arquivos)
-npx masked-components-cli masked-popup --no-install
+npx masked-components masked-popup --no-install
 ```
 
 ### ⚙️ Opções
@@ -161,7 +161,7 @@ O CLI resolve as dependências internas na ordem certa e instala só os pacotes 
 | `masked-hooks`                   | `useDebounce`, `useLocalStorage`, `useMediaQuery`, `useScrollToTop`                                 | –                                   | –                   |
 | `masked-hooks-next` (só Next.js) | `useSafeReturn`: voltar para a rota de origem com segurança                                         | –                                   | (usa `next`)        |
 
-> A coluna "Deps internas" mostra as dependências diretas. As transitivas entram sozinhas. Rode `npx masked-components-cli --list` para ver a lista atual.
+> A coluna "Deps internas" mostra as dependências diretas. As transitivas entram sozinhas. Rode `npx masked-components --list` para ver a lista atual.
 
 > `useInView` é instalado junto com `masked-animations`, e `useSmartSearch` junto com `masked-input`.
 
@@ -220,7 +220,7 @@ A versão 2.0 traz **breaking changes** pequenos, mas importantes. Os nomes anti
 - **`CurrencyInput` emite `onChange` a cada dígito** (antes só no `blur`) e passou a funcionar com teclado virtual de celular.
 - **Sem barrels.** `masked-hooks` e `masked-config` não instalam mais `index.ts`. Importe por arquivo (`@/hooks/useDebounce`, `@/components/ui/MaskedConfigProvider`).
 - **`react-icons`, `next/image` e `react-hot-toast` não são mais dependências** dos templates. Ícones são internos e a imagem do `FileInput` é injetável.
-- **`useSmartSearch`** continua instalado por `masked-input` e também por `masked-hooks`.
+- **`useSmartSearch`** é instalado apenas por `masked-input` (em `components/ui/MaskedInput/hooks/`); **`useInView`** apenas por `masked-animations` (em `hooks/`). `masked-hooks` não instala mais duplicatas deles.  
 
 ---
 
@@ -362,7 +362,7 @@ Como os arquivos são seus, atualizar é uma escolha consciente.
 ### 🔍 Ver o que mudou
 
 ```bash
-npx masked-components-cli --dry-run
+npx masked-components --dry-run
 ```
 
 O relatório lista, por arquivo, o que seria criado, sobrescrito, mantido (por já ter edições suas) ou ignorado (já idêntico).

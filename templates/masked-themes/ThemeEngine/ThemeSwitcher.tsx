@@ -7,7 +7,10 @@ import { useThemeEngine } from './ThemeEngineProvider'
 
 const Root = styled.div`
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  /* impede que um pai flex/grid estique o Root: o menu (right: 0)
+     ficaria ancorado na borda do container, não no botão */
+  width: fit-content;
 `
 
 const SplitRoot = styled.div`
@@ -62,11 +65,12 @@ const ChevronButton = styled.button<{ $open: boolean }>`
 
 const Menu = styled.ul`
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   right: 0;
-  z-index: ${({ theme }) => theme.zIndex?.dropdown ?? 1000};
+  z-index: ${({ theme }) => theme.zIndex?.dropdown ?? 100};
   min-width: 180px;
-  max-height: 280px;
+  max-width: calc(100vw - 24px);
+  max-height: 320px;
   overflow-y: auto;
   margin: 0;
   padding: 6px;
@@ -120,8 +124,8 @@ export type ThemeSwitcherProps = {
 }
 
 /**
- * Split button: o corpo mostra o tema atual; a seta abre a lista  
- * de temas e clicar num item aplica na hora (persiste no storage).  
+ * Split button: o corpo mostra o tema atual; a seta abre a lista
+ * de temas e clicar num item aplica na hora (persiste no storage).
  */
 export function ThemeSwitcher({ label = 'Theme', className }: ThemeSwitcherProps) {
   const { themeName, availableThemes, setThemeName } = useThemeEngine()

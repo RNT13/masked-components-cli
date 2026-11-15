@@ -2,18 +2,17 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
-
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
-import { readableTextOn } from '@/utils/masked-utils'
-
 import { PopupOverlay, PopupPanel } from './MaskedPopup.styles'
-import type { MaskedPopupProps } from './MaskedPopup.types'
+import { MaskedPopupProps } from './MaskedPopup.types'
+import { readableTextOn } from '@/utils/masked-utils'
 
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
 
-const EXIT_MS = 600
+/* duração máxima das transições de saída (pop 0.45s) + margem */
+const EXIT_MS = 500
 
 export function MaskedPopup({
   children,
@@ -37,51 +36,35 @@ export function MaskedPopup({
 
   /* onClose via ref: trocar a callback não re-executa o efeito de foco */
   const onCloseRef = useRef(onClose)
-
   useEffect(() => {
     onCloseRef.current = onClose
   }, [onClose])
 
   /*
-   * Mantém o painel visível durante a animação de saída.
-   * Após EXIT_MS, o painel entra no estado morto, sem transição.
+   * visible: mantém o painel montado durante a animação de saída.
+   * panelOpen: estado interno que abre via rAF — garante um frame
+   * "fechado" pintado antes de abrir (primeira abertura anima do
+   * ponto certo, sem voar de outro lugar).
    */
-  const [hasExited, setHasExited] = useState(!isOpen)
-  const visible = isOpen || !hasExited
-
-  /*
-   * Estado visual independente:
-   * permite preparar o painel fechado antes de iniciar a animação.
-   */
+  const [visible, setVisible] = useState(isOpen)
   const [panelOpen, setPanelOpen] = useState(isOpen)
 
+  /* Ajuste de estado durante o render (padrão oficial do React, sem efeito):
+     - abrir: visible liga na hora (painel monta já no frame de abertura)
+     - fechar: panelOpen desliga na hora (inicia a animação de saída) */
+  if (isOpen && !visible) setVisible(true)
+  if (!isOpen && panelOpen) setPanelOpen(false)
+
   useEffect(() => {
-    let rafId: number | undefined
-    let timeoutId: number | undefined
-
     if (isOpen) {
-      rafId = window.requestAnimationFrame(() => {
-        setPanelOpen(true)
-      })
-    } else {
-      rafId = window.requestAnimationFrame(() => {
-        setPanelOpen(false)
-      })
-
-      timeoutId = window.setTimeout(() => {
-        setHasExited(true)
-      }, EXIT_MS)
+      /* rAF: garante um frame "fechado" pintado antes de abrir —
+         primeira abertura anima do ponto certo, sem voar */
+      const raf = requestAnimationFrame(() => setPanelOpen(true))
+      return () => cancelAnimationFrame(raf)
     }
-
-    return () => {
-      if (rafId !== undefined) {
-        window.cancelAnimationFrame(rafId)
-      }
-
-      if (timeoutId !== undefined) {
-        window.clearTimeout(timeoutId)
-      }
-    }
+    /* desmonta só depois da animação de saída (callback assíncrono: permitido) */
+    const t = window.setTimeout(() => setVisible(false), EXIT_MS)
+    return () => window.clearTimeout(t)
   }, [isOpen])
 
   const mounted = useSyncExternalStore(
@@ -90,13 +73,11 @@ export function MaskedPopup({
     () => false // server
   )
 
-  // Escape + focus inicial + focus trap
   useEffect(() => {
-    if (!isOpen || !panelOpen) return
+    if (!panelOpen) return
 
     const panel = panelRef.current
     const prevActive = document.activeElement as HTMLElement | null
-
     panel?.querySelector<HTMLElement>(FOCUSABLE)?.focus()
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -104,19 +85,15 @@ export function MaskedPopup({
         onCloseRef.current()
         return
       }
-
       if (e.key !== 'Tab' || !panel) return
 
       const items = [...panel.querySelectorAll<HTMLElement>(FOCUSABLE)]
-
       if (items.length === 0) {
         e.preventDefault()
         return
       }
-
       const first = items[0]
       const last = items[items.length - 1]
-
       if (e.shiftKey && document.activeElement === first) {
         e.preventDefault()
         last.focus()
@@ -127,20 +104,16 @@ export function MaskedPopup({
     }
 
     document.addEventListener('keydown', onKeyDown)
-
     return () => {
       document.removeEventListener('keydown', onKeyDown)
       prevActive?.focus?.()
     }
-  }, [isOpen, panelOpen, closeOnEscape])
+  }, [panelOpen, closeOnEscape])
 
-  // Scroll lock
   useEffect(() => {
     if (!isOpen || !lockScroll) return
-
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-
     return () => {
       document.body.style.overflow = prev
     }
@@ -160,23 +133,28 @@ export function MaskedPopup({
     ...(tokens?.panelBg ? { '--mc-popup-panel-bg': tokens.panelBg } : {})
   } as CSSProperties
 
-  const content = (
+  /*
+   * Montagem: enquanto isOpen OU visible (saída animando).
+   * $instant = !visible: morto -> transition: none (sem "voo" ao
+   * trocar transition/primeiro paint). Durante abertura e saída,
+   * visible=true -> transição ativa.
+   */
+  const content = visible ? (
     <>
       <PopupOverlay
-        $isOpen={isOpen}
+        $isOpen={panelOpen}
         $blur={overlayBlur}
         $zIndex={zIndex}
         style={vars}
         aria-hidden="true"
         onClick={closeOnOverlay ? () => onCloseRef.current() : undefined}
       />
-
       <PopupPanel
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-hidden={!isOpen}
-        inert={!isOpen}
+        aria-hidden={!panelOpen}
+        inert={!panelOpen}
         $isOpen={panelOpen}
         $instant={!visible}
         $width={width}
@@ -189,9 +167,8 @@ export function MaskedPopup({
         {children}
       </PopupPanel>
     </>
-  )
+  ) : null
 
   if (!portal || !mounted) return content
-
   return createPortal(content, document.body)
 }
