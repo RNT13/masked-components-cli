@@ -1,38 +1,34 @@
-import { styled, type DefaultTheme } from 'styled-components'
+import styled from 'styled-components'
+import { DefaultTheme } from 'styled-components'
 import { media } from '@/styles/MaskedThemes/MaskedThemes'
 import type { PopupTransition } from './MaskedPopup.types'
 
-const surface = (t: DefaultTheme) => t.colors?.surfaceColor ?? '#ffffff'
-const textColor = (t: DefaultTheme) => t.colors?.textColor ?? '#111111'
-const borderColor = (t: DefaultTheme) => t.colors?.borderColor ?? 'rgba(128, 128, 128, 0.35)'
+const transitionMap: Record<PopupTransition, string> = {
+  fade: 'opacity 0.3s ease, transform 0.3s ease',
+  pop: 'opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+  'slide-up': 'opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+  blur: 'opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease'
+}
 
-const getTransform = (transition: PopupTransition, isOpen: boolean) => {
-  if (isOpen) return 'translate(-50%, -50%) scale(1)'
-
+const getTransform = (transition: PopupTransition, isOpen: boolean): string => {
+  if (isOpen) return 'translate(-50%, -50%)'
   switch (transition) {
     case 'pop':
-      return 'translate(-50%, -50%) scale(0.88)'
-
+      return 'translate(-50%, -50%) scale(0.9)'
     case 'slide-up':
-      return 'translate(-50%, -40%)'
-
+      return 'translate(-50%, calc(-50% + 24px))'
     case 'blur':
-      return 'translate(-50%, -50%) scale(0.96)'
-
     case 'fade':
+    default:
       return 'translate(-50%, -50%)'
   }
 }
 
-const transitionMap: Record<PopupTransition, string> = {
-  pop: 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease',
+const surface = (theme: DefaultTheme) => theme.colors.surfaceColor ?? theme.colors.baseBlack.light08
 
-  fade: 'transform 0.35s ease, opacity 0.35s ease',
+const textColor = (theme: DefaultTheme) => theme.colors.textColor ?? theme.colors.basePureWhite.base
 
-  'slide-up': 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease',
-
-  blur: 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease, filter 0.4s ease'
-}
+const borderColor = (theme: DefaultTheme) => theme.colors.borderColor ?? theme.colors.baseGlass.light08
 
 export const PopupOverlay = styled.div<{
   $isOpen: boolean
@@ -41,15 +37,12 @@ export const PopupOverlay = styled.div<{
 }>`
   position: fixed;
   inset: 0;
-  z-index: ${({ $zIndex }) => $zIndex - 1};
+  z-index: ${({ $zIndex }) => $zIndex};
 
-  /* translúcido: o conteúdo da página continua visível por trás */
-  background: var(--mc-popup-overlay-bg, rgba(0, 0, 0, 0.45));
-
-  ${({ $blur }) => $blur && 'backdrop-filter: blur(6px);'}
+  background: var(--mc-popup-overlay-bg, rgba(0, 0, 0, 0.55));
+  backdrop-filter: ${({ $blur }) => ($blur ? 'blur(6px)' : 'none')};
 
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
-
   pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
 
   transition: opacity 0.3s ease;
@@ -95,14 +88,14 @@ export const PopupPanel = styled.div<{
 
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
 
-  filter: ${({ $transition, $isOpen }) =>
-    $transition === 'blur' && !$isOpen ? 'blur(8px)' : 'blur(0px)'};
+  filter: ${({ $transition, $isOpen }) => ($transition === 'blur' && !$isOpen ? 'blur(8px)' : 'blur(0px)')};
 
   pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
 
   /*
-   * Sem transição quando o painel está morto.
-   * A abertura e o fechamento continuam utilizando transitionMap.
+   * Sem transição quando o painel está morto ($instant):
+   * mudanças de transform aplicam instantaneamente, então a
+   * abertura sempre anima a partir da posição correta.
    */
   transition: ${({ $transition, $instant }) => ($instant ? 'none' : transitionMap[$transition])};
 

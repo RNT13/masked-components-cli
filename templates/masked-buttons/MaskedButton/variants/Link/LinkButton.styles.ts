@@ -22,7 +22,10 @@ const disabledStyles = css`
 `
 
 const activeStyles = css`
-  color: var(--mc-btn-bg-dark, ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.base});
+  color: var(
+    --mc-btn-bg-dark,
+    ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.base}
+  );
   text-decoration: underline;
 
   svg {
@@ -30,15 +33,24 @@ const activeStyles = css`
   }
 
   &:hover {
-    color: var(--mc-btn-bg, ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.light20});
+    color: var(
+      --mc-btn-bg,
+      ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.light20}
+    );
   }
 `
 
 const errorStyles = css`
-  color: var(--mc-btn-danger-fg, ${({ theme }) => theme.colors.dangerColor ?? theme.colors.baseRed.light30});
+  color: var(
+    --mc-btn-danger-fg,
+    ${({ theme }) => theme.colors.dangerColor ?? theme.colors.baseRed.light30}
+  );
 
   &:hover {
-    color: var(--mc-btn-danger-fg, ${({ theme }) => theme.colors.dangerColor ?? theme.colors.baseRed.light20});
+    color: var(
+      --mc-btn-danger-fg,
+      ${({ theme }) => theme.colors.dangerColor ?? theme.colors.baseRed.light20}
+    );
     text-decoration: underline;
   }
 `
@@ -61,7 +73,10 @@ export const LinkButtonContainer = styled(BaseButton)<props>`
   justify-content: center;
   text-decoration: none;
 
-  color: var(--mc-btn-bg-dark, ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.base});
+  color: var(
+    --mc-btn-bg-dark,
+    ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.base}
+  );
   background-color: transparent;
   border: none;
 
@@ -69,7 +84,10 @@ export const LinkButtonContainer = styled(BaseButton)<props>`
     background-color: transparent;
     border: none;
     text-decoration: underline;
-    color: var(--mc-btn-bg, ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.light20});
+    color: var(
+      --mc-btn-bg,
+      ${({ theme }) => theme.colors.accentColor ?? theme.colors.baseBlue.light20}
+    );
     ${transitions.fast}
   }
 

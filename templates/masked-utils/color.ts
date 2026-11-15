@@ -218,14 +218,14 @@ export function readableTextOn(background: string, options: ReadableTextOptions 
 }
 
 /**
- * Escolhe a cor de texto mais legível sobre `background` entre `candidates`.  
- * Ordem de decisão:  
- *  1. primeiro candidato que atinge AA (4.5:1) — respeita a ordem da lista;  
- *  2. se nenhum atingir, o de maior contraste (light/dark entram no pool  
- *     como rede de segurança);  
- *  3. fundo inválido (ex.: `var(--x)`) -> primeiro candidato válido;  
- *  4. lista vazia/sem válidos -> `dark`.  
- * @example pickReadable('#111111', ['#fff5f7', '#ffffff']) // '#fff5f7'  
+ * Escolhe a cor de texto mais legível sobre `background` entre `candidates`.
+ * Ordem de decisão:
+ *  1. primeiro candidato que atinge AA (4.5:1) — respeita a ordem da lista;
+ *  2. se nenhum atingir, o de maior contraste (light/dark entram no pool
+ *     como rede de segurança);
+ *  3. fundo inválido (ex.: `var(--x)`) -> primeiro candidato válido;
+ *  4. lista vazia/sem válidos -> `dark`.
+ * @example pickReadable('#111111', ['#fff5f7', '#ffffff']) // '#fff5f7'
  */
 export function pickReadable(
   background: string,
@@ -242,21 +242,21 @@ export function pickReadable(
   if (!bg) return valid[0] ?? dark
   if (valid.length === 0) return dark
 
-    /* 1) primeiro que atinge AA — light/dark entram como rede de segurança */  
-  for (const color of [...valid, light, dark]) {  
-    const ratio = contrastRatio(color, background)  
-    if (ratio !== null && ratio >= 4.5) return color  
-  }  
-  
-  /* 2) nenhum atingiu AA -> maior contraste APENAS entre os candidatos */  
-  let best = valid[0]  
-  let bestRatio = -1  
-  for (const color of valid) {  
-    const ratio = contrastRatio(color, background)  
-    if (ratio !== null && ratio > bestRatio) {  
-      bestRatio = ratio  
-      best = color  
-    }  
-  }  
-  return best  
+  /* 1) primeiro que atinge AA — light/dark entram como rede de segurança */
+  for (const color of [...valid, light, dark]) {
+    const ratio = contrastRatio(color, background)
+    if (ratio !== null && ratio >= 4.5) return color
+  }
+
+  /* 2) nenhum atingiu AA -> maior contraste APENAS entre os candidatos */
+  let best = valid[0]
+  let bestRatio = -1
+  for (const color of valid) {
+    const ratio = contrastRatio(color, background)
+    if (ratio !== null && ratio > bestRatio) {
+      bestRatio = ratio
+      best = color
+    }
+  }
+  return best
 }
