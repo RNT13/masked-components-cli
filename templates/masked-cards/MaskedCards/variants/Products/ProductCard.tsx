@@ -54,6 +54,20 @@ export default function ProductCard({
   fullWidth,
   cardBg,
   direction,
+  appearance,
+  layout,
+  mediaRatio,
+  disabled,
+  selected,
+  defaultSelected,
+  onSelectedChange,
+  selectionMode,
+  expanded,
+  defaultExpanded,
+  onExpandedChange,
+  expandable,
+  expandContent,
+  hrefLabel,
   colorTheme,
   tokens,
   style,
@@ -67,12 +81,27 @@ export default function ProductCard({
       fullWidth={fullWidth}
       cardBg={cardBg}
       direction={direction}
+      appearance={appearance}
+      layout={layout}
+      mediaRatio={mediaRatio}
+      disabled={disabled}
+      selected={selected}
+      defaultSelected={defaultSelected}
+      onSelectedChange={onSelectedChange}
+      selectionMode={selectionMode}
+      expanded={expanded}
+      defaultExpanded={defaultExpanded}
+      onExpandedChange={onExpandedChange}
+      expandable={expandable}
+      expandContent={expandContent}
       colorTheme={colorTheme}
       tokens={tokens}
       style={style}
       href={href}
+      hrefLabel={hrefLabel ?? title}
       onClick={onClick}
       className={className}
+      hasActions={!!actions}
     >
       {image ? (
         <ProductImage src={image} alt={imageAlt ?? title} />

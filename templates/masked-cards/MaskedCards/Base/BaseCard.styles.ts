@@ -1,5 +1,5 @@
 import { css, styled } from 'styled-components'
-import { CardDirection, CardSize } from '../MaskedCards.types'
+import { CardAppearance, CardDirection, CardLayout, CardSize } from '../MaskedCards.types'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 
 const sizeStyles: Record<CardSize, ReturnType<typeof css>> = {
@@ -32,13 +32,33 @@ const gapStyles: Record<CardSize, ReturnType<typeof css>> = {
   `
 }
 
+/**
+ * Aparências: o mapa completo (filled, outlined, flat, gradient, glass)  
+ * é centralizado em appearances.styles.ts (Passo 2). 'elevated' é o  
+ * visual atual e default de compatibilidade.  
+ */
+const appearanceStyles: Record<CardAppearance, ReturnType<typeof css>> = {
+  elevated: css``,
+  filled: css``,
+  outlined: css``,
+  flat: css``,
+  gradient: css``,
+  glass: css``
+}
+
 export const BaseCardContainer = styled.div<{
   $size?: CardSize
-  $gapStyles?: CardSize
   $fullWidth?: boolean
   $clickable?: boolean
   $cardBg?: string
   $direction?: CardDirection
+  $appearance?: CardAppearance
+  $layout?: CardLayout
+  $disabled?: boolean
+  $selected?: boolean
+  $expanded?: boolean
+  $stretched?: boolean
+  $isButton?: boolean
 }>`
   width: 100%;
   height: 100%;
@@ -54,12 +74,36 @@ export const BaseCardContainer = styled.div<{
     ${({ $cardBg }) => $cardBg ?? maskedTheme.colors.baseBlue.light50}
   );
   color: var(--mc-card-fg, ${maskedTheme.colors.baseBlack.dark40});
-  ${({ $gapStyles = 'md' }) => gapStyles[$gapStyles]};
   box-shadow: var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()});
   transition: ${maskedTheme.transition.slow};
 
-  ${({ $size = 'md' }) => sizeStyles[$size]}
+  ${({ $stretched }) => $stretched && 'position: relative;'}
+
+  /* Reset quando o container é um <button> real */  
+  ${({ $isButton }) =>
+    $isButton &&
+    css`
+      margin: 0;
+      border-style: solid;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    `}  
+  
+  ${({ $size = 'md', $layout }) =>
+    $layout === 'compact'
+      ? css`
+          padding: ${maskedTheme.spacing.sm};
+          gap: ${maskedTheme.spacing.sm};
+        `
+      : css`
+          ${sizeStyles[$size]}
+          ${gapStyles[$size]}
+        `}  
+  
   ${({ $fullWidth }) => $fullWidth && 'width: 100%;'}  
+  
+  ${({ $appearance = 'elevated' }) => appearanceStyles[$appearance]}  
   
   &:hover {
     box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.sm()});
@@ -85,10 +129,87 @@ export const BaseCardContainer = styled.div<{
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
+        outline: 2px solid var(--mc-card-focus-ring, ${maskedTheme.colors.baseBlue.base});
         outline-offset: 2px;
       }
     `}
+
+  ${({ $selected }) =>
+    $selected &&
+    css`
+      border-color: var(--mc-card-selected-border, ${maskedTheme.colors.baseBlue.base});
+      background-color: var(
+        --mc-card-selected-bg,
+        var(--mc-card-bg, ${maskedTheme.colors.baseBlue.light50})
+      );
+      box-shadow: 0 0 0 1px var(--mc-card-selected-border, ${maskedTheme.colors.baseBlue.base});
+    `}  
+  
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      cursor: not-allowed;
+      opacity: 0.55;
+      background-color: var(
+        --mc-card-disabled-bg,
+        var(--mc-card-bg, ${maskedTheme.colors.baseBlue.light50})
+      );
+      color: var(--mc-card-disabled-fg, ${maskedTheme.colors.baseBlack.dark08});
+      box-shadow: none;
+      transform: none;
+
+      &:hover,
+      &:active {
+        transform: none;
+        box-shadow: none;
+      }
+    `}  
+  
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+`
+
+/* Cobre o card inteiro quando há href + actions (stretched-link). */
+export const StretchedLink = styled.a`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--mc-card-focus-ring, ${maskedTheme.colors.baseBlue.base});
+    outline-offset: 2px;
+  }
+`
+
+/* Cobre o card inteiro quando há onClick + actions (stretched-button). */
+export const StretchedButton = styled.button`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mc-card-focus-ring, ${maskedTheme.colors.baseBlue.base});
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `
 
 export const MetricRowBody = styled.div`

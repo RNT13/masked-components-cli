@@ -11,14 +11,26 @@ export const PlanCardContainer = styled(BaseCard)<{ $active?: boolean }>`
       ? css`
           background-image: var(
             --mc-card-plan-active-bg,
-            linear-gradient(160deg, ${theme.colors?.accentColor ?? theme.colors.baseBlue.base}, ${theme.colors.baseBlue.dark20})
+            linear-gradient(
+              160deg,
+              ${theme.colors?.accentColor ?? theme.colors.baseBlue.base},
+              ${theme.colors.baseBlue.dark20}
+            )
           );
-          border: 2px solid var(--mc-card-plan-active-border, ${theme.colors?.accentColor ?? theme.colors.baseBlue.base});
+          border: 2px solid
+            var(
+              --mc-card-plan-active-border,
+              ${theme.colors?.accentColor ?? theme.colors.baseBlue.base}
+            );
         `
       : css`
           background-image: var(
             --mc-card-plan-inactive-bg,
-            linear-gradient(160deg, ${theme.colors.baseBlack.light20}, ${theme.colors.baseBlack.dark})
+            linear-gradient(
+              160deg,
+              ${theme.colors.baseBlack.light20},
+              ${theme.colors.baseBlack.dark}
+            )
           );
           border: 2px solid var(--mc-card-plan-inactive-border, ${theme.colors.baseBlack.light20});
         `}
@@ -55,8 +67,10 @@ export const PlanRenewal = styled.span`
   opacity: 0.8;
 `
 
-/* margin-top:auto empurra a ação para o fim do card, qualquer que seja a altura */
+/* margin-top:auto empurra a ação para o fim do card; z-index acima do stretched */
 export const PlanAction = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: center;
   margin-top: auto;

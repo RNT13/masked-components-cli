@@ -24,6 +24,26 @@ export interface CardTokenOverrides {
   planInactiveBg?: string
   planInactiveBorder?: string
   placeholderBg?: string
+  /** Fundo de áreas de mídia/imagem. */
+  mediaBg?: string
+  /** Fundo do estado selecionado. */
+  selectedBg?: string
+  /** Borda/anel do estado selecionado. */
+  selectedBorder?: string
+  /** Fundo do estado desabilitado. */
+  disabledBg?: string
+  /** Texto do estado desabilitado. */
+  disabledFg?: string
+  /** Cor do anel de foco (focus-visible). */
+  focusRing?: string
+  /** Fundo translúcido da aparência glass. */
+  glassBg?: string
+  /** Borda semitransparente da aparência glass. */
+  glassBorder?: string
+  /** Gradiente da aparência gradient (valor completo de background-image). */
+  gradient?: string
+  /** Gradiente de overlay sobre imagem de fundo (legibilidade). */
+  overlayGradient?: string
 }
 
 export interface ResolveCardTokensInput {
@@ -60,7 +80,12 @@ export function resolveCardTokens(
       accent: colors.base,
       accentSoft: colors.light40,
       iconBg,
-      iconFg: readableTextOn(iconBg)
+      iconFg: readableTextOn(iconBg),
+      selectedBorder: colors.base,
+      focusRing: colors.base,
+      gradient: `linear-gradient(160deg, ${colors.base}, ${colors.dark20 ?? colors.base})`,
+      glassBg: `color-mix(in srgb, ${colors.base} 18%, transparent)`,
+      glassBorder: `color-mix(in srgb, ${colors.base} 35%, transparent)`
     }
   }
 

@@ -19,6 +19,23 @@ export default function StatCard({
   fullWidth,
   direction,
   cardBg,
+  appearance,
+  layout,
+  mediaRatio,
+  disabled,
+  selected,
+  defaultSelected,
+  onSelectedChange,
+  selectionMode,
+  expanded,
+  defaultExpanded,
+  onExpandedChange,
+  expandable,
+  expandContent,
+  hrefLabel,
+  colorTheme,
+  tokens,
+  style,
   iconSize,
   href,
   onClick,
@@ -29,7 +46,24 @@ export default function StatCard({
       size={size}
       fullWidth={fullWidth}
       direction={direction}
+      appearance={appearance}
+      layout={layout}
+      mediaRatio={mediaRatio}
+      disabled={disabled}
+      selected={selected}
+      defaultSelected={defaultSelected}
+      onSelectedChange={onSelectedChange}
+      selectionMode={selectionMode}
+      expanded={expanded}
+      defaultExpanded={defaultExpanded}
+      onExpandedChange={onExpandedChange}
+      expandable={expandable}
+      expandContent={expandContent}
+      colorTheme={colorTheme}
+      tokens={tokens}
+      style={style}
       href={href}
+      hrefLabel={hrefLabel}
       onClick={onClick}
       className={className}
       cardBg={cardBg}

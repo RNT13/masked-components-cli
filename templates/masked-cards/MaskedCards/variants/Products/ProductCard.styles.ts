@@ -17,6 +17,7 @@ export const ProductImage = styled.img`
   height: 180px;
   object-fit: cover;
   border-radius: ${maskedTheme.radius.sm};
+  background-color: var(--mc-card-media-bg, ${maskedTheme.colors.baseBlue.light20});
 `
 
 export const ProductImagePlaceholder = styled.div`
@@ -101,7 +102,10 @@ export const ProductOriginalPrice = styled.span`
   text-decoration: line-through;
 `
 
+/* z-index acima do stretched-link/button para continuar clicável */
 export const ProductActions = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   gap: ${maskedTheme.spacing.sm};
 `

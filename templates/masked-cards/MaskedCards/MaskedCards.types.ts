@@ -7,16 +7,59 @@ export type CardTrend = 'up' | 'down' | 'neutral'
 export type CardStatus = 'active' | 'inactive' | 'warning' | 'error'
 export type CardDirection = 'row' | 'column'
 
+/** Aparência visual independente de $variant. Default 'elevated' = visual atual. */
+export type CardAppearance = 'elevated' | 'filled' | 'outlined' | 'flat' | 'gradient' | 'glass'
+
+/** Disposição de mídia/conteúdo. 'horizontal' implica direction row quando direction não é passado. */
+export type CardLayout = 'vertical' | 'horizontal' | 'overlay' | 'split' | 'compact'
+
+/** Proporção da mídia do card. */
+export type CardMediaRatio = '1:1' | '4:3' | '16:9' | '3:4' | 'auto'
+
+/** Semântica de seleção: 'single' = radio, 'multiple' = checkbox. */
+export type CardSelectionMode = 'single' | 'multiple'
+
 export type BaseCardProps = {
   href?: string
+  /** Nome acessível do link quando o card usa stretched-link (href + actions). */
+  hrefLabel?: string
   onClick?: React.MouseEventHandler
   size?: CardSize
   fullWidth?: boolean
   cardBg?: string
+  /** Direção explícita do flex. Vence o direction implícito de layout='horizontal'. */
   direction?: CardDirection
   className?: string
   style?: CSSProperties
   children?: ReactNode
+
+  /** Aparência visual (default 'elevated'). */
+  appearance?: CardAppearance
+  /** Disposição de mídia/conteúdo (default 'vertical'). */
+  layout?: CardLayout
+  /** Proporção da mídia (default 'auto'). */
+  mediaRatio?: CardMediaRatio
+
+  /** Desabilita interação e aplica estilo disabled. */
+  disabled?: boolean
+
+  /** Seleção controlada. */
+  selected?: boolean
+  /** Seleção inicial não controlada. */
+  defaultSelected?: boolean
+  onSelectedChange?: (selected: boolean) => void
+  /** 'single' → role radio; 'multiple' → role checkbox (default 'single'). */
+  selectionMode?: CardSelectionMode
+
+  /** Expansão controlada. */
+  expanded?: boolean
+  /** Expansão inicial não controlada. */
+  defaultExpanded?: boolean
+  onExpandedChange?: (expanded: boolean) => void
+  /** Habilita botão de expandir/recolher. */
+  expandable?: boolean
+  /** Conteúdo exibido apenas quando expandido. */
+  expandContent?: ReactNode
 
   /** Paleta registrada em colorThemes (ex.: 'ruby'). Deriva os tokens --mc-card-*. */
   colorTheme?: ColorThemeName

@@ -21,21 +21,58 @@ export default function FeatureCard({
   highlight,
   size,
   fullWidth,
+  cardBg,
+  direction,
+  appearance,
+  layout,
+  mediaRatio,
+  disabled,
+  selected,
+  defaultSelected,
+  onSelectedChange,
+  selectionMode,
+  expanded,
+  defaultExpanded,
+  onExpandedChange,
+  expandable,
+  expandContent,
+  hrefLabel,
+  colorTheme,
+  tokens,
+  style,
   href,
   onClick,
   className,
-  cardBg,
   iconSize
 }: Props) {
   return (
     <FeatureCardContainer
       size={size}
       fullWidth={fullWidth}
+      cardBg={cardBg}
+      direction={direction}
+      appearance={appearance}
+      layout={layout}
+      mediaRatio={mediaRatio}
+      disabled={disabled}
+      selected={selected}
+      defaultSelected={defaultSelected}
+      onSelectedChange={onSelectedChange}
+      selectionMode={selectionMode}
+      expanded={expanded}
+      defaultExpanded={defaultExpanded}
+      onExpandedChange={onExpandedChange}
+      expandable={expandable}
+      expandContent={expandContent}
+      colorTheme={colorTheme}
+      tokens={tokens}
+      style={style}
       href={href}
+      hrefLabel={hrefLabel ?? title}
       onClick={onClick}
       className={className}
+      hasActions={!!action}
       $highlight={highlight}
-      cardBg={cardBg}
     >
       <FeatureIcon $bg={iconBgColor} $color={iconTextColor} $iconSize={iconSize}>
         {icon}

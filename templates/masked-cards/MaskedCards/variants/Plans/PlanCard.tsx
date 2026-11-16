@@ -26,6 +26,22 @@ export default function PlanCard({
   action,
   size,
   fullWidth,
+  cardBg,
+  direction,
+  appearance,
+  layout,
+  mediaRatio,
+  disabled,
+  selected,
+  defaultSelected,
+  onSelectedChange,
+  selectionMode,
+  expanded,
+  defaultExpanded,
+  onExpandedChange,
+  expandable,
+  expandContent,
+  hrefLabel,
   href,
   onClick,
   className,
@@ -40,9 +56,26 @@ export default function PlanCard({
     <PlanCardContainer
       size={size}
       fullWidth={fullWidth}
+      cardBg={cardBg}
+      direction={direction}
+      appearance={appearance}
+      layout={layout}
+      mediaRatio={mediaRatio}
+      disabled={disabled}
+      selected={selected}
+      defaultSelected={defaultSelected}
+      onSelectedChange={onSelectedChange}
+      selectionMode={selectionMode}
+      expanded={expanded}
+      defaultExpanded={defaultExpanded}
+      onExpandedChange={onExpandedChange}
+      expandable={expandable}
+      expandContent={expandContent}
       href={href}
+      hrefLabel={hrefLabel ?? planName}
       onClick={onClick}
       className={className}
+      hasActions={!!action}
       $active={active ?? $active ?? false}
       colorTheme={colorTheme}
       tokens={tokens}

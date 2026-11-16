@@ -5,7 +5,7 @@ import type { CSSProperties } from 'react'
 import type { DefaultTheme } from 'styled-components'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
-import { pickReadable, readableTextOn } from '@/utils/masked-utils'
+import { pickReadable } from '@/utils/masked-utils'
 import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 
 /** Paleta neutra da lib (F.25). */

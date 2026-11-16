@@ -15,7 +15,7 @@ import {
 type Props = { $variant: 'metric' } & CardVariantMap['metric']
 
 export default function MetricCard({
-  direction = 'column',
+  direction,
   icon,
   iconBgColor,
   iconTextColor,
@@ -32,11 +32,30 @@ export default function MetricCard({
   size,
   fullWidth,
   cardBg,
+  appearance,
+  layout,
+  mediaRatio,
+  disabled,
+  selected,
+  defaultSelected,
+  onSelectedChange,
+  selectionMode,
+  expanded,
+  defaultExpanded,
+  onExpandedChange,
+  expandable,
+  expandContent,
+  hrefLabel,
+  colorTheme,
+  tokens,
+  style,
   href,
   onClick,
   className,
   iconSize
 }: Props) {
+  const effectiveDirection = direction ?? (layout === 'horizontal' ? 'row' : 'column')
+
   const topRight = rightIcon ? (
     <MetricRightIcon>{rightIcon}</MetricRightIcon>
   ) : badge ? (
@@ -50,14 +69,31 @@ export default function MetricCard({
   return (
     <MetricCardContainer
       direction={direction}
+      layout={layout}
       size={size}
       fullWidth={fullWidth}
       cardBg={cardBg}
+      appearance={appearance}
+      mediaRatio={mediaRatio}
+      disabled={disabled}
+      selected={selected}
+      defaultSelected={defaultSelected}
+      onSelectedChange={onSelectedChange}
+      selectionMode={selectionMode}
+      expanded={expanded}
+      defaultExpanded={defaultExpanded}
+      onExpandedChange={onExpandedChange}
+      expandable={expandable}
+      expandContent={expandContent}
+      colorTheme={colorTheme}
+      tokens={tokens}
+      style={style}
       href={href}
+      hrefLabel={hrefLabel}
       onClick={onClick}
       className={className}
     >
-      {direction === 'row' ? (
+      {effectiveDirection === 'row' ? (
         <>
           <CardIconBadge $color={iconTextColor} $iconSize={iconSize}>
             {icon}

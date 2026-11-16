@@ -21,6 +21,25 @@ export default function CompareCard({
   compareTrend,
   size,
   fullWidth,
+  cardBg,
+  direction,
+  appearance,
+  layout,
+  mediaRatio,
+  disabled,
+  selected,
+  defaultSelected,
+  onSelectedChange,
+  selectionMode,
+  expanded,
+  defaultExpanded,
+  onExpandedChange,
+  expandable,
+  expandContent,
+  hrefLabel,
+  colorTheme,
+  tokens,
+  style,
   href,
   onClick,
   className,
@@ -32,7 +51,26 @@ export default function CompareCard({
     <CompareCardContainer
       size={size}
       fullWidth={fullWidth}
+      cardBg={cardBg}
+      direction={direction}
+      appearance={appearance}
+      layout={layout}
+      mediaRatio={mediaRatio}
+      disabled={disabled}
+      selected={selected}
+      defaultSelected={defaultSelected}
+      onSelectedChange={onSelectedChange}
+      selectionMode={selectionMode}
+      expanded={expanded}
+      defaultExpanded={defaultExpanded}
+      onExpandedChange={onExpandedChange}
+      expandable={expandable}
+      expandContent={expandContent}
+      colorTheme={colorTheme}
+      tokens={tokens}
+      style={style}
       href={href}
+      hrefLabel={hrefLabel}
       onClick={onClick}
       className={className}
     >
