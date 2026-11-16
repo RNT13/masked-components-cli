@@ -10,61 +10,75 @@ export type CardDirection = 'row' | 'column'
 /** Aparência visual independente de $variant. Default 'elevated' = visual atual. */
 export type CardAppearance = 'elevated' | 'filled' | 'outlined' | 'flat' | 'gradient' | 'glass'
 
-/** Disposição de mídia/conteúdo. 'horizontal' implica direction row quando direction não é passado. */
+/** Disposição do conteúdo. 'horizontal' implica direction row (direction explícito vence). */
 export type CardLayout = 'vertical' | 'horizontal' | 'overlay' | 'split' | 'compact'
 
-/** Proporção da mídia do card. */
+/** Proporção da área de mídia (usado por CardMedia e variantes com imagem). */
 export type CardMediaRatio = '1:1' | '4:3' | '16:9' | '3:4' | 'auto'
 
-/** Semântica de seleção: 'single' = radio, 'multiple' = checkbox. */
+/** 'single' → role="radio"; 'multiple' → role="checkbox". */
 export type CardSelectionMode = 'single' | 'multiple'
 
 export type BaseCardProps = {
   href?: string
-  /** Nome acessível do link quando o card usa stretched-link (href + actions). */
-  hrefLabel?: string
   onClick?: React.MouseEventHandler
   size?: CardSize
   fullWidth?: boolean
   cardBg?: string
-  /** Direção explícita do flex. Vence o direction implícito de layout='horizontal'. */
   direction?: CardDirection
   className?: string
   style?: CSSProperties
   children?: ReactNode
 
-  /** Aparência visual (default 'elevated'). */
-  appearance?: CardAppearance
-  /** Disposição de mídia/conteúdo (default 'vertical'). */
-  layout?: CardLayout
-  /** Proporção da mídia (default 'auto'). */
-  mediaRatio?: CardMediaRatio
-
-  /** Desabilita interação e aplica estilo disabled. */
-  disabled?: boolean
-
-  /** Seleção controlada. */
-  selected?: boolean
-  /** Seleção inicial não controlada. */
-  defaultSelected?: boolean
-  onSelectedChange?: (selected: boolean) => void
-  /** 'single' → role radio; 'multiple' → role checkbox (default 'single'). */
-  selectionMode?: CardSelectionMode
-
-  /** Expansão controlada. */
-  expanded?: boolean
-  /** Expansão inicial não controlada. */
-  defaultExpanded?: boolean
-  onExpandedChange?: (expanded: boolean) => void
-  /** Habilita botão de expandir/recolher. */
-  expandable?: boolean
-  /** Conteúdo exibido apenas quando expandido. */
-  expandContent?: ReactNode
-
   /** Paleta registrada em colorThemes (ex.: 'ruby'). Deriva os tokens --mc-card-*. */
   colorTheme?: ColorThemeName
   /** Overrides diretos de tokens --mc-card-*. */
   tokens?: CardTokenOverrides
+
+  /** Aparência visual (default 'elevated', equivalente ao visual atual). */
+  appearance?: CardAppearance
+  /** Disposição do conteúdo; 'horizontal' implica row salvo direction explícito. */
+  layout?: CardLayout
+  /** Proporção da mídia; efeito real em CardMedia e variantes com imagem. */
+  mediaRatio?: CardMediaRatio
+
+  /**
+   * Nome acessível do link/botão principal quando o card usa o padrão  
+   * stretched (href/onClick + actions ou expandable). Opcional — fallback  
+   * pt-BR: 'Abrir' (link) ou 'Selecionar'/'Abrir' (botão). As variantes  
+   * passam o título (title/planName) quando disponível.  
+   */
+  hrefLabel?: string
+
+  /**
+   * Seleção controlada. Ignorada quando `href` está presente (um <a> não  
+   * pode ser radio/checkbox — o link navega e a seleção não se aplica).  
+   * role="radio" fora de um radiogroup é limitado: para seleção exclusiva  
+   * entre cards, controle `selected` externamente ou use MaskedCardGroup.  
+   */
+  selected?: boolean
+  /** Seleção inicial não controlada. */
+  defaultSelected?: boolean
+  onSelectedChange?: (selected: boolean) => void
+  /** 'single' → radio; 'multiple' → checkbox (default 'single'). */
+  selectionMode?: CardSelectionMode
+
+  /** Desabilita interações; mantém a semântica (button disabled / link sem href). */
+  disabled?: boolean
+
+  /** Expansão controlada. O controle é um botão dedicado (nunca o card inteiro). */
+  expanded?: boolean
+  /** Expansão inicial não controlada. */
+  defaultExpanded?: boolean
+  onExpandedChange?: (expanded: boolean) => void
+  /** Habilita o bloco de expansão (botão "Mostrar mais" + região colapsável). */
+  expandable?: boolean
+  /** Conteúdo da região colapsável. */
+  expandContent?: ReactNode
+  /** Rótulo do botão quando recolhido (default 'Mostrar mais'). */
+  expandLabel?: string
+  /** Rótulo do botão quando expandido (default 'Mostrar menos'). */
+  collapseLabel?: string
 }
 
 type WithIcon = {

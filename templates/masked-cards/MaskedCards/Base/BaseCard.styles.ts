@@ -1,6 +1,7 @@
 import { css, styled } from 'styled-components'
 import { CardAppearance, CardDirection, CardLayout, CardSize } from '../MaskedCards.types'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
+import { appearanceStyles } from './appearances.styles'
 
 const sizeStyles: Record<CardSize, ReturnType<typeof css>> = {
   sm: css`
@@ -32,20 +33,6 @@ const gapStyles: Record<CardSize, ReturnType<typeof css>> = {
   `
 }
 
-/**
- * Aparências: o mapa completo (filled, outlined, flat, gradient, glass)  
- * é centralizado em appearances.styles.ts (Passo 2). 'elevated' é o  
- * visual atual e default de compatibilidade.  
- */
-const appearanceStyles: Record<CardAppearance, ReturnType<typeof css>> = {
-  elevated: css``,
-  filled: css``,
-  outlined: css``,
-  flat: css``,
-  gradient: css``,
-  glass: css``
-}
-
 export const BaseCardContainer = styled.div<{
   $size?: CardSize
   $fullWidth?: boolean
@@ -57,9 +44,9 @@ export const BaseCardContainer = styled.div<{
   $disabled?: boolean
   $selected?: boolean
   $expanded?: boolean
-  $stretched?: boolean
   $isButton?: boolean
 }>`
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
@@ -67,6 +54,7 @@ export const BaseCardContainer = styled.div<{
   align-items: ${({ $direction = 'column' }) => ($direction === 'row' ? 'center' : 'stretch')};
   justify-content: ${({ $direction = 'column' }) =>
     $direction === 'row' ? 'space-between' : 'flex-start'};
+  flex-wrap: wrap;
   border-radius: var(--mc-card-radius, ${maskedTheme.radius.md});
   border: 1px solid var(--mc-card-border, ${maskedTheme.colors.baseBlue.light20});
   background-color: var(
@@ -77,13 +65,15 @@ export const BaseCardContainer = styled.div<{
   box-shadow: var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()});
   transition: ${maskedTheme.transition.slow};
 
-  ${({ $stretched }) => $stretched && 'position: relative;'}
+  /* Expõe cardBg para as aparências (prioridade: tokens.bg > cardBg > padrão) */
+  ${({ $cardBg }) => $cardBg && `--mc-card-bg-prop: ${$cardBg};`}
 
   /* Reset quando o container é um <button> real */  
   ${({ $isButton }) =>
     $isButton &&
     css`
       margin: 0;
+      padding: 0;
       border-style: solid;
       font: inherit;
       text-align: left;
@@ -103,10 +93,10 @@ export const BaseCardContainer = styled.div<{
   
   ${({ $fullWidth }) => $fullWidth && 'width: 100%;'}  
   
-  ${({ $appearance = 'elevated' }) => appearanceStyles[$appearance]}  
-  
-  &:hover {
-    box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.sm()});
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.sm()});
+    }
   }
 
   ${({ $clickable }) =>
@@ -114,14 +104,16 @@ export const BaseCardContainer = styled.div<{
     css`
       cursor: pointer;
       text-decoration: none;
-      color: inherit;
+      color: var(--mc-card-fg, inherit);
       transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
 
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.md()});
+      @media (hover: hover) {
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.md()});
+        }
       }
 
       &:active {
@@ -134,29 +126,36 @@ export const BaseCardContainer = styled.div<{
       }
     `}
 
+  /* Aparência DEPOIS do hover/$clickable (vence sombra/translateY genéricos)  
+     e ANTES de $selected/$disabled (estados vencem a aparência). */  
+  ${({ $appearance = 'elevated' }) => appearanceStyles[$appearance]}  
+  
   ${({ $selected }) =>
     $selected &&
     css`
       border-color: var(--mc-card-selected-border, ${maskedTheme.colors.baseBlue.base});
-      background-color: var(
-        --mc-card-selected-bg,
-        var(--mc-card-bg, ${maskedTheme.colors.baseBlue.light50})
-      );
-      box-shadow: 0 0 0 1px var(--mc-card-selected-border, ${maskedTheme.colors.baseBlue.base});
+      box-shadow:
+        0 0 0 1px var(--mc-card-selected-border, ${maskedTheme.colors.baseBlue.base}),
+        var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()});
     `}  
   
+  /*  
+   * Disabled: não depende só de opacity — combina fundo/texto/borda por  
+   * tokens (--mc-card-disabled-*) com redução moderada de opacidade,  
+   * mantendo o texto essencial legível.  
+   */  
   ${({ $disabled }) =>
     $disabled &&
     css`
       cursor: not-allowed;
-      opacity: 0.55;
       background-color: var(
         --mc-card-disabled-bg,
         var(--mc-card-bg, ${maskedTheme.colors.baseBlue.light50})
       );
       color: var(--mc-card-disabled-fg, ${maskedTheme.colors.baseBlack.dark08});
+      border-color: var(--mc-card-border, ${maskedTheme.colors.baseBlue.light20});
       box-shadow: none;
-      transform: none;
+      opacity: 0.7;
 
       &:hover,
       &:active {
@@ -175,7 +174,7 @@ export const BaseCardContainer = styled.div<{
   }
 `
 
-/* Cobre o card inteiro quando há href + actions (stretched-link). */
+/* Cobre o card inteiro quando há href + (actions | expandable). */
 export const StretchedLink = styled.a`
   position: absolute;
   inset: 0;
@@ -189,7 +188,7 @@ export const StretchedLink = styled.a`
   }
 `
 
-/* Cobre o card inteiro quando há onClick + actions (stretched-button). */
+/* Cobre o card inteiro quando há (onClick | seleção) + (actions | expandable). */
 export const StretchedButton = styled.button`
   position: absolute;
   inset: 0;
@@ -209,6 +208,106 @@ export const StretchedButton = styled.button`
 
   &:disabled {
     cursor: not-allowed;
+  }
+`
+
+/* Indicador de seleção — não depende só de cor (marcador ✓ + anel). */
+export const CardSelectedIndicator = styled.span`
+  position: absolute;
+  top: ${maskedTheme.spacing.xs};
+  right: ${maskedTheme.spacing.xs};
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: var(--mc-card-selected-border, ${maskedTheme.colors.baseBlue.base});
+  color: var(--mc-card-selected-fg, #ffffff);
+  font-size: 12px;
+  line-height: 1;
+  pointer-events: none;
+`
+
+/*
+ * Wrapper do bloco de expansão (botão + região).
+ * Ocupa a largura toda mesmo com direction="row"/layout horizontal
+ * e não adiciona espaço extra quando a região está fechada.
+ */
+export const CardExpandSection = styled.div`
+  flex-basis: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+`
+
+export const CardExpandButton = styled.button<{ $open?: boolean }>`
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.875em;
+  cursor: pointer;
+  color: var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
+  display: inline-flex;
+  align-items: center;
+  gap: ${maskedTheme.spacing.xs};
+
+  &:focus-visible {
+    outline: 2px solid var(--mc-card-focus-ring, ${maskedTheme.colors.baseBlue.base});
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: var(--mc-card-disabled-fg, ${maskedTheme.colors.baseBlack.dark08});
+  }
+
+  [data-expand-icon] {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    transform: ${({ $open }) => ($open ? 'rotate(180deg)' : 'none')};
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-expand-icon] {
+      transition: none;
+    }
+  }
+`
+
+/*
+ * Região colapsável: grid-template-rows 0fr→1fr (solução mais simples e
+ * robusta que max-height — sem valor máximo arbitrário).
+ * Fechada: visibility:hidden sai da árvore de acessibilidade e da tabulação;
+ * a transição de visibility é atrasada até o fim da animação de fechamento
+ * e é imediata ao abrir.
+ */
+export const CardExpandRegion = styled.div<{ $open?: boolean }>`
+  display: grid;
+  grid-template-rows: ${({ $open }) => ($open ? '1fr' : '0fr')};
+  width: 100%;
+  opacity: ${({ $open }) => ($open ? 1 : 0)};
+  visibility: ${({ $open }) => ($open ? 'visible' : 'hidden')};
+  margin-top: ${({ $open }) => ($open ? maskedTheme.spacing.xs : '0')};
+  transition:
+    grid-template-rows 0.25s ease,
+    opacity 0.25s ease,
+    margin-top 0.25s ease,
+    visibility 0s linear ${({ $open }) => ($open ? '0s' : '0.25s')};
+
+  > div {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 `
 

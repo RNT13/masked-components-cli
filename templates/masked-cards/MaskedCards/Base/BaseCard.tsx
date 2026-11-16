@@ -1,11 +1,21 @@
 'use client'
 
-import { forwardRef, useState } from 'react'
+import { forwardRef } from 'react'
 import { useTheme } from 'styled-components'
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 import { BaseCardProps, CardDirection } from '../MaskedCards.types'
 import { resolveCardTokens, CardTokenOverrides } from '../cardTokens'
-import { BaseCardContainer, StretchedButton, StretchedLink } from './BaseCard.styles'
+import { useSelectable } from '../behaviors/useSelectable'
+import { useExpandable } from '../behaviors/useExpandable'
+import {
+  BaseCardContainer,
+  CardExpandButton,
+  CardExpandRegion,
+  CardExpandSection,
+  CardSelectedIndicator,
+  StretchedButton,
+  StretchedLink
+} from './BaseCard.styles'
 
 export type BaseCardInternalProps = BaseCardProps & {
   /** Interno: a variante informa se renderiza actions/action interativo. */
@@ -29,12 +39,14 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     selected,
     defaultSelected,
     onSelectedChange,
-    selectionMode = 'single',
+    selectionMode,
     expanded,
     defaultExpanded,
     onExpandedChange,
     expandable,
     expandContent,
+    expandLabel = 'Mostrar mais',
+    collapseLabel = 'Mostrar menos',
     colorTheme,
     tokens,
     style,
@@ -50,18 +62,35 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
   const theme = useTheme()
   const LinkTag = (linkComponent ?? 'a') as 'a'
 
-  // Seleção controlada/não controlada (será extraída para behaviors/useSelectable no Passo 3)
-  const selectable =
-    selected !== undefined || defaultSelected !== undefined || onSelectedChange !== undefined
-  const [internalSelected, setInternalSelected] = useState(defaultSelected ?? false)
-  const isSelected = selected ?? internalSelected
+  const {
+    selectable,
+    isSelected,
+    toggle: toggleSelected,
+    ariaProps: selectableAria
+  } = useSelectable({ selected, defaultSelected, onSelectedChange, selectionMode, disabled })
 
-  // Expansão controlada/não controlada (será extraída para behaviors/useExpandable no Passo 3)
-  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded ?? false)
-  const isExpanded = expanded ?? internalExpanded
+  const {
+    expandable: isExpandable,
+    isExpanded,
+    toggle: toggleExpanded,
+    buttonId,
+    regionId
+  } = useExpandable({ expandable, expanded, defaultExpanded, onExpandedChange, disabled })
 
-  const clickable = !disabled && (!!href || !!onClick || selectable)
-  const stretched = clickable && !!hasActions
+  /*
+   * interactive = o card TEM comportamento (href, onClick ou seleção).
+   * clickable  = interactive && !disabled (só estilo: cursor/hover).
+   * Desabilitado mantém a semântica: <button disabled> / <a> sem href.
+   */
+  const interactive = !!href || !!onClick || selectable
+  const clickable = interactive && !disabled
+
+  /*
+   * Stretched sempre que o elemento interativo principal não pode conter
+   * outros interativos: actions OU expansão (o botão de expandir e a
+   * região nunca ficam dentro de <a>/<button>).
+   */
+  const stretched = interactive && !!(hasActions || isExpandable)
 
   // Precedência: direction explícito do consumidor vence o implícito do layout.
   const effectiveDirection: CardDirection =
@@ -70,32 +99,23 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
   const tokenStyle = resolveCardTokens(
     {
       colorTheme,
-      tokens: tokens as CardTokenOverrides | undefined
+      tokens: tokens as CardTokenOverrides | undefined,
+      appearance
     },
     theme
   )
 
-  const handleClick: React.MouseEventHandler = (e) => {
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (disabled) return
-    if (selectable) {
-      const next = !isSelected
-      if (selected === undefined) setInternalSelected(next)
-      onSelectedChange?.(next)
-    } else if (expandable && !href) {
-      const next = !isExpanded
-      if (expanded === undefined) setInternalExpanded(next)
-      onExpandedChange?.(next)
-    }
+    if (selectable) toggleSelected()
     onClick?.(e)
   }
 
-  const selectableAria = selectable
-    ? {
-        role: selectionMode === 'multiple' ? ('checkbox' as const) : ('radio' as const),
-        'aria-checked': isSelected
-      }
-    : {}
-
+  /*
+   * Regra documentada: href + seleção → o link navega e a seleção é
+   * ignorada (um <a> não pode ser radio/checkbox). Os atributos de
+   * seleção só vão para elementos <button>.
+   */
   const common = {
     $size: size,
     $fullWidth: fullWidth,
@@ -107,23 +127,53 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     $disabled: disabled,
     $selected: isSelected,
     $expanded: isExpanded,
-    $stretched: stretched,
-    'aria-disabled': disabled || undefined,
+    'data-selected': (selectable && isSelected) || undefined,
+    'data-disabled': disabled || undefined,
     'data-media-ratio': mediaRatio,
     className,
     style: { ...tokenStyle, ...style },
-    ...selectableAria,
     ...props
   }
+
+  /*
+   * Bloco de expansão: botão dedicado + região. Sempre FORA do elemento
+   * interativo principal (z-index acima do stretched). A região fica
+   * sempre montada para a transição de grid-rows; quando recolhida,
+   * visibility:hidden a remove da tabulação e da árvore de acessibilidade.
+   */
+  const expandSection = isExpandable ? (
+    <CardExpandSection>
+      <CardExpandButton
+        type="button"
+        id={buttonId}
+        onClick={toggleExpanded}
+        disabled={disabled}
+        aria-expanded={isExpanded}
+        aria-controls={regionId}
+        $open={isExpanded}
+      >
+        {isExpanded ? collapseLabel : expandLabel}
+      </CardExpandButton>
+      <CardExpandRegion id={regionId} role="region" aria-labelledby={buttonId} $open={isExpanded}>
+        <div>{expandContent}</div>
+      </CardExpandRegion>
+    </CardExpandSection>
+  ) : null
+
+  const selectionIndicator =
+    selectable && isSelected ? (
+      <CardSelectedIndicator aria-hidden="true">✓</CardSelectedIndicator>
+    ) : null
 
   const content = (
     <>
       {children}
-      {expandable && isExpanded ? expandContent : null}
+      {selectionIndicator}
+      {expandSection}
     </>
   )
 
-  // href + actions: wrapper div + stretched-link; actions ficam fora do link (z-index).
+  // href + (actions|expandable): wrapper div + stretched-link.
   if (href && stretched) {
     return (
       <BaseCardContainer ref={ref} {...common}>
@@ -132,19 +182,21 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
           href={disabled ? undefined : href}
           aria-label={hrefLabel ?? 'Abrir'}
           tabIndex={disabled ? -1 : undefined}
+          aria-disabled={disabled || undefined}
         />
         {content}
       </BaseCardContainer>
     )
   }
 
-  // href sem actions: o próprio card é o link (comportamento original).
+  // href sem actions/expandable: o próprio card é o link (comportamento original).
   if (href) {
     return (
       <BaseCardContainer
         as={LinkTag}
         href={disabled ? undefined : href}
         tabIndex={disabled ? -1 : undefined}
+        aria-disabled={disabled || undefined}
         ref={ref as React.Ref<HTMLAnchorElement>}
         {...common}
       >
@@ -153,16 +205,15 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     )
   }
 
-  // onClick/seleção + actions: wrapper div + stretched-button; actions fora do botão.
-  if (clickable && stretched) {
+  // onClick/seleção + (actions|expandable): wrapper div + stretched-button.
+  if (interactive && stretched) {
     return (
       <BaseCardContainer ref={ref} {...common}>
         <StretchedButton
           type="button"
           onClick={handleClick}
           disabled={disabled}
-          aria-label={hrefLabel}
-          aria-expanded={expandable ? isExpanded : undefined}
+          aria-label={hrefLabel ?? (selectable ? 'Selecionar' : 'Abrir')}
           {...selectableAria}
         />
         {content}
@@ -170,17 +221,17 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     )
   }
 
-  // onClick/seleção sem actions: o card é um <button> real (P1 — sem div role="button").
-  if (clickable) {
+  // onClick/seleção sem actions/expandable: o card é um <button> real.
+  if (interactive) {
     return (
       <BaseCardContainer
         as="button"
         type="button"
         disabled={disabled}
         onClick={handleClick}
-        aria-expanded={expandable ? isExpanded : undefined}
         $isButton
         ref={ref as React.Ref<HTMLButtonElement>}
+        {...selectableAria}
         {...common}
       >
         {content}
