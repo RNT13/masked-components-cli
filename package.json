@@ -19,7 +19,7 @@
     "build": "tsup src/cli.ts --format esm --platform node --target es2020 --clean",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "prepublishOnly": "npm run typecheck && npm test && npm run build",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm test && npm run build",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"templates/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"templates/**/*.{ts,tsx}\"",
     "lint": "eslint src templates"

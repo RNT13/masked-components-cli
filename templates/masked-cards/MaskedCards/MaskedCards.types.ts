@@ -7,24 +7,33 @@ export type CardTrend = 'up' | 'down' | 'neutral'
 export type CardStatus = 'active' | 'inactive' | 'warning' | 'error'
 export type CardDirection = 'row' | 'column'
 
-/** Aparência visual independente de $variant. Default 'elevated' = visual atual. */
+/** Aparência visual independente de $variant (default 'elevated' = visual atual). */
 export type CardAppearance = 'elevated' | 'filled' | 'outlined' | 'flat' | 'gradient' | 'glass'
 
-/** Disposição do conteúdo. 'horizontal' implica direction row (direction explícito vence). */
+/** Disposição estrutural do conteúdo. 'horizontal' implica direction='row' quando direction não é passado. */
 export type CardLayout = 'vertical' | 'horizontal' | 'overlay' | 'split' | 'compact'
 
-/** Proporção da área de mídia (usado por CardMedia e variantes com imagem). */
+/** Proporção da mídia (usado por CardMedia e variantes com imagem). */
 export type CardMediaRatio = '1:1' | '4:3' | '16:9' | '3:4' | 'auto'
 
 /** 'single' → role="radio"; 'multiple' → role="checkbox". */
 export type CardSelectionMode = 'single' | 'multiple'
 
 export type BaseCardProps = {
+  /** Navegação. Com href, props de seleção são ignoradas (link navega, não seleciona). */
   href?: string
+  /**
+   * Nome acessível do link/botão principal quando o card usa o padrão  
+   * stretched (href/onClick + actions). Opcional; fallback 'Abrir'/'Selecionar'.  
+   * As variantes passam title/planName automaticamente.  
+   */
+  hrefLabel?: string
   onClick?: React.MouseEventHandler
   size?: CardSize
   fullWidth?: boolean
+  /** Cor de fundo da instância (vence o padrão da aparência; perde para tokens.bg). */
   cardBg?: string
+  /** Direção explícita; vence o implícito de layout='horizontal'. */
   direction?: CardDirection
   className?: string
   style?: CSSProperties
@@ -32,41 +41,35 @@ export type BaseCardProps = {
 
   /** Paleta registrada em colorThemes (ex.: 'ruby'). Deriva os tokens --mc-card-*. */
   colorTheme?: ColorThemeName
-  /** Overrides diretos de tokens --mc-card-*. */
+  /** Overrides diretos de tokens --mc-card-*; sempre vencem colorTheme e tema global. */
   tokens?: CardTokenOverrides
 
-  /** Aparência visual (default 'elevated', equivalente ao visual atual). */
   appearance?: CardAppearance
-  /** Disposição do conteúdo; 'horizontal' implica row salvo direction explícito. */
   layout?: CardLayout
-  /** Proporção da mídia; efeito real em CardMedia e variantes com imagem. */
   mediaRatio?: CardMediaRatio
 
   /**
-   * Nome acessível do link/botão principal quando o card usa o padrão  
-   * stretched (href/onClick + actions ou expandable). Opcional — fallback  
-   * pt-BR: 'Abrir' (link) ou 'Selecionar'/'Abrir' (botão). As variantes  
-   * passam o título (title/planName) quando disponível.  
+   * Valor do card dentro de um MaskedCardGroup. Quando presente e o card  
+   * está dentro de um grupo, a seleção é controlada pelo grupo e as props  
+   * avulsas (selected/defaultSelected/onSelectedChange/selectionMode) são  
+   * ignoradas. Fora de grupo, não tem efeito.  
    */
-  hrefLabel?: string
+  selectionValue?: string
 
-  /**
-   * Seleção controlada. Ignorada quando `href` está presente (um <a> não  
-   * pode ser radio/checkbox — o link navega e a seleção não se aplica).  
-   * role="radio" fora de um radiogroup é limitado: para seleção exclusiva  
-   * entre cards, controle `selected` externamente ou use MaskedCardGroup.  
-   */
+  /** Seleção controlada (uso avulso). */
   selected?: boolean
-  /** Seleção inicial não controlada. */
+  /** Seleção inicial não controlada (uso avulso). */
   defaultSelected?: boolean
   onSelectedChange?: (selected: boolean) => void
-  /** 'single' → radio; 'multiple' → checkbox (default 'single'). */
+  /**
+   * 'single' → role="radio" (fora de radiogroup é limitado — prefira  
+   * MaskedCardGroup); 'multiple' → role="checkbox".  
+   */
   selectionMode?: CardSelectionMode
 
-  /** Desabilita interações; mantém a semântica (button disabled / link sem href). */
   disabled?: boolean
 
-  /** Expansão controlada. O controle é um botão dedicado (nunca o card inteiro). */
+  /** Expansão controlada. */
   expanded?: boolean
   /** Expansão inicial não controlada. */
   defaultExpanded?: boolean

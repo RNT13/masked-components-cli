@@ -1,11 +1,17 @@
+'use client'
+
 import { useCallback, useState } from 'react'
-import { CardSelectionMode } from '../MaskedCards.types'
+import type { CardSelectionMode } from '../MaskedCards.types'
 
 export interface UseSelectableOptions {
   selected?: boolean
   defaultSelected?: boolean
   onSelectedChange?: (selected: boolean) => void
-  /** 'single' → role="radio"; 'multiple' → role="checkbox". */
+  /**
+   * 'single' → role="radio" (uso avulso; dentro de um MaskedCardGroup o  
+   * grupo assume o controle — ver useCardGroup).  
+   * 'multiple' → role="checkbox".  
+   */
   selectionMode?: CardSelectionMode
   disabled?: boolean
 }
@@ -27,9 +33,10 @@ export interface UseSelectableResult {
 }
 
 /**
- * Seleção controlada ou não controlada.  
+ * Seleção controlada ou não controlada, para uso AVULSO (fora de grupo).  
  * 'single' sem grupo: a exclusividade entre cards é responsabilidade de  
  * quem renderiza (controle externo via `selected`/`onSelectedChange`).  
+ * role="radio" fora de um radiogroup é limitado — prefira MaskedCardGroup.  
  */
 export function useSelectable({
   selected,
