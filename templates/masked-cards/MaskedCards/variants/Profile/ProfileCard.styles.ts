@@ -47,19 +47,19 @@ export const ProfileName = styled.h3`
 
 export const ProfileRole = styled.span`
   font-size: ${maskedTheme.fontSize.sm};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ProfileMeta = styled.span`
   font-size: ${maskedTheme.fontSize.xs};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.light40});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ProfileBio = styled.p`
   margin: 0;
   font-size: ${maskedTheme.fontSize.sm};
   line-height: ${maskedTheme.lineHeight.normal};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ProfileStats = styled.div`
@@ -82,7 +82,7 @@ export const ProfileStatValue = styled.span`
 
 export const ProfileStatLabel = styled.span`
   font-size: ${maskedTheme.fontSize.xs};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.light40});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ProfileActions = styled.div`

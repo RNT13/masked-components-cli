@@ -3,19 +3,19 @@ import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 import { CardAppearance } from '../MaskedCards.types'
 
 /**
- * Aparências visuais independentes de $variant.  
- * Centralizadas aqui — proibido duplicar estes estilos dentro das variantes.  
- * Todas consomem tokens --mc-card-* com fallback do maskedTheme (claro/escuro).  
+ * Aparências visuais independentes de $variant.
+ * Centralizadas aqui — proibido duplicar estes estilos dentro das variantes.
+ * Todas consomem tokens --mc-card-* com fallback do maskedTheme (claro/escuro).
  *
- * Prioridade de fundo: --mc-card-bg (tokens.bg/colorTheme) >  
- * --mc-card-bg-prop (prop cardBg) > padrão da aparência.  
+ * Prioridade de fundo: --mc-card-bg (tokens.bg/colorTheme) >
+ * --mc-card-bg-prop (prop cardBg) > padrão da aparência.
  *
- * elevated  = visual atual da biblioteca (default de compatibilidade)  
- * filled    = fundo suave (accent-soft ou bg derivado do colorTheme), sem sombra  
- * outlined  = borda visível, sem sombra; hover/focus por borda  
- * flat      = minimalista, sem sombra nem borda (dashboards densos)  
- * gradient  = gradiente do acento via --mc-card-gradient; texto por contraste  
- * glass     = translúcido + backdrop-blur, com fallback opaco via @supports  
+ * elevated  = visual atual da biblioteca (default de compatibilidade)
+ * filled    = fundo suave (accent-soft ou bg derivado do colorTheme), sem sombra
+ * outlined  = borda visível, sem sombra; hover/focus por borda
+ * flat      = minimalista, sem sombra nem borda (dashboards densos)
+ * gradient  = gradiente do acento via --mc-card-gradient; texto por contraste
+ * glass     = translúcido + backdrop-blur, com fallback opaco via @supports
  */
 export const appearanceStyles: Record<CardAppearance, ReturnType<typeof css>> = {
   elevated: css``,

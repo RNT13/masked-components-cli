@@ -84,7 +84,7 @@ export const ProductStatus = styled.span<{ $status: CardStatus }>`
 
 export const ProductDescription = styled.p`
   font-size: ${maskedTheme.fontSize.sm};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.dark20});
+  color: var(--mc-card-muted-fg, currentColor);
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -102,12 +102,19 @@ export const ProductPriceRow = styled.div`
 export const ProductPrice = styled.strong`
   font-size: ${maskedTheme.fontSize.xl};
   font-weight: 700;
-  color: var(--mc-card-accent-fg, ${maskedTheme.colors.baseBlue.dark20});
+  color: var(
+    --mc-card-original-price-fg,
+    light-dark(${maskedTheme.colors.baseGreen.dark}, ${maskedTheme.colors.baseRed.light})
+  );
 `
 
 export const ProductOriginalPrice = styled.span`
   font-size: ${maskedTheme.fontSize.sm};
-  color: var(--mc-card-faint-fg, ${maskedTheme.colors.baseBlack.dark08});
+  font-weight: ${maskedTheme.fontWeight.semibold};
+  color: var(
+    --mc-card-original-price-fg,
+    light-dark(${maskedTheme.colors.baseRed.dark}, ${maskedTheme.colors.baseRed.light})
+  );
   text-decoration: line-through;
 `
 
