@@ -37,6 +37,7 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     layout,
     mediaRatio,
     disabled,
+    selectable: selectableProp,
     selected,
     defaultSelected,
     onSelectedChange,
@@ -64,6 +65,7 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
   const group = useCardGroup(selectionValue, disabled)
 
   const selectable = useSelectable({
+    selectable: selectableProp,
     selected,
     defaultSelected,
     onSelectedChange,
@@ -87,12 +89,13 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
       if (effectiveDisabled) return
       if (group.grouped) {
         group.select()
-      } else if (selectable.selectable) {
-        selectable.toggle()
+        return
       }
+      if (selectable.selectable) selectable.toggle()
+      else if (expand.expandable && !href) expand.toggle()
       onClick?.(event)
     },
-    [effectiveDisabled, group, selectable, onClick]
+    [effectiveDisabled, group, selectable, expand, href, onClick]
   )
 
   const handleKeyDown = useCallback(
@@ -145,10 +148,7 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
 
   const selectableAria =
     !group.grouped && selectable.selectable
-      ? {
-          role: selectionMode === 'multiple' ? 'checkbox' : 'radio',
-          'aria-checked': selectable.isSelected
-        }
+      ? { role: selectable.role, 'aria-checked': selectable.isSelected }
       : {}
 
   const expandSection = expand.expandable ? (
@@ -197,7 +197,6 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
       <BaseCardContainer {...common}>
         <StretchedLink
           href={effectiveDisabled ? undefined : href}
-          aria-disabled={effectiveDisabled || undefined}
           aria-label={hrefLabel}
           tabIndex={effectiveDisabled ? -1 : groupTabIndex}
           ref={registerRef as React.Ref<HTMLAnchorElement>}

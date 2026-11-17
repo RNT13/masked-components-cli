@@ -14,9 +14,22 @@ export type CardLayout = 'vertical' | 'horizontal' | 'overlay' | 'split' | 'comp
 /** Proporção da mídia dentro do card. */
 export type CardMediaRatio = '1:1' | '4:3' | '16:9' | '21:9' | '3:4' | '9:16' | 'auto'
 
-/** Semântica de seleção. */
+/** Modo de seleção: 'single' → role radio; 'multiple' → role checkbox. */
 export type CardSelectionMode = 'single' | 'multiple'
 
+/** Formatação de preço via Intl.NumberFormat. */
+export type PriceFormat = {
+  locale: string
+  currency: string
+}
+
+/** Item da lista de features do pricing. */
+export type PricingFeature = {
+  label: string
+  included?: boolean
+}
+
+/** Props de ícone compartilhadas pelas variantes com ícone. */
 export type WithIcon = {
   icon?: ReactNode
   iconSize?: number
@@ -24,156 +37,106 @@ export type WithIcon = {
   iconTextColor?: string
 }
 
-/** Formatação de preço via Intl.NumberFormat. */
-export type PriceFormat = {
-  /** Locale BCP 47 (ex.: 'pt-BR'). */
-  locale: string
-  /** Moeda ISO 4217 (ex.: 'BRL'). */
-  currency: string
-}
-
-export type ProfileStat = {
-  label: string
-  value: string | number
-}
-
-export type PricingFeature = {
-  label: string
-  /** false → item riscado/indisponível (default true). */
-  included?: boolean
-}
-
 export type BaseCardProps = {
+  href?: string
+  /** Rótulo acessível do link/botão esticado. */
+  hrefLabel?: string
+  onClick?: MouseEventHandler
   size?: CardSize
   fullWidth?: boolean
   cardBg?: string
   direction?: CardDirection
+  className?: string
+  style?: CSSProperties
+  children?: ReactNode
 
   /** Aparência visual (default 'elevated'). */
   appearance?: CardAppearance
-
   /** Layout estrutural (default 'vertical'). */
   layout?: CardLayout
-
-  /** Proporção da mídia quando a variante/composição renderiza imagem. */
+  /** Proporção da mídia; encaminhado via --mc-card-media-ratio. */
   mediaRatio?: CardMediaRatio
 
-  /** Tema de cor do card. */
+  /** Paleta registrada em colorThemes (ex.: 'ruby'). Deriva os tokens --mc-card-*. */
   colorTheme?: string
-
-  /** Overrides de tokens --mc-card-*. */
+  /** Overrides diretos de tokens --mc-card-*. */
   tokens?: import('./cardTokens').CardTokenOverrides
-
-  /** Torna o card inteiro um link. */
-  href?: string
-
-  /** Nome acessível do link/botão do card. */
-  hrefLabel?: string
-
-  /** Clique no card inteiro. */
-  onClick?: MouseEventHandler
 
   /** Desabilita interação e aplica visual de disabled. */
   disabled?: boolean
 
+  /** Torna o card selecionável (role checkbox/radio). */
+  selectable?: boolean
+  selectionMode?: CardSelectionMode
   /** Selecionado (controlado). */
   selected?: boolean
-
-  /** Selecionado inicialmente (não controlado). */
+  /** Selecionado inicial (não controlado). */
   defaultSelected?: boolean
-
   onSelectedChange?: (selected: boolean) => void
-
-  /** 'single' → radio; 'multiple' → checkbox. */
-  selectionMode?: CardSelectionMode
-
   /** Valor do card dentro de um MaskedCardGroup. */
   selectionValue?: string
 
+  /** Permite expandir para revelar expandContent. */
+  expandable?: boolean
+  expandContent?: ReactNode
   /** Expandido (controlado). */
   expanded?: boolean
-
-  /** Expandido inicialmente (não controlado). */
+  /** Expandido inicial (não controlado). */
   defaultExpanded?: boolean
-
   onExpandedChange?: (expanded: boolean) => void
-
-  /** Habilita o botão de expansão. */
-  expandable?: boolean
-
-  /** Conteúdo revelado ao expandir. */
-  expandContent?: ReactNode
-
-  /** Rótulo do botão quando recolhido. */
   expandLabel?: string
-
-  /** Rótulo do botão quando expandido. */
   collapseLabel?: string
-
-  className?: string
-  style?: CSSProperties
 }
 
 export type CardVariantMap = {
   metric: BaseCardProps &
     WithIcon & {
-      badge?: string | ReactNode
+      value: string | number
+      label: string
+      trend?: CardTrend
+      trendValue?: string
+      badge?: string
       badgeBgColor?: string
       badgeTextColor?: string
-      trendValue?: string
-      trend?: CardTrend
       rightIcon?: ReactNode
-      value: string | number | null | undefined
       value2?: string | number
-      label?: string
       label2?: string
-      valueTextColor?: string
-      labelTextColor?: string
-      description?: string
     }
 
   stat: BaseCardProps &
     WithIcon & {
+      label: string
       value: string | number
-      label?: string
-      value2?: string | number
       label2?: string
-      valueTextColor?: string
+      value2?: string | number
       labelTextColor?: string
-      trend?: CardTrend
-      trendValue?: string
-      description?: string
+      valueTextColor?: string
     }
 
   compare: BaseCardProps &
     WithIcon & {
       value: string | number
-      label?: string
+      label: string
       compareText?: string
       compareTrend?: CardTrend
-      valueTextColor?: string
-      labelTextColor?: string
-      description?: string
     }
 
   product: BaseCardProps & {
+    title: string
     image?: string
     imageAlt?: string
+    /** Conteúdo exibido quando não há imagem. */
     imagePlaceholder?: ReactNode
-    title: string
     description?: string
     price?: string | number
-    originalPrice?: string | number
-
-    /** Formata o preço usando Intl.NumberFormat. */
     priceFormat?: PriceFormat
-
     badge?: string
+    originalPrice?: string | number
     status?: CardStatus
-
-    /** Rótulos de status por idioma (default pt-BR). */
+    /** Rótulos por status (ex.: { active: 'Disponível' }). */
     statusLabels?: Partial<Record<CardStatus, string>>
-
+    rating?: number
+    action?: ReactNode
     actions?: ReactNode
   }
 
@@ -188,183 +151,87 @@ export type CardVariantMap = {
   plan: BaseCardProps &
     WithIcon & {
       planName: string
-
-      /** Cartão ativo. */
+      /** Cartão ativo (gradiente). */
       active?: boolean
-
       statusLabel?: string
       description?: string
       renewalDate?: string
-
-      /** Prefixo do rótulo de renovação. */
+      /** Prefixo do rótulo de renovação (default 'Renovação em'). */
       renewalLabel?: string
-
       action?: ReactNode
-
-      /** @deprecated use active */
+      /** @deprecated use `active` */
       $active?: boolean
     }
 
   profile: BaseCardProps & {
-    /** Foto/avatar. Sem ela, renderiza iniciais do nome. */
-    avatar?: string
-
-    /** Alt do avatar (default: name). */
-    avatarAlt?: string
-
-    /** Texto alternativo exibido quando não há avatar. */
-    avatarFallback?: string
-
     name: string
-
-    /** Cargo/função. */
     role?: string
-
-    /** Empresa/organização. */
     company?: string
-
-    /** Localização ou cidade do perfil. */
-    location?: string
-
-    /** Bio curta. */
+    avatar?: string
+    avatarFallback?: string
+    avatarAlt?: string
     bio?: string
-
-    /** Métricas do perfil. */
-    stats?: ProfileStat[]
-
-    /** Ações do perfil. */
+    location?: string
+    stats?: Array<{ label: string; value: string | number }>
     actions?: ReactNode
   }
 
   article: BaseCardProps & {
-    /** Imagem de capa. */
-    image?: string
-
-    /** Alt da imagem (default: title). */
-    imageAlt?: string
-
-    /** Categoria/editoria. */
-    category?: string
-
     title: string
-
-    /** Resumo/chamada. */
     excerpt?: string
-
-    /** Nome do autor. */
+    image?: string
+    imageAlt?: string
     author?: string
-
-    /** Avatar do autor. */
     authorAvatar?: string
-
-    /** Data formatada. */
     date?: string
-
-    /** Tempo de leitura. */
     readTime?: string
-
-    /** Ações do artigo. */
+    category?: string
     actions?: ReactNode
   }
 
   service: BaseCardProps &
     WithIcon & {
-      /** Imagem do serviço (alternativa ao icon). */
-      image?: string
-
-      /** Alt da imagem (default: title). */
-      imageAlt?: string
-
       title: string
       description?: string
-
-      /** Preço exibido. */
+      image?: string
+      imageAlt?: string
       price?: string | number
-
       /** Prefixo do preço (default 'A partir de'). */
       pricePrefix?: string
-
-      /** Formatação monetária. */
       priceFormat?: PriceFormat
-
-      /** Duração estimada. */
       duration?: string
-
-      /** Selo curto. */
       badge?: string
-
-      /** Ações do serviço. */
       actions?: ReactNode
     }
 
   testimonial: BaseCardProps & {
-    /** Texto do depoimento. */
     quote: string
-
-    /** Nome do autor. */
     author: string
-
-    /** Cargo do autor. */
     role?: string
-
-    /** @deprecated use role */
     authorRole?: string
-
-    /** Empresa do autor. */
     company?: string
-
-    /** Avatar do autor. */
     avatar?: string
-
-    /** Alt do avatar (default: author). */
     avatarAlt?: string
-
-    /** Fallback quando avatar não é passado. */
-    avatarFallback?: ReactNode
-
-    /** Nota de 0 a 5. */
+    /** Iniciais/texto quando não há avatar. */
+    avatarFallback?: string
     rating?: number
-
-    /** Nome acessível do rating. */
+    /** Rótulo acessível do rating (ex.: '4 de 5'). */
     ratingLabel?: string
-
-    /** Ações opcionais. */
     actions?: ReactNode
   }
 
   pricing: BaseCardProps & {
-    /** Nome do plano. */
     planName: string
-
-    /** Preço. */
     price?: string | number
-
-    /** Preço original riscado. */
     originalPrice?: string | number
-
-    /** Período de cobrança. */
     period?: string
-
-    /** Formatação monetária. */
-    priceFormat?: PriceFormat
-
-    /** Descrição curta do plano. */
     description?: string
-
-    /** Lista de funcionalidades. */
     features?: PricingFeature[]
-
-    /** Destaque visual do plano. */
     highlighted?: boolean
-
-    /** Selo do plano. */
     badge?: string
-
-    /** CTA principal. */
     action?: ReactNode
-
-    /** Nota de rodapé. */
     footnote?: string
+    priceFormat?: PriceFormat
   }
 }
 
