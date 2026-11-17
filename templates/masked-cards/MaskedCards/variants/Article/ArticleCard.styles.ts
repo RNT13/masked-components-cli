@@ -20,8 +20,7 @@ export const ArticleMedia = styled.div.attrs({ className: 'mc-card-media' })<{
   overflow: hidden;
   border-radius: ${maskedTheme.radius.md} ${maskedTheme.radius.md} 0 0;
   background-color: var(--mc-card-media-bg, ${maskedTheme.colors.baseBlack.light08});
-  aspect-ratio: ${({ $ratio }) =>
-    $ratio ? ratioMap[$ratio] : 'var(--mc-card-media-ratio, 16 / 9)'};
+  aspect-ratio: ${({ $ratio }) => ($ratio ? ratioMap[$ratio] : 'var(--mc-card-media-ratio, 16 / 9)')};
 
   img {
     display: block;
@@ -58,7 +57,7 @@ export const ArticleExcerpt = styled.p`
   font-size: ${maskedTheme.fontSize.sm};
   font-weight: ${maskedTheme.fontWeight.normal};
   line-height: ${maskedTheme.lineHeight.normal};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ArticleMeta = styled.div`
@@ -100,13 +99,13 @@ export const ArticleAuthor = styled.span`
 export const ArticleDate = styled.span`
   font-size: ${maskedTheme.fontSize.xs};
   font-weight: ${maskedTheme.fontWeight.normal};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ArticleReadTime = styled.span`
   font-size: ${maskedTheme.fontSize.xs};
   font-weight: ${maskedTheme.fontWeight.normal};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ArticleActions = styled.div`

@@ -30,7 +30,7 @@ export const TestimonialRating = styled.div`
 export const TestimonialRatingValue = styled.span`
   font-size: ${maskedTheme.fontSize.xs};
   font-weight: ${maskedTheme.fontWeight.medium};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const TestimonialFooter = styled.footer`
@@ -80,7 +80,7 @@ export const TestimonialAuthor = styled.span`
 export const TestimonialRole = styled.span`
   font-size: ${maskedTheme.fontSize.xs};
   font-weight: ${maskedTheme.fontWeight.normal};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const TestimonialActions = styled.div`

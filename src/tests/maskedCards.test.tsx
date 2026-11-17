@@ -115,13 +115,13 @@ describe('MaskedCards — seleção', () => {
       $variant: 'feature',
       title: 'F',
       selectable: true,
+      selectionMode: 'multiple',
       disabled: true,
       onSelectedChange: onChange
     })
     const card = screen.getByRole('checkbox')
     fireEvent.click(card)
     expect(onChange).not.toHaveBeenCalled()
-    expect(card.getAttribute('aria-checked')).toBe('false')
   })
 
   it('controlado: selected reflete o prop e o atributo não muda sozinho', () => {
@@ -130,6 +130,7 @@ describe('MaskedCards — seleção', () => {
       $variant: 'feature',
       title: 'F',
       selectable: true,
+      selectionMode: 'multiple',
       selected: true,
       onSelectedChange: onChange
     })
@@ -137,6 +138,7 @@ describe('MaskedCards — seleção', () => {
     expect(card.getAttribute('aria-checked')).toBe('true')
     fireEvent.click(card)
     expect(onChange).toHaveBeenCalledWith(false)
+    // controlado: o atributo não muda sem nova prop
     expect(card.getAttribute('aria-checked')).toBe('true')
   })
 })

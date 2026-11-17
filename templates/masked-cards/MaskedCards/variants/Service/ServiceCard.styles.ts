@@ -49,7 +49,7 @@ export const ServiceDescription = styled.p`
   font-size: ${maskedTheme.fontSize.sm};
   font-weight: ${maskedTheme.fontWeight.normal};
   line-height: ${maskedTheme.lineHeight.normal};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ServiceMeta = styled.div`
@@ -74,13 +74,13 @@ export const ServicePrice = styled.span`
 export const ServicePricePrefix = styled.span`
   font-size: ${maskedTheme.fontSize.xs};
   font-weight: ${maskedTheme.fontWeight.normal};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ServiceDuration = styled.span`
   font-size: ${maskedTheme.fontSize.xs};
   font-weight: ${maskedTheme.fontWeight.medium};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.base});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 
 export const ServiceActions = styled.div`

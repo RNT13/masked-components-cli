@@ -4,47 +4,45 @@ import { useCallback, useState } from 'react'
 import type { CardSelectionMode } from '../MaskedCards.types'
 
 export interface UseSelectableOptions {
-  /** Liga o comportamento de seleção. */
   selectable?: boolean
-  /** Selecionado (controlado). */
+  selectionMode?: CardSelectionMode
   selected?: boolean
-  /** Selecionado inicial (não controlado). */
   defaultSelected?: boolean
   onSelectedChange?: (selected: boolean) => void
-  /** 'single' → role radio; 'multiple' → role checkbox. */
-  selectionMode?: CardSelectionMode
   disabled?: boolean
 }
 
 export interface UseSelectableResult {
   selectable: boolean
   isSelected: boolean
-  role: 'radio' | 'checkbox'
+  /** 'checkbox' fora de grupo; dentro de MaskedCardGroup o useCardGroup sobrescreve. */
+  role: 'checkbox' | 'radio'
   toggle: () => void
 }
 
 export function useSelectable({
   selectable,
+  selectionMode = 'single',
   selected,
   defaultSelected,
   onSelectedChange,
-  selectionMode = 'multiple',
   disabled
 }: UseSelectableOptions): UseSelectableResult {
-  const [internalSelected, setInternalSelected] = useState(defaultSelected ?? false)
-  const isSelected = selected ?? internalSelected
+  const [internal, setInternal] = useState(!!defaultSelected)
+  const isControlled = selected !== undefined
+  const isSelected = isControlled ? !!selected : internal
 
   const toggle = useCallback(() => {
     if (disabled || !selectable) return
     const next = !isSelected
-    if (selected === undefined) setInternalSelected(next)
+    if (!isControlled) setInternal(next)
     onSelectedChange?.(next)
-  }, [disabled, selectable, isSelected, selected, onSelectedChange])
+  }, [disabled, selectable, isSelected, isControlled, onSelectedChange])
 
   return {
     selectable: !!selectable,
     isSelected,
-    role: selectionMode === 'single' ? 'radio' : 'checkbox',
+    role: selectionMode === 'single' ? 'radio' : 'checkbox',  
     toggle
   }
 }

@@ -17,7 +17,7 @@ export const CompareValue = styled.strong`
 `
 export const CompareLabel = styled.span`
   font-size: ${maskedTheme.fontSize.sm};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.dark20});
+  color: var(--mc-card-muted-fg, currentColor);
 `
 export const CompareTrend = styled.span<{ $trend?: CardTrend }>`
   display: flex;

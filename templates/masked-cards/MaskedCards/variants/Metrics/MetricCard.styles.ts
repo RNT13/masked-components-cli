@@ -19,8 +19,7 @@ export const MetricBadge = styled.span<{ $bg?: string; $color?: string }>`
   font-weight: 600;
   padding: 2px 10px;
   border-radius: ${maskedTheme.radius.xl};
-  background-color: ${({ $bg }) =>
-    $bg ?? `var(--mc-card-icon-bg, ${maskedTheme.colors.baseBlue.light20})`};
+  background-color: ${({ $bg }) => $bg ?? `var(--mc-card-icon-bg, ${maskedTheme.colors.baseBlue.light20})`};
   color: ${({ $color }) => $color ?? `var(--mc-card-icon-fg, ${maskedTheme.colors.baseBlue.base})`};
 `
 
@@ -49,5 +48,5 @@ export const MetricValue = styled.strong`
 `
 export const MetricLabel = styled.span`
   font-size: ${maskedTheme.fontSize.sm};
-  color: var(--mc-card-muted-fg, ${maskedTheme.colors.baseBlack.dark20});
+  color: var(--mc-card-muted-fg, currentColor);
 `

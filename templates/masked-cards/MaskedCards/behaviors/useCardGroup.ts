@@ -1,45 +1,40 @@
 'use client'
 
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useRef } from 'react'
 import { CardGroupContext } from '../Group/CardGroupContext'
 
 export interface UseCardGroupResult {
   grouped: boolean
   isSelected: boolean
   role: 'radio' | 'checkbox'
-  /** tabIndex do card dentro do roving tabindex do grupo. */
   tabIndex: number | undefined
   select: () => void
   onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => void
-  /** Callback ref: registra o elemento interativo no grupo. */
   registerRef: (el: HTMLElement | null) => void
   effectiveDisabled: boolean
 }
 
-/**
- * Cleanup de registro por elemento. O callback ref do React é chamado  
- * com `null` na desmontagem — sem o elemento não dá para saber qual  
- * cleanup rodar, então guardamos por referência de elemento.  
- */
-const cleanups = new WeakMap<HTMLElement, () => void>()
-
-/**
- * Conecta um card ao MaskedCardGroup ancestral.  
- * Fora de grupo (ou sem selectionValue) retorna grouped: false.  
- */
-export function useCardGroup(
-  selectionValue: string | undefined,
-  cardDisabled?: boolean
-): UseCardGroupResult {
+export function useCardGroup(selectionValue: string | number | undefined, cardDisabled?: boolean): UseCardGroupResult {
   const group = useContext(CardGroupContext)
+  const cleanups = useRef(new Map<HTMLElement, () => void>())
+  const lastEl = useRef<HTMLElement | null>(null)
 
   const registerRef = useCallback(
     (el: HTMLElement | null) => {
       if (!group || selectionValue === undefined) return
+      const key = String(selectionValue)
+      if (lastEl.current && lastEl.current !== el) {
+        cleanups.current.get(lastEl.current)?.()
+        cleanups.current.delete(lastEl.current)
+      }
       if (el) {
-        // Re-registro no mesmo elemento: limpa o anterior antes.
-        cleanups.get(el)?.()
-        cleanups.set(el, group.register(selectionValue, el, group.disabled || !!cardDisabled))
+        cleanups.current.get(el)?.()
+        cleanups.current.set(el, group.register(key, el, group.disabled || !!cardDisabled))
+        lastEl.current = el
+      } else if (lastEl.current) {
+        cleanups.current.get(lastEl.current)?.()
+        cleanups.current.delete(lastEl.current)
+        lastEl.current = null
       }
     },
     [group, selectionValue, cardDisabled]
@@ -49,17 +44,18 @@ export function useCardGroup(
     return { grouped: false } as UseCardGroupResult
   }
 
+  const key = String(selectionValue)
   const effectiveDisabled = group.disabled || !!cardDisabled
 
   return {
     grouped: true,
-    isSelected: group.isSelected(selectionValue),
+    isSelected: group.isSelected(key),
     role: group.mode === 'multiple' ? 'checkbox' : 'radio',
-    tabIndex: group.tabIndexFor(selectionValue, effectiveDisabled),
+    tabIndex: group.tabIndexFor(key, effectiveDisabled),
     select: () => {
-      if (!effectiveDisabled) group.select(selectionValue)
+      if (!effectiveDisabled) group.select(key)
     },
-    onKeyDown: (event) => group.onCardKeyDown(selectionValue, event),
+    onKeyDown: event => group.onCardKeyDown(key, event),
     registerRef,
     effectiveDisabled
   }
