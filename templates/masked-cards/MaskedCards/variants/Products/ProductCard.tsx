@@ -50,30 +50,11 @@ export default function ProductCard({
   status,
   statusLabels,
   actions,
-  size,
-  fullWidth,
-  cardBg,
-  direction,
-  colorTheme,
-  tokens,
-  style,
-  href,
-  onClick,
-  className
+  hrefLabel,
+  ...rest
 }: Props) {
   return (
-    <ProductCardContainer
-      size={size}
-      fullWidth={fullWidth}
-      cardBg={cardBg}
-      direction={direction}
-      colorTheme={colorTheme}
-      tokens={tokens}
-      style={style}
-      href={href}
-      onClick={onClick}
-      className={className}
-    >
+    <ProductCardContainer hasActions={!!actions} hrefLabel={hrefLabel ?? title} {...rest}>
       {image ? (
         <ProductImage src={image} alt={imageAlt ?? title} />
       ) : (

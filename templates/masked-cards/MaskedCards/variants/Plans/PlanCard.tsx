@@ -24,29 +24,18 @@ export default function PlanCard({
   renewalDate,
   renewalLabel = 'Renovação em',
   action,
-  size,
-  fullWidth,
-  href,
-  onClick,
-  className,
   iconSize,
   iconBgColor,
   iconTextColor,
-  colorTheme,
-  tokens,
-  style
+  hrefLabel,
+  ...rest
 }: Props) {
   return (
     <PlanCardContainer
-      size={size}
-      fullWidth={fullWidth}
-      href={href}
-      onClick={onClick}
-      className={className}
       $active={active ?? $active ?? false}
-      colorTheme={colorTheme}
-      tokens={tokens}
-      style={style}
+      hasActions={!!action}
+      hrefLabel={hrefLabel ?? planName}
+      {...rest}
     >
       <PlanHeader>
         {icon && (

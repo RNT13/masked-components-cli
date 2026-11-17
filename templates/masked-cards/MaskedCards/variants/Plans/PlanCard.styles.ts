@@ -1,7 +1,13 @@
 import styled, { css } from 'styled-components'
 import { BaseCard } from '../../Base/BaseCard'
 
-/* os dois estados são gradientes escuros: texto branco sempre legível */
+/*
+ * os dois estados são gradientes escuros: texto branco sempre legível.
+ * NOTA: plan tem identidade visual própria — seu gradiente/borda vencem
+ * `appearance` por ordem de especificidade (styled(BaseCard) concatena
+ * depois). Os estados selected/disabled, porém, SEMPRE vencem a borda
+ * do plano via os seletores [data-selected]/[data-disabled] abaixo.
+ */
 export const PlanCardContainer = styled(BaseCard)<{ $active?: boolean }>`
   color: var(--mc-card-plan-fg, #ffffff);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
@@ -11,17 +17,43 @@ export const PlanCardContainer = styled(BaseCard)<{ $active?: boolean }>`
       ? css`
           background-image: var(
             --mc-card-plan-active-bg,
-            linear-gradient(160deg, ${theme.colors?.accentColor ?? theme.colors.baseBlue.base}, ${theme.colors.baseBlue.dark20})
+            linear-gradient(
+              160deg,
+              ${theme.colors?.accentColor ?? theme.colors.baseBlue.base},
+              ${theme.colors.baseBlue.dark20}
+            )
           );
-          border: 2px solid var(--mc-card-plan-active-border, ${theme.colors?.accentColor ?? theme.colors.baseBlue.base});
+          border: 2px solid
+            var(
+              --mc-card-plan-active-border,
+              ${theme.colors?.accentColor ?? theme.colors.baseBlue.base}
+            );
         `
       : css`
           background-image: var(
             --mc-card-plan-inactive-bg,
-            linear-gradient(160deg, ${theme.colors.baseBlack.light20}, ${theme.colors.baseBlack.dark})
+            linear-gradient(
+              160deg,
+              ${theme.colors.baseBlack.light20},
+              ${theme.colors.baseBlack.dark}
+            )
           );
           border: 2px solid var(--mc-card-plan-inactive-border, ${theme.colors.baseBlack.light20});
         `}
+
+  /*  
+   * selected/disabled vencem a borda do plano: vêm depois na ordem e usam  
+   * atributos emitidos pelo BaseCard (data-selected/data-disabled).  
+   * O anel de seleção (box-shadow do $selected) e o marcador ✓ garantem  
+   * percepção sem depender só da cor da borda.  
+   */  
+  &[data-selected='true'] {
+    border-color: var(--mc-card-selected-border, ${({ theme }) => theme.colors.baseBlue.base});
+  }
+
+  &[data-disabled='true'] {
+    border-color: var(--mc-card-disabled-bg, ${({ theme }) => theme.colors.baseBlack.light20});
+  }
 `
 
 export const PlanHeader = styled.div`
