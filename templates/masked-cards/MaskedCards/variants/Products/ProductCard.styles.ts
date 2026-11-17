@@ -12,17 +12,26 @@ const statusVar: Record<CardStatus, string> = {
 
 export const ProductCardContainer = styled(BaseCard)``
 
-export const ProductImage = styled.img`
+/*
+ * mc-card-media: participa dos layouts horizontal/split/overlay do
+ * BaseCardContainer. mediaRatio: quando --mc-card-media-ratio está
+ * definida (data-media-ratio no card), o valor é uma razão inválida
+ * para height → height cai para auto e o aspect-ratio assume; sem a
+ * var, height = 180px (visual original preservado).
+ */
+export const ProductImage = styled.img.attrs({ className: 'mc-card-media' })`
   width: 100%;
-  height: 180px;
+  height: var(--mc-card-media-ratio, 180px);
+  aspect-ratio: var(--mc-card-media-ratio, auto);
   object-fit: cover;
   border-radius: ${maskedTheme.radius.sm};
   background-color: var(--mc-card-media-bg, ${maskedTheme.colors.baseBlue.light20});
 `
 
-export const ProductImagePlaceholder = styled.div`
+export const ProductImagePlaceholder = styled.div.attrs({ className: 'mc-card-media' })`
   width: 100%;
-  height: 180px;
+  height: var(--mc-card-media-ratio, 180px);
+  aspect-ratio: var(--mc-card-media-ratio, auto);
   border-radius: ${maskedTheme.radius.sm};
   background-color: var(--mc-card-placeholder-bg, ${maskedTheme.colors.baseBlue.light20});
   display: flex;

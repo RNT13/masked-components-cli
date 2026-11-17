@@ -3,3 +3,4 @@ dist
 .tmp-typecheck-*  
 REPORT.md  
 repomix-output.xml
+repomix-masked-cards.xml
