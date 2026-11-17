@@ -1,71 +1,79 @@
 'use client'
 
-import { CardVariantMap } from '../../MaskedCards.types'
 import { BaseCard } from '../../Base/BaseCard'
+import { CardVariantMap } from '../../MaskedCards.types'
 import {
+  TestimonialActions,
   TestimonialAuthor,
-  TestimonialAuthorName,
-  TestimonialAuthorRole,
+  TestimonialAuthorBlock,
   TestimonialAvatar,
+  TestimonialAvatarFallback,
   TestimonialFooter,
   TestimonialQuote,
   TestimonialRating,
-  TestimonialRatingValue
+  TestimonialRatingValue,
+  TestimonialRole
 } from './TestimonialCard.styles'
 
-type TestimonialCardProps = CardVariantMap['testimonial']
+type Props = CardVariantMap['testimonial']
 
-function initialsOf(name: string): string {
+function initials(name: string): string {
   return name
-    .trim()
-    .split(/\s+/)
+    .split(' ')
+    .filter(Boolean)
     .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? '')
+    .map((part) => part[0]?.toUpperCase())
     .join('')
 }
 
-function renderStars(rating: number): string {
+function stars(rating: number): string {
   const clamped = Math.max(0, Math.min(5, Math.round(rating)))
   return '★'.repeat(clamped) + '☆'.repeat(5 - clamped)
 }
 
-export function TestimonialCard(props: TestimonialCardProps) {
-  const {
-    quote,
-    author,
-    authorRole,
-    avatar,
-    avatarAlt,
-    avatarFallback,
-    rating,
-    ratingLabel,
-    ...rest
-  } = props
+export function TestimonialCard({
+  quote,
+  author,
+  role,
+  authorRole,
+  company,
+  avatar,
+  avatarAlt,
+  avatarFallback,
+  rating,
+  ratingLabel,
+  actions,
+  ...rest
+}: Props) {
+  const displayRole = role ?? authorRole
+  const roleLine = [displayRole, company].filter(Boolean).join(' · ')
 
   return (
-    <BaseCard {...rest} hrefLabel={rest.hrefLabel ?? author}>
-      {rating !== undefined && (
-        <TestimonialRating role="img" aria-label={ratingLabel ?? `Nota ${rating} de 5`}>
-          <span aria-hidden="true">{renderStars(rating)}</span>
-          <TestimonialRatingValue aria-hidden="true">{rating.toFixed(1)}</TestimonialRatingValue>
+    <BaseCard {...rest} hasActions={!!actions} hrefLabel={rest.hrefLabel ?? author}>
+      <TestimonialQuote>{quote}</TestimonialQuote>
+
+      {rating !== undefined && rating !== null && (
+        <TestimonialRating aria-label={ratingLabel ?? `Avaliação ${rating} de 5`}>
+          <span aria-hidden>{stars(rating)}</span>
+          <TestimonialRatingValue>{rating}/5</TestimonialRatingValue>
         </TestimonialRating>
       )}
 
-      <TestimonialQuote>{quote}</TestimonialQuote>
-
       <TestimonialFooter>
-        <TestimonialAvatar>
-          {avatar ? (
-            <img src={avatar} alt={avatarAlt ?? author} />
-          ) : (
-            (avatarFallback ?? initialsOf(author))
-          )}
-        </TestimonialAvatar>
-        <TestimonialAuthor>
-          <TestimonialAuthorName>{author}</TestimonialAuthorName>
-          {authorRole && <TestimonialAuthorRole>{authorRole}</TestimonialAuthorRole>}
-        </TestimonialAuthor>
+        {avatar ? (
+          <TestimonialAvatar src={avatar} alt={avatarAlt ?? ''} />
+        ) : (
+          <TestimonialAvatarFallback aria-hidden>
+            {avatarFallback ?? initials(author)}
+          </TestimonialAvatarFallback>
+        )}
+        <TestimonialAuthorBlock>
+          <TestimonialAuthor>{author}</TestimonialAuthor>
+          {roleLine && <TestimonialRole>{roleLine}</TestimonialRole>}
+        </TestimonialAuthorBlock>
       </TestimonialFooter>
+
+      {actions && <TestimonialActions>{actions}</TestimonialActions>}
     </BaseCard>
   )
 }

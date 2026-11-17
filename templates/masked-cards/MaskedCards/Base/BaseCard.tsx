@@ -2,7 +2,6 @@
 
 import { forwardRef, useCallback } from 'react'
 import { useTheme } from 'styled-components'
-import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 import { BaseCardProps, CardDirection } from '../MaskedCards.types'
 import { resolveCardTokens, CardTokenOverrides } from '../cardTokens'
 import { useSelectable } from '../behaviors/useSelectable'
@@ -48,29 +47,23 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     onExpandedChange,
     expandable,
     expandContent,
-    expandLabel = 'Mostrar mais',
-    collapseLabel = 'Mostrar menos',
+    expandLabel,
+    collapseLabel,
     colorTheme,
     tokens,
     style,
-    children,
     className,
     hasActions,
-    ...props
+    children,
+    ...rest
   },
   ref
 ) {
-  // hooks incondicionais; linkComponent prop-level não existe em card — provider > <a>
-  const { linkComponent } = useMaskedConfig()
   const theme = useTheme()
-  const LinkTag = (linkComponent ?? 'a') as 'a'
 
-  const {
-    selectable,
-    isSelected,
-    toggle,
-    ariaProps: selectableAria
-  } = useSelectable({
+  const group = useCardGroup(selectionValue, disabled)
+
+  const selectable = useSelectable({
     selected,
     defaultSelected,
     onSelectedChange,
@@ -78,13 +71,7 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     disabled
   })
 
-  const {
-    expandable: isExpandable,
-    isExpanded,
-    toggle: toggleExpanded,
-    buttonId: expandButtonId,
-    regionId: expandRegionId
-  } = useExpandable({
+  const expand = useExpandable({
     expandable,
     expanded,
     defaultExpanded,
@@ -92,105 +79,106 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     disabled
   })
 
-  // Grupo (MaskedCardGroup): fora de grupo retorna { grouped: false }.
-  const group = useCardGroup(selectionValue, disabled)
-  const grouped = group.grouped
+  const effectiveDisabled = group.grouped ? group.effectiveDisabled : disabled
+  const effectiveSelectable = group.grouped || selectable.selectable
 
-  const effectiveDisabled = grouped ? group.effectiveDisabled : !!disabled
-  const effectiveSelected = grouped ? group.isSelected : isSelected
-  const effectiveSelectable = grouped || selectable
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      if (effectiveDisabled) return
+      if (group.grouped) {
+        group.select()
+      } else if (selectable.selectable) {
+        selectable.toggle()
+      }
+      onClick?.(event)
+    },
+    [effectiveDisabled, group, selectable, onClick]
+  )
 
-  // Semântica preservada mesmo desabilitado: <button disabled> / <a> sem href.
-  const interactive = !!href || !!onClick || effectiveSelectable
-  // Estilo "clicável" (hover/cursor) só quando de fato habilitado.
-  const clickable = interactive && !effectiveDisabled
-  const stretched = interactive && !!hasActions
-
-  // Precedência: direction explícito do consumidor vence o implícito do layout.
-  const effectiveDirection: CardDirection =
-    direction ?? (layout === 'horizontal' ? 'row' : 'column')
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      if (group.grouped) group.onKeyDown(event)
+    },
+    [group]
+  )
 
   const tokenStyle = resolveCardTokens(
     {
       colorTheme,
       appearance,
-      tokens: tokens as CardTokenOverrides | undefined
+      // cardBg (legado) vira tokens.bg; tokens do consumidor têm prioridade.
+      tokens: {
+        ...(cardBg ? { bg: cardBg } : {}),
+        ...(tokens as CardTokenOverrides | undefined)
+      }
     },
     theme
   )
 
-  const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
-      if (effectiveDisabled) return
-      if (grouped) {
-        group.select()
-      } else if (selectable) {
-        toggle()
-      }
-      onClick?.(event)
-    },
-    [effectiveDisabled, grouped, group, selectable, toggle, onClick]
-  )
+  const interactive = !!href || !!onClick || effectiveSelectable
+  const clickable = interactive && !effectiveDisabled
+  const stretched = interactive && (!!hasActions || expand.expandable)
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLElement>) => {
-      if (grouped) group.onKeyDown(event)
-    },
-    [grouped, group]
-  )
-
-  const groupTabIndex = grouped ? group.tabIndex : undefined
-  const registerRef = grouped ? group.registerRef : undefined
-
-  const groupAriaProps = grouped ? { role: group.role, 'aria-checked': group.isSelected } : {}
+  const resolvedDirection: CardDirection =
+    direction ?? (layout === 'horizontal' || layout === 'split' ? 'row' : 'column')
 
   const common = {
     $size: size,
     $fullWidth: fullWidth,
-    $clickable: clickable,
-    $cardBg: cardBg,
-    $direction: effectiveDirection,
+    $direction: resolvedDirection,
     $appearance: appearance,
     $layout: layout,
+    $clickable: clickable,
     $disabled: effectiveDisabled,
-    $selected: effectiveSelected,
-    $expanded: isExpanded,
+    $selected: group.grouped ? group.isSelected : selectable.isSelected,
+    $expanded: expand.isExpanded,
     'data-media-ratio': mediaRatio,
-    'data-selected': effectiveSelected || undefined,
-    'data-disabled': effectiveDisabled || undefined,
+    'data-appearance': appearance,
+    'data-layout': layout,
     'aria-disabled': effectiveDisabled || undefined,
+    style: { ...tokenStyle, ...style } as React.CSSProperties,
     className,
-    style: { ...tokenStyle, ...style },
-    ...props
-  } as const
+    ...rest
+  }
 
-  const expandSection = isExpandable ? (
+  const groupAriaProps = group.grouped ? { role: group.role, 'aria-checked': group.isSelected } : {}
+
+  const selectableAria =
+    !group.grouped && selectable.selectable
+      ? {
+          role: selectionMode === 'multiple' ? 'checkbox' : 'radio',
+          'aria-checked': selectable.isSelected
+        }
+      : {}
+
+  const expandSection = expand.expandable ? (
     <CardExpandSection>
       <CardExpandButton
-        id={expandButtonId}
         type="button"
-        onClick={toggleExpanded}
+        id={expand.buttonId}
+        aria-expanded={expand.isExpanded}
+        aria-controls={expand.regionId}
         disabled={effectiveDisabled}
-        aria-expanded={isExpanded}
-        aria-controls={expandRegionId}
+        onClick={expand.toggle}
       >
-        {isExpanded ? collapseLabel : expandLabel}
-        <CardExpandCaret $expanded={isExpanded} aria-hidden="true" />
+        {expand.isExpanded ? (collapseLabel ?? 'Mostrar menos') : (expandLabel ?? 'Mostrar mais')}
+        <CardExpandCaret $expanded={expand.isExpanded} aria-hidden="true" />
       </CardExpandButton>
       <CardExpandRegion
-        id={expandRegionId}
+        id={expand.regionId}
         role="region"
-        aria-labelledby={expandButtonId}
-        $expanded={isExpanded}
+        aria-labelledby={expand.buttonId}
+        $expanded={expand.isExpanded}
       >
-        <div>{expandContent}</div>
+        {expandContent}
       </CardExpandRegion>
     </CardExpandSection>
   ) : null
 
-  const selectedIndicator = effectiveSelectable ? (
-    <CardSelectedIndicator aria-hidden="true" $visible={effectiveSelected} />
-  ) : null
+  const selectedIndicator =
+    (group.grouped ? group.isSelected : selectable.isSelected) && effectiveSelectable ? (
+      <CardSelectedIndicator aria-hidden="true" />
+    ) : null
 
   const content = (
     <>
@@ -200,30 +188,36 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     </>
   )
 
-  // href + conteúdo interativo interno: wrapper + stretched-link (sem aninhar).
+  const groupTabIndex = group.grouped ? group.tabIndex : undefined
+  const registerRef = group.grouped ? group.registerRef : undefined
+
+  // href + conteúdo interativo interno: stretched-link (sem aninhamento).
   if (href && stretched) {
     return (
-      <BaseCardContainer ref={ref} {...common}>
+      <BaseCardContainer {...common}>
         <StretchedLink
-          as={LinkTag}
           href={effectiveDisabled ? undefined : href}
-          aria-label={hrefLabel ?? 'Abrir'}
-          tabIndex={effectiveDisabled ? -1 : undefined}
+          aria-disabled={effectiveDisabled || undefined}
+          aria-label={hrefLabel}
+          tabIndex={effectiveDisabled ? -1 : groupTabIndex}
+          ref={registerRef as React.Ref<HTMLAnchorElement>}
+          onKeyDown={handleKeyDown}
         />
         {content}
       </BaseCardContainer>
     )
   }
 
-  // href sem conteúdo interativo interno: o próprio card é o link.
-  // 'aria-disabled' já vem em common — não repetir aqui.
+  // href sem conteúdo interativo interno: o card inteiro é o link.
   if (href) {
     return (
       <BaseCardContainer
-        as={LinkTag}
+        as="a"
         href={effectiveDisabled ? undefined : href}
-        tabIndex={effectiveDisabled ? -1 : undefined}
-        ref={ref as React.Ref<HTMLAnchorElement>}
+        aria-label={hrefLabel}
+        tabIndex={effectiveDisabled ? -1 : groupTabIndex}
+        ref={registerRef ?? (ref as React.Ref<HTMLAnchorElement>)}
+        onKeyDown={handleKeyDown}
         {...common}
       >
         {content}
@@ -231,19 +225,20 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
     )
   }
 
-  // onClick/seleção + conteúdo interativo interno: wrapper + stretched-button.
-  if (interactive && stretched) {
+  // onClick/seleção + conteúdo interativo interno: wrapper + botão stretched.
+  if (stretched) {
     return (
-      <BaseCardContainer ref={ref} {...common}>
+      <BaseCardContainer {...common}>
         <StretchedButton
-          ref={registerRef as React.Ref<HTMLButtonElement>}
           type="button"
           onClick={handleClick}
           onKeyDown={handleKeyDown}
           disabled={effectiveDisabled}
           tabIndex={groupTabIndex}
           aria-label={hrefLabel ?? (effectiveSelectable ? 'Selecionar' : 'Ação do cartão')}
-          {...(grouped ? groupAriaProps : selectableAria)}
+          ref={registerRef as React.Ref<HTMLButtonElement>}
+          {...groupAriaProps}
+          {...selectableAria}
         />
         {content}
       </BaseCardContainer>
@@ -263,7 +258,8 @@ export const BaseCard = forwardRef<HTMLDivElement, BaseCardInternalProps>(functi
         ref={registerRef ?? (ref as React.Ref<HTMLButtonElement>)}
         {...common}
         $isButton
-        {...(grouped ? groupAriaProps : selectableAria)}
+        {...groupAriaProps}
+        {...selectableAria}
       >
         {content}
       </BaseCardContainer>
