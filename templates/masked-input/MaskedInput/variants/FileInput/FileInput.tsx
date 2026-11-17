@@ -102,7 +102,6 @@ export function FileInput(props: Props) {
       <ImageComponent src={src} alt={alt} fill style={style} />
     ) : (
       // Fallback agnóstico de framework; em Next, injete next/image via imageComponent.
-      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
         alt={alt}

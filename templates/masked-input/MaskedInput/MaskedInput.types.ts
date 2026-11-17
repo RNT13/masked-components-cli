@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ComponentType, CSSProperties, ReactNode } from 'react'
 import type { InputColorTheme, InputTokenOverrides } from './inputTokens'
 
