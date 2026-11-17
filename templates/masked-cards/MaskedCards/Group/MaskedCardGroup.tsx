@@ -1,6 +1,6 @@
 'use client'
 
-import { Children, isValidElement, useCallback, useMemo, useRef, useState } from 'react'
+import { Children, isValidElement, useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import type { KeyboardEvent, ReactElement } from 'react'
 import { CardGroupContext } from './CardGroupContext'
 import type { CardGroupContextValue } from './CardGroupContext'
@@ -42,6 +42,13 @@ export function MaskedCardGroup(props: MaskedCardGroupProps) {
   const itemsRef = useRef<Map<string, RegisteredItem>>(new Map())
   const orderRef = useRef<string[]>([])
 
+  /**
+   * Os itens se registram via callback ref (após o commit). Sem estado,  
+   * o primeiro render calcula tabIndex com o mapa vazio e nunca  
+   * recalcula — bump força um re-render a cada registro/desregistro.  
+   */
+  const [, bumpRegistration] = useReducer((x: number) => x + 1, 0)
+
   const emitChange = useCallback(
     (next: string | string[]) => {
       if (!isControlled) setInternalValue(next)
@@ -77,9 +84,11 @@ export function MaskedCardGroup(props: MaskedCardGroupProps) {
   const register = useCallback((value: string, el: HTMLElement, itemDisabled: boolean) => {
     itemsRef.current.set(value, { value, disabled: itemDisabled, el })
     if (!orderRef.current.includes(value)) orderRef.current.push(value)
+    bumpRegistration()
     return () => {
       itemsRef.current.delete(value)
       orderRef.current = orderRef.current.filter((v) => v !== value)
+      bumpRegistration()
     }
   }, [])
 
