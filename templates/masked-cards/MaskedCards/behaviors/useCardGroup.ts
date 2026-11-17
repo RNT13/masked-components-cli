@@ -1,48 +1,53 @@
 'use client'
 
-import { useCallback, useRef } from 'react'
-import { useCardGroupContext } from '../Group/CardGroupContext'
-import type { KeyboardEvent } from 'react'
+import { useCallback, useContext } from 'react'
+import { CardGroupContext } from '../Group/CardGroupContext'
 
-export interface GroupedCardBehavior {
-  grouped: true
+export interface UseCardGroupResult {
+  grouped: boolean
   isSelected: boolean
   role: 'radio' | 'checkbox'
-  tabIndex: number
+  /** tabIndex do card dentro do roving tabindex do grupo. */
+  tabIndex: number | undefined
   select: () => void
-  onKeyDown: (event: KeyboardEvent<HTMLElement>) => void
-  /** Callback ref para o elemento interativo (button/stretched-button). */
+  onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => void
+  /** Callback ref: registra o elemento interativo no grupo. */
   registerRef: (el: HTMLElement | null) => void
-  /** disabled efetivo: grupo desabilitado OU card desabilitado. */
   effectiveDisabled: boolean
 }
 
-export type CardGroupBehavior = GroupedCardBehavior | { grouped: false }
+/**
+ * Cleanup de registro por elemento. O callback ref do React é chamado  
+ * com `null` na desmontagem — sem o elemento não dá para saber qual  
+ * cleanup rodar, então guardamos por referência de elemento.  
+ */
+const cleanups = new WeakMap<HTMLElement, () => void>()
 
 /**
- * Adapta o card ao MaskedCardGroup. Fora de grupo (ou sem selectionValue),  
- * retorna { grouped: false } e o BaseCard usa o comportamento avulso.  
- * Dentro do grupo, as props de seleção avulsas do card são ignoradas.  
+ * Conecta um card ao MaskedCardGroup ancestral.  
+ * Fora de grupo (ou sem selectionValue) retorna grouped: false.  
  */
 export function useCardGroup(
   selectionValue: string | undefined,
-  cardDisabled: boolean | undefined
-): CardGroupBehavior {
-  const group = useCardGroupContext()
-  const cleanupRef = useRef<(() => void) | null>(null)
+  cardDisabled?: boolean
+): UseCardGroupResult {
+  const group = useContext(CardGroupContext)
 
   const registerRef = useCallback(
     (el: HTMLElement | null) => {
-      cleanupRef.current?.()
-      cleanupRef.current = null
-      if (el && group && selectionValue !== undefined) {
-        cleanupRef.current = group.register(selectionValue, el, group.disabled || !!cardDisabled)
+      if (!group || selectionValue === undefined) return
+      if (el) {
+        // Re-registro no mesmo elemento: limpa o anterior antes.
+        cleanups.get(el)?.()
+        cleanups.set(el, group.register(selectionValue, el, group.disabled || !!cardDisabled))
       }
     },
     [group, selectionValue, cardDisabled]
   )
 
-  if (!group || selectionValue === undefined) return { grouped: false }
+  if (!group || selectionValue === undefined) {
+    return { grouped: false } as UseCardGroupResult
+  }
 
   const effectiveDisabled = group.disabled || !!cardDisabled
 
