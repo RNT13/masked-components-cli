@@ -1,13 +1,13 @@
 import styled from 'styled-components'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 
-export const ServiceMedia = styled.div`
+export const ServiceMedia = styled.div.attrs({ className: 'mc-card-media' })`
   position: relative;
   margin: calc(${maskedTheme.spacing.md} * -1) calc(${maskedTheme.spacing.md} * -1) 0;
   overflow: hidden;
   border-radius: ${maskedTheme.radius.md} ${maskedTheme.radius.md} 0 0;
   background-color: var(--mc-card-media-bg, ${maskedTheme.colors.baseBlack.light08});
-  aspect-ratio: 16 / 9;
+  aspect-ratio: var(--mc-card-media-ratio, 16/9);
 
   img {
     display: block;
@@ -34,15 +34,13 @@ export const ServiceBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${maskedTheme.spacing.xs};
-  width: 100%;
-  flex: 1;
 `
 
 export const ServiceTitle = styled.h3`
   margin: 0;
   font-size: ${maskedTheme.fontSize.md};
   font-weight: ${maskedTheme.fontWeight.semibold};
-  line-height: ${maskedTheme.lineHeight.snug};
+  line-height: ${maskedTheme.lineHeight.tight};
   color: var(--mc-card-fg, ${maskedTheme.colors.baseBlack.dark40});
 `
 
@@ -57,7 +55,6 @@ export const ServiceDescription = styled.p`
 export const ServiceMeta = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: ${maskedTheme.spacing.xs};
   flex-wrap: wrap;
 `
@@ -65,8 +62,7 @@ export const ServiceMeta = styled.div`
 export const ServicePriceRow = styled.div`
   display: flex;
   align-items: baseline;
-  gap: ${maskedTheme.spacing.xs};
-  flex-wrap: wrap;
+  gap: ${maskedTheme.spacing['2xs']};
 `
 
 export const ServicePrice = styled.span`

@@ -1,24 +1,24 @@
 import styled, { css } from 'styled-components'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
+import { CardAppearance, CardDirection, CardSize } from '../MaskedCards.types'
 import { appearanceStyles } from './appearances.styles'
-import type { CardAppearance, CardDirection, CardLayout, CardSize } from '../MaskedCards.types'
 
 const sizeStyles: Record<CardSize, ReturnType<typeof css>> = {
   sm: css`
     padding: ${maskedTheme.spacing.sm};
-    border-radius: ${maskedTheme.radius.sm};
+    font-size: ${maskedTheme.fontSize.xs};
   `,
   md: css`
     padding: ${maskedTheme.spacing.md};
-    border-radius: ${maskedTheme.radius.md};
+    font-size: ${maskedTheme.fontSize.sm};
   `,
   lg: css`
     padding: ${maskedTheme.spacing.lg};
-    border-radius: ${maskedTheme.radius.lg};
+    font-size: ${maskedTheme.fontSize.md};
   `,
   xl: css`
     padding: ${maskedTheme.spacing.xl};
-    border-radius: ${maskedTheme.radius.lg};
+    font-size: ${maskedTheme.fontSize.lg};
   `
 }
 
@@ -26,81 +26,116 @@ const gapStyles: Record<CardSize, string> = {
   sm: maskedTheme.spacing.xs,
   md: maskedTheme.spacing.sm,
   lg: maskedTheme.spacing.md,
-  xl: maskedTheme.spacing.md
+  xl: maskedTheme.spacing.lg
 }
 
 export const BaseCardContainer = styled.div<{
   $size: CardSize
   $fullWidth?: boolean
   $direction?: CardDirection
-  $appearance?: CardAppearance
-  $layout?: CardLayout
   $clickable?: boolean
+  $isButton?: boolean
+  $appearance?: CardAppearance
   $disabled?: boolean
   $selected?: boolean
-  $expanded?: boolean
-  $isButton?: boolean
 }>`
   position: relative;
   display: flex;
   flex-direction: ${({ $direction }) => ($direction === 'row' ? 'row' : 'column')};
-  align-items: ${({ $direction }) => ($direction === 'row' ? 'center' : 'stretch')};
   gap: ${({ $size }) => gapStyles[$size]};
-  width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'fit-content')};
-  text-align: left;
-  font-family: inherit;
-  text-decoration: none;
+  width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
+  border-radius: ${maskedTheme.radius.md};
+  border: 1px solid var(--mc-card-border, ${maskedTheme.colors.baseBlue.light20});
+  background-color: var(--mc-card-bg, ${maskedTheme.colors.baseBlue.light50});
+  color: var(--mc-card-fg, ${maskedTheme.colors.baseBlack.dark40});
+  box-shadow: var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()});
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease;
 
   ${({ $size }) => sizeStyles[$size]}
   ${({ $appearance }) => appearanceStyles[$appearance ?? 'elevated']}  
   
-  /* Reset quando o card inteiro é um <button> */  
-  ${({ $isButton }) =>
-    $isButton &&
-    css`
-      border-style: solid;
-      border-width: 1px;
-      font: inherit;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-    `}  
-  
-  /* Card em destaque (ex.: pricing highlighted) */  
+  /* Layout horizontal/split: mídia vira lateral */  
+  &[data-layout='horizontal'] .mc-card-media,  
+  &[data-layout='split'] .mc-card-media {
+    flex: 0 0 40%;
+    margin: 0;
+    border-radius: 0;
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+
+  &[data-layout='horizontal'],
+  &[data-layout='split'] {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  &[data-layout='horizontal'] .mc-card-media {
+    border-radius: ${maskedTheme.radius.md} 0 0 ${maskedTheme.radius.md};
+  }
+
+  &[data-layout='split'] .mc-card-media {
+    flex-basis: 50%;
+  }
+
+  /* Layout overlay: mídia absoluta + conteúdo sobre gradiente */
+  &[data-layout='overlay'] {
+    overflow: hidden;
+  }
+
+  &[data-layout='overlay'] .mc-card-media {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    border-radius: 0;
+    aspect-ratio: auto;
+    z-index: 0;
+  }
+
+  &[data-layout='overlay'] .mc-card-media img {
+    height: 100%;
+  }
+
+  &[data-layout='overlay'] > *:not(.mc-card-media) {
+    position: relative;
+    z-index: 1;
+  }
+
+  &[data-layout='overlay']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(
+      --mc-card-overlay-gradient,
+      linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.08) 60%, transparent)
+    );
+    pointer-events: none;
+  }
+
+  &[data-layout='overlay'] {
+    color: var(--mc-card-overlay-fg, #ffffff);
+  }
+
+  /* Layout compact: densidade reduzida */
+  &[data-layout='compact'] {
+    padding: ${maskedTheme.spacing.sm};
+    gap: ${maskedTheme.spacing.xs};
+  }
+
+  &[data-layout='compact'] .mc-card-media {
+    margin: calc(${maskedTheme.spacing.sm} * -1) calc(${maskedTheme.spacing.sm} * -1) 0;
+  }
+
   &[data-highlighted='true'] {
     border-color: var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
     box-shadow:
-      0 0 0 1px var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base}),
-      var(--mc-card-shadow, ${maskedTheme.boxShadow.md()});
-  }
-
-  /* Seleção: anel + borda + fundo sutil — perceptível em qualquer aparência */
-  ${({ $selected }) =>
-    $selected &&
-    css`
-      border-color: var(
-        --mc-card-selected-border,
-        var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base})
-      );
-      background-color: var(
-        --mc-card-selected-bg,
-        var(--mc-card-bg, ${maskedTheme.colors.baseBlue.light50})
-      );
-      box-shadow:
-        0 0 0 1px
-          var(--mc-card-selected-border, var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base})),
-        var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()});
-    `}
-
-  /* Hover/focus só em dispositivos com hover real e quando clicável */  
-  @media (hover: hover) {
-    ${({ $clickable }) =>
-      $clickable &&
-      css`
-        &:hover {
-          box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.md()});
-        }
-      `}
+      var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()}),
+      0 0 0 1px var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
   }
 
   ${({ $clickable }) =>
@@ -108,37 +143,64 @@ export const BaseCardContainer = styled.div<{
     css`
       cursor: pointer;
 
-      &:focus-visible {
-        outline: 2px solid var(--mc-card-focus-ring, ${maskedTheme.colors.baseBlue.base});
-        outline-offset: 2px;
+      &:hover {
+        box-shadow: var(--mc-card-shadow-hover, ${maskedTheme.boxShadow.md()});
+        transform: translateY(-1px);
       }
     `}
 
-  /* Disabled: mantém semântica (button disabled / a sem href) + visual atenuado */  
+  ${({ $isButton }) =>
+    $isButton &&
+    css`
+      appearance: none;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    `}  
+  
+  &:focus-visible {
+    outline: 2px solid var(--mc-card-focus-ring, ${maskedTheme.colors.baseBlue.base});
+    outline-offset: 2px;
+  }
+
+  ${({ $selected }) =>
+    $selected &&
+    css`
+      border-color: var(--mc-card-selected-border, ${maskedTheme.colors.baseBlue.base});
+      background-color: var(
+        --mc-card-selected-bg,
+        var(--mc-card-bg, ${maskedTheme.colors.baseBlue.light50})
+      );
+      box-shadow:
+        var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()}),
+        0 0 0 1px var(--mc-card-selected-border, ${maskedTheme.colors.baseBlue.base});
+    `}
+
   ${({ $disabled }) =>
     $disabled &&
     css`
       cursor: not-allowed;
+      opacity: 0.6;
       background-color: var(
         --mc-card-disabled-bg,
-        var(--mc-card-bg, ${maskedTheme.colors.baseBlack.light08})
+        var(--mc-card-bg, ${maskedTheme.colors.baseBlue.light50})
       );
-      color: var(--mc-card-disabled-fg, ${maskedTheme.colors.baseBlack.light40});
-      box-shadow: none;
+      color: var(--mc-card-disabled-fg, var(--mc-card-fg, ${maskedTheme.colors.baseBlack.base}));
 
-      * {
-        color: var(--mc-card-disabled-fg, ${maskedTheme.colors.baseBlack.light40}) !important;
+      &:hover {
+        box-shadow: var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()});
+        transform: none;
       }
     `}
 `
 
-/** Link "esticado": cobre o card inteiro sem aninhar interativos. */
 export const StretchedLink = styled.a`
   position: absolute;
   inset: 0;
   z-index: 0;
   border-radius: inherit;
   text-decoration: none;
+  color: inherit;
 
   &:focus-visible {
     outline: 2px solid var(--mc-card-focus-ring, ${maskedTheme.colors.baseBlue.base});
@@ -146,23 +208,18 @@ export const StretchedLink = styled.a`
   }
 `
 
-/** Botão "esticado": mesma técnica para onClick/seleção com actions internas. */
 export const StretchedButton = styled.button`
   position: absolute;
   inset: 0;
   z-index: 0;
   border: none;
+  padding: 0;
+  margin: 0;
   background: transparent;
   border-radius: inherit;
   cursor: pointer;
-  padding: 0;
   font: inherit;
-  appearance: none;
-  -webkit-appearance: none;
-
-  &:disabled {
-    cursor: not-allowed;
-  }
+  color: inherit;
 
   &:focus-visible {
     outline: 2px solid var(--mc-card-focus-ring, ${maskedTheme.colors.baseBlue.base});
@@ -170,32 +227,6 @@ export const StretchedButton = styled.button`
   }
 `
 
-/** Marcador visual de seleção (canto superior direito). */
-export const CardSelectedIndicator = styled.span`
-  position: absolute;
-  top: ${maskedTheme.spacing.xs};
-  right: ${maskedTheme.spacing.xs};
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: ${maskedTheme.radius.full};
-  background-color: var(
-    --mc-card-selected-border,
-    var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base})
-  );
-  color: var(--mc-card-selected-fg, #ffffff);
-  font-size: 12px;
-  line-height: 1;
-
-  &::before {
-    content: '✓';
-  }
-`
-
-/** Seção de expansão: botão dedicado + região colapsável. */
 export const CardExpandSection = styled.div`
   position: relative;
   z-index: 1;
@@ -206,6 +237,7 @@ export const CardExpandSection = styled.div`
 `
 
 export const CardExpandButton = styled.button`
+  appearance: none;
   display: inline-flex;
   align-items: center;
   gap: ${maskedTheme.spacing['2xs']};
@@ -218,13 +250,6 @@ export const CardExpandButton = styled.button`
   font-weight: ${maskedTheme.fontWeight.medium};
   color: var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
   cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-
-  &:disabled {
-    cursor: not-allowed;
-    color: var(--mc-card-disabled-fg, ${maskedTheme.colors.baseBlack.light40});
-  }
 
   &:focus-visible {
     outline: 2px solid var(--mc-card-focus-ring, ${maskedTheme.colors.baseBlue.base});
@@ -235,31 +260,46 @@ export const CardExpandButton = styled.button`
 
 export const CardExpandCaret = styled.span<{ $expanded?: boolean }>`
   display: inline-block;
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 5px solid currentColor;
-  transform: ${({ $expanded }) => ($expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
-  transition: transform 160ms ease;
+  font-size: 0.75em;
+  line-height: 1;
+  transform: ${({ $expanded }) => ($expanded ? 'rotate(180deg)' : 'none')};
+  transition: transform 0.2s ease;
+
+  &::before {
+    content: '▾';
+  }
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
 `
 
-/**
- * Região colapsável: oculta de verdade quando fechada (display:none),  
- * com transição suave quando aberta — respeitando reduced-motion.  
- */
 export const CardExpandRegion = styled.div<{ $expanded?: boolean }>`
   display: ${({ $expanded }) => ($expanded ? 'block' : 'none')};
   width: 100%;
 `
 
-/* ------------------------------------------------------------------ */
-/* Primitivos compartilhados pelas variantes                            */
-/* ------------------------------------------------------------------ */
+export const CardSelectedIndicator = styled.span`
+  position: absolute;
+  top: ${maskedTheme.spacing.xs};
+  right: ${maskedTheme.spacing.xs};
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: ${maskedTheme.radius.full};
+  background-color: var(--mc-card-selected-border, ${maskedTheme.colors.baseBlue.base});
+  color: var(--mc-card-selected-fg, #ffffff);
+  font-size: ${maskedTheme.fontSize['2xs']};
+  line-height: 1;
+  pointer-events: none;
+
+  &::before {
+    content: '✓';
+  }
+`
 
 export const CardIconBadge = styled.div<{
   $bg?: string
@@ -284,7 +324,8 @@ export const CardIconBadge = styled.div<{
 `
 
 export const MetricRowBody = styled.div`
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
