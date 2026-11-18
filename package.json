@@ -1,6 +1,6 @@
 {
   "name": "masked-components",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "description": "Instala componentes React + TypeScript (copy-in) direto no seu projeto: botões, inputs, cards, drawer, popup, skeleton, temas, animações, hooks e utils.",
   "bin": {
