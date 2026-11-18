@@ -162,6 +162,15 @@ O CLI resolve as dependências internas na ordem correta e instala apenas os pac
 | `masked-hooks`                   | `useDebounce`, `useLocalStorage`, `useMediaQuery` e `useScrollToTop`.                                                    | –                                   | –                   |
 | `masked-hooks-next` (só Next.js) | `useSafeReturn`: voltar para a rota de origem com segurança.                                                             | –                                   | (usa `next`)        |
 
+### Outros componentes
+
+| Componente | Descrição |
+|---|---|
+| MaskedConfigProvider | Config global opcional: linkComponent, imageComponent, toasts e locale |
+| masked-utils | Utilitários de formatação (currency, date, duration, string, time, weekday) |
+| masked-hooks | Hooks utilitários da biblioteca |
+| masked-hooks-next | Hooks específicos para Next.js (App Router) |
+
 > A coluna "Dependências internas" mostra as dependências diretas. As dependências transitivas são resolvidas automaticamente. Rode `npx masked-components --list` para ver a lista atual.
 >
 > `useInView` é instalado junto com `masked-animations`, e `useSmartSearch` junto com `masked-input`.
@@ -756,4 +765,4 @@ Se um template importar algo não registrado, o teste falha, impedindo a publica
 
 ## ✅ 11. Licença
 
-MIT © Renato Minoita
+MIT © [Renato Minoita](https://www.linkedin.com/in/renato-minoita/)
