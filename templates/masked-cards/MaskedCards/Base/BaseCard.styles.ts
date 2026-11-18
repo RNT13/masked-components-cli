@@ -50,9 +50,10 @@ type ContainerProps = {
 export const BaseCardContainer = styled.div<ContainerProps>`
   position: relative;
   display: flex;
+  text-decoration: none;
   flex-direction: ${({ $direction }) => ($direction === 'row' ? 'row' : 'column')};
   ${({ $size }) => gapStyles[$size]}
-  ${({ $size }) => sizeStyles[$size]}  
+  ${({ $size }) => sizeStyles[$size]}
   width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
   border-radius: var(--mc-card-radius, ${maskedTheme.radius.lg});
   border: 1px solid var(--mc-card-border, transparent);
@@ -96,8 +97,8 @@ export const BaseCardContainer = styled.div<ContainerProps>`
         outline: 2px solid var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
         outline-offset: 2px;
       }
-    `}  
-  
+    `}
+
   ${({ $stretched }) =>
     $stretched &&
     css`
@@ -107,8 +108,8 @@ export const BaseCardContainer = styled.div<ContainerProps>`
         outline: 2px solid var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
         outline-offset: 2px;
       }
-    `}  
-  
+    `}
+
   ${({ $selected }) =>
     $selected &&
     css`
@@ -116,9 +117,9 @@ export const BaseCardContainer = styled.div<ContainerProps>`
       box-shadow:
         var(--mc-card-shadow, ${maskedTheme.boxShadow.xs()}),
         0 0 0 1px var(--mc-card-accent, ${maskedTheme.colors.baseBlue.base});
-    `}  
-  
-  /* ---------- layout: horizontal ---------- */  
+    `}
+
+  /* ---------- layout: horizontal ---------- */
   &&[data-layout='horizontal'] {
     flex-direction: row;
     align-items: stretch;
@@ -240,6 +241,15 @@ export const BaseCardContainer = styled.div<ContainerProps>`
   & > .mc-card-media {
     aspect-ratio: var(--mc-card-media-ratio, auto);
     border-radius: ${maskedTheme.radius.md};
+  }
+
+  /* ---------- links internos: nunca sublinhados ---------- */
+  && a,
+  && a:hover,
+  && a:focus,
+  && a:visited,
+  && a:active {
+    text-decoration: none;
   }
 `
 
@@ -386,8 +396,7 @@ export const CardIconBadge = styled.div<{
   width: ${({ $size }) => ($size === 'sm' ? '32px' : '42px')};
   height: ${({ $size }) => ($size === 'sm' ? '32px' : '42px')};
   border-radius: ${maskedTheme.radius.sm};
-  background-color: ${({ $bg }) =>
-    $bg ?? `var(--mc-card-icon-bg, ${maskedTheme.colors.baseBlue.light20})`};
+  background-color: ${({ $bg }) => $bg ?? `var(--mc-card-icon-bg, ${maskedTheme.colors.baseBlue.light20})`};
   color: ${({ $color }) => $color ?? `var(--mc-card-icon-fg, ${maskedTheme.colors.baseBlue.base})`};
 
   svg {
