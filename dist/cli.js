@@ -17,13 +17,13 @@ var registry = [
   {
     id: "masked-utils",
     label: "Masked Utils",
-    description: "Fun\xE7\xF5es puras: moeda, n\xFAmero, data, hora, dura\xE7\xE3o, nomes, cores, erros",
+    description: "Fun\xE7\xF5es puras: moeda, n\xFAmero, data, hora, dura\xE7\xE3o, nomes, cores, erros e espa\xE7amento",
     templates: [{ dir: "masked-utils", to: "utils", subdir: "masked-utils" }]
   },
   {
     id: "masked-themes",
     label: "Masked Themes",
-    description: "Tema base, temas prontos (light/dark/paleta) e registro de colorTheme",
+    description: "Tema base, temas prontos (light/dark/paleta), registro de colorTheme e ThemeSwitcher",
     // color.ts agora mora dentro de masked-utils — sem pasta color-utils separada
     templates: [{ dir: "masked-themes", to: "styles" }],
     requires: ["masked-utils"],
@@ -52,6 +52,133 @@ var registry = [
     description: "Placeholder de carregamento (autossuficiente, tokens --mc-skeleton-*)",
     templates: [{ dir: "masked-skeleton", to: "components" }],
     dependencies: [STYLED]
+  },
+  {
+    id: "masked-div",
+    label: "Masked Div",
+    description: "Container base polim\xF3rfico (as): plain, card, outlined, glass \u2014 tokens --mc-div-*",
+    templates: [{ dir: "masked-layout/MaskedDiv", to: "components", subdir: "MaskedDiv" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-stack",
+    label: "Masked Stack",
+    description: "Flex com gap sem\xE2ntico e divisor: column, row, inline, spread \u2014 tokens --mc-stack-*",
+    templates: [{ dir: "masked-layout/MaskedStack", to: "components", subdir: "MaskedStack" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-grid",
+    label: "Masked Grid",
+    description: "Grid responsivo: equal, auto, feature, sidebar \u2014 colunas por breakpoint, tokens --mc-grid-*",
+    templates: [{ dir: "masked-layout/MaskedGrid", to: "components", subdir: "MaskedGrid" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-container",
+    label: "Masked Container",
+    description: "Largura de p\xE1gina + gutters responsivos: narrow, default, wide, full \u2014 tokens --mc-container-*",
+    templates: [
+      { dir: "masked-layout/MaskedContainer", to: "components", subdir: "MaskedContainer" }
+    ],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-section",
+    label: "Masked Section",
+    description: "Se\xE7\xE3o sem\xE2ntica com cabe\xE7alho slot\xE1vel: plain, tinted, bordered, gradient \u2014 tokens --mc-section-*",
+    templates: [{ dir: "masked-layout/MaskedSection", to: "components", subdir: "MaskedSection" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-divider",
+    label: "Masked Divider",
+    description: "Divisor horizontal, vertical ou com texto (decorativo ou sem\xE2ntico) \u2014 tokens --mc-divider-*",
+    templates: [{ dir: "masked-layout/MaskedDivider", to: "components", subdir: "MaskedDivider" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-layout",
+    label: "Masked Layout (preset)",
+    description: "Preset de funda\xE7\xF5es de layout: instala o conjunto de uma vez",
+    // preset não copia arquivos próprios: só agrega os ids em `requires`
+    templates: [],
+    preset: true,
+    requires: [
+      "masked-div",
+      "masked-stack",
+      "masked-grid",
+      "masked-container",
+      "masked-section",
+      "masked-divider"
+    ]
+  },
+  {
+    id: "masked-footer",
+    label: "Masked Footer",
+    description: "Rodap\xE9 com marca, colunas de links, redes e copyright: simple, columns, centered \u2014 tokens --mc-footer-*",
+    templates: [{ dir: "masked-page/MaskedFooter", to: "components", subdir: "MaskedFooter" }],
+    requires: ["masked-themes", "masked-config"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-page-header",
+    label: "Masked Page Header",
+    description: "Cabe\xE7alho de p\xE1gina interna (breadcrumbs, t\xEDtulo, a\xE7\xF5es): simple, banner, gradient \u2014 tokens --mc-page-header-*",
+    templates: [
+      { dir: "masked-page/MaskedPageHeader", to: "components", subdir: "MaskedPageHeader" }
+    ],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-header",
+    label: "Masked Header",
+    description: "Navbar com links, a\xE7\xF5es e menu mobile em Drawer: static, sticky, transparent, blur \u2014 tokens --mc-header-*",
+    templates: [{ dir: "masked-page/MaskedHeader", to: "components", subdir: "MaskedHeader" }],
+    requires: ["masked-themes", "masked-config", "masked-drawer"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-sidebar",
+    label: "Masked Sidebar",
+    description: "Navega\xE7\xE3o lateral com colapso e modo mobile em Drawer: fixed, inline, floating, minimal \u2014 tokens --mc-sidebar-*",
+    templates: [{ dir: "masked-page/MaskedSidebar", to: "components", subdir: "MaskedSidebar" }],
+    requires: ["masked-themes", "masked-config", "masked-drawer"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-shell",
+    label: "Masked Shell",
+    description: "Estrutura de p\xE1gina (header, sidebar, conte\xFAdo, footer): app, site, split, centered \u2014 tokens --mc-shell-*",
+    templates: [{ dir: "masked-page/MaskedShell", to: "components", subdir: "MaskedShell" }],
+    requires: ["masked-themes", "masked-config"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-page",
+    label: "Masked Page (preset)",
+    description: "Preset de estrutura de p\xE1gina: instala o conjunto de uma vez",
+    // preset não copia arquivos próprios: só agrega os ids em `requires`
+    templates: [],
+    preset: true,
+    requires: [
+      "masked-shell",
+      "masked-header",
+      "masked-sidebar",
+      "masked-footer",
+      "masked-page-header"
+    ]
   },
   {
     id: "masked-toaster",
@@ -639,34 +766,42 @@ function resolveProjectPaths(info, config = null) {
 // src/cli.ts
 var PACKAGE_MANAGERS = ["npm", "pnpm", "yarn", "bun"];
 var ALIAS_MODES = ["auto", "keep", "relative"];
-var HELP = `  
-${paint.bold("masked-components")} \u2014 instala componentes React + TypeScript no seu projeto  
-  
-${paint.bold("Uso")}  
-  npx masked-components                       escolhe os componentes de forma interativa  
-  npx masked-components masked-buttons ...    instala componentes espec\xEDficos  
-  npx masked-components --all                 instala tudo  
-  
-${paint.bold("Op\xE7\xF5es")}  
-  -l, --list           lista os componentes dispon\xEDveis  
-  -y, --yes            n\xE3o pergunta nada (aceita o plano)  
-  -f, --force          sobrescreve arquivos que j\xE1 existem e s\xE3o diferentes  
-      --dry-run        mostra o que seria feito, sem escrever nada  
-      --no-install     n\xE3o instala pacotes npm (s\xF3 copia os arquivos)  
-      --pm <gerenciador>   npm | pnpm | yarn | bun (padr\xE3o: detectado pelo lockfile)  
-      --alias <modo>   auto | keep | relative \u2014 como tratar imports "@/..." (padr\xE3o: auto)  
-      --cwd <pasta>    roda em outra pasta (padr\xE3o: pasta atual)  
-  -h, --help           mostra esta ajuda  
-  -v, --version        mostra a vers\xE3o  
-  
-Arquivos existentes e diferentes nunca s\xE3o sobrescritos sem --force.  
-Caminhos de destino podem ser ajustados em ${CONFIG_FILE}.  
+var HELP = `    
+${paint.bold("masked-components")} \u2014 instala componentes React + TypeScript no seu projeto    
+    
+${paint.bold("Uso")}    
+  npx masked-components                       escolhe os componentes de forma interativa    
+  npx masked-components masked-buttons ...    instala componentes espec\xEDficos    
+  npx masked-components --all                 instala tudo    
+    
+${paint.bold("Op\xE7\xF5es")}    
+  -l, --list           lista os componentes dispon\xEDveis    
+  -y, --yes            n\xE3o pergunta nada (aceita o plano)    
+  -f, --force          sobrescreve arquivos que j\xE1 existem e s\xE3o diferentes    
+      --dry-run        mostra o que seria feito, sem escrever nada    
+      --no-install     n\xE3o instala pacotes npm (s\xF3 copia os arquivos)    
+      --pm <gerenciador>   npm | pnpm | yarn | bun (padr\xE3o: detectado pelo lockfile)    
+      --alias <modo>   auto | keep | relative \u2014 como tratar imports "@/..." (padr\xE3o: auto)    
+      --cwd <pasta>    roda em outra pasta (padr\xE3o: pasta atual)    
+  -h, --help           mostra esta ajuda    
+  -v, --version        mostra a vers\xE3o    
+    
+Arquivos existentes e diferentes nunca s\xE3o sobrescritos sem --force.    
+Caminhos de destino podem ser ajustados em ${CONFIG_FILE}.    
 `;
+function printListEntry(entry, requiresLabel) {
+  const requires = entry.requires?.length ? paint.dim(`  (${requiresLabel}: ${entry.requires.join(", ")})`) : "";
+  log.info(`  ${entry.id.padEnd(22)} ${entry.description}${requires}`);
+}
 function printList() {
+  const components = registry.filter((entry) => !entry.preset);
+  const presets = registry.filter((entry) => entry.preset);
   log.info(paint.bold("Componentes dispon\xEDveis:"));
-  for (const entry of registry) {
-    const requires = entry.requires?.length ? paint.dim(`  (requer: ${entry.requires.join(", ")})`) : "";
-    log.info(`  ${entry.id.padEnd(22)} ${entry.description}${requires}`);
+  for (const entry of components) printListEntry(entry, "requer");
+  if (presets.length) {
+    log.blank();
+    log.info(paint.bold("Presets (instalam o conjunto de uma vez):"));
+    for (const entry of presets) printListEntry(entry, "instala");
   }
 }
 function printPlan(plan, info, paths) {

@@ -2,8 +2,8 @@
 import { describe, expect, it, vi, afterEach } from 'vitest'
 import React, { useState } from 'react'
 import { render, screen, fireEvent, waitFor, cleanup, within } from '@testing-library/react'
-import { MaskedHeader } from '../../templates/masked-page/MaskedHeader/MaskedHeader'
-import { MaskedSidebar } from '../../templates/masked-page/MaskedSidebar/MaskedSidebar'
+import { MaskedHeader } from "../../../templates/masked-page/MaskedHeader/MaskedHeader";  
+import { MaskedSidebar } from "../../../templates/masked-page/MaskedSidebar/MaskedSidebar";  
 
 afterEach(cleanup)
 const dialog = () => document.querySelector('[role="dialog"]') as HTMLElement

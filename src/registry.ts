@@ -1,9 +1,9 @@
 import type { Framework, NpmDep, PathRoot } from './types'
 
 /**
- * Registro único de tudo que a CLI instala.
- * Fonte da verdade: pastas de templates/, dependências entre componentes,
- * pacotes npm e avisos. Conferido por templates-integrity.test.ts.
+ * Registro único de tudo que a CLI instala.  
+ * Fonte da verdade: pastas de templates/, dependências entre componentes,  
+ * pacotes npm e avisos. Conferido por templates-integrity.test.ts.  
  */
 
 export interface TemplateMapping {
@@ -29,6 +29,11 @@ export interface ComponentEntry {
   frameworks?: Framework[]
   warnings?: ComponentWarning[]
   notes?: string[]
+  /**
+   * Preset: não copia arquivos — apenas agrupa ids em `requires` e instala  
+   * o conjunto de uma vez. Exibido em seção separada no --list.  
+   */
+  preset?: true
 }
 
 const STYLED: NpmDep = { name: 'styled-components', range: '^6.1.0' }
@@ -46,13 +51,15 @@ export const registry: ComponentEntry[] = [
   {
     id: 'masked-utils',
     label: 'Masked Utils',
-    description: 'Funções puras: moeda, número, data, hora, duração, nomes, cores, erros',
+    description:
+      'Funções puras: moeda, número, data, hora, duração, nomes, cores, erros e espaçamento',
     templates: [{ dir: 'masked-utils', to: 'utils', subdir: 'masked-utils' }]
   },
   {
     id: 'masked-themes',
     label: 'Masked Themes',
-    description: 'Tema base, temas prontos (light/dark/paleta) e registro de colorTheme',
+    description:
+      'Tema base, temas prontos (light/dark/paleta), registro de colorTheme e ThemeSwitcher',
     // color.ts agora mora dentro de masked-utils — sem pasta color-utils separada
     templates: [{ dir: 'masked-themes', to: 'styles' }],
     requires: ['masked-utils'],
@@ -81,6 +88,144 @@ export const registry: ComponentEntry[] = [
     description: 'Placeholder de carregamento (autossuficiente, tokens --mc-skeleton-*)',
     templates: [{ dir: 'masked-skeleton', to: 'components' }],
     dependencies: [STYLED]
+  },
+  {
+    id: 'masked-div',
+    label: 'Masked Div',
+    description:
+      'Container base polimórfico (as): plain, card, outlined, glass — tokens --mc-div-*',
+    templates: [{ dir: 'masked-layout/MaskedDiv', to: 'components', subdir: 'MaskedDiv' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-stack',
+    label: 'Masked Stack',
+    description:
+      'Flex com gap semântico e divisor: column, row, inline, spread — tokens --mc-stack-*',
+    templates: [{ dir: 'masked-layout/MaskedStack', to: 'components', subdir: 'MaskedStack' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-grid',
+    label: 'Masked Grid',
+    description:
+      'Grid responsivo: equal, auto, feature, sidebar — colunas por breakpoint, tokens --mc-grid-*',
+    templates: [{ dir: 'masked-layout/MaskedGrid', to: 'components', subdir: 'MaskedGrid' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-container',
+    label: 'Masked Container',
+    description:
+      'Largura de página + gutters responsivos: narrow, default, wide, full — tokens --mc-container-*',
+    templates: [
+      { dir: 'masked-layout/MaskedContainer', to: 'components', subdir: 'MaskedContainer' }
+    ],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-section',
+    label: 'Masked Section',
+    description:
+      'Seção semântica com cabeçalho slotável: plain, tinted, bordered, gradient — tokens --mc-section-*',
+    templates: [{ dir: 'masked-layout/MaskedSection', to: 'components', subdir: 'MaskedSection' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-divider',
+    label: 'Masked Divider',
+    description:
+      'Divisor horizontal, vertical ou com texto (decorativo ou semântico) — tokens --mc-divider-*',
+    templates: [{ dir: 'masked-layout/MaskedDivider', to: 'components', subdir: 'MaskedDivider' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-layout',
+    label: 'Masked Layout (preset)',
+    description: 'Preset de fundações de layout: instala o conjunto de uma vez',
+    // preset não copia arquivos próprios: só agrega os ids em `requires`
+    templates: [],
+    preset: true,
+    requires: [
+      'masked-div',
+      'masked-stack',
+      'masked-grid',
+      'masked-container',
+      'masked-section',
+      'masked-divider'
+    ]
+  },
+  {
+    id: 'masked-footer',
+    label: 'Masked Footer',
+    description:
+      'Rodapé com marca, colunas de links, redes e copyright: simple, columns, centered — tokens --mc-footer-*',
+    templates: [{ dir: 'masked-page/MaskedFooter', to: 'components', subdir: 'MaskedFooter' }],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-page-header',
+    label: 'Masked Page Header',
+    description:
+      'Cabeçalho de página interna (breadcrumbs, título, ações): simple, banner, gradient — tokens --mc-page-header-*',
+    templates: [
+      { dir: 'masked-page/MaskedPageHeader', to: 'components', subdir: 'MaskedPageHeader' }
+    ],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-header',
+    label: 'Masked Header',
+    description:
+      'Navbar com links, ações e menu mobile em Drawer: static, sticky, transparent, blur — tokens --mc-header-*',
+    templates: [{ dir: 'masked-page/MaskedHeader', to: 'components', subdir: 'MaskedHeader' }],
+    requires: ['masked-themes', 'masked-config', 'masked-drawer'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-sidebar',
+    label: 'Masked Sidebar',
+    description:
+      'Navegação lateral com colapso e modo mobile em Drawer: fixed, inline, floating, minimal — tokens --mc-sidebar-*',
+    templates: [{ dir: 'masked-page/MaskedSidebar', to: 'components', subdir: 'MaskedSidebar' }],
+    requires: ['masked-themes', 'masked-config', 'masked-drawer'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-shell',
+    label: 'Masked Shell',
+    description:
+      'Estrutura de página (header, sidebar, conteúdo, footer): app, site, split, centered — tokens --mc-shell-*',
+    templates: [{ dir: 'masked-page/MaskedShell', to: 'components', subdir: 'MaskedShell' }],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-page',
+    label: 'Masked Page (preset)',
+    description: 'Preset de estrutura de página: instala o conjunto de uma vez',
+    // preset não copia arquivos próprios: só agrega os ids em `requires`
+    templates: [],
+    preset: true,
+    requires: [
+      'masked-shell',
+      'masked-header',
+      'masked-sidebar',
+      'masked-footer',
+      'masked-page-header'
+    ]
   },
   {
     id: 'masked-toaster',

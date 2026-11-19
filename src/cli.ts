@@ -54,42 +54,54 @@ const ALIAS_MODES: AliasMode[] = ['auto', 'keep', 'relative']
  * Texto de ajuda (--help)
  * ============================================================ */
 
-const HELP = `  
-${paint.bold('masked-components')} — instala componentes React + TypeScript no seu projeto  
-  
-${paint.bold('Uso')}  
-  npx masked-components                       escolhe os componentes de forma interativa  
-  npx masked-components masked-buttons ...    instala componentes específicos  
-  npx masked-components --all                 instala tudo  
-  
-${paint.bold('Opções')}  
-  -l, --list           lista os componentes disponíveis  
-  -y, --yes            não pergunta nada (aceita o plano)  
-  -f, --force          sobrescreve arquivos que já existem e são diferentes  
-      --dry-run        mostra o que seria feito, sem escrever nada  
-      --no-install     não instala pacotes npm (só copia os arquivos)  
-      --pm <gerenciador>   npm | pnpm | yarn | bun (padrão: detectado pelo lockfile)  
-      --alias <modo>   auto | keep | relative — como tratar imports "@/..." (padrão: auto)  
-      --cwd <pasta>    roda em outra pasta (padrão: pasta atual)  
-  -h, --help           mostra esta ajuda  
-  -v, --version        mostra a versão  
-  
-Arquivos existentes e diferentes nunca são sobrescritos sem --force.  
-Caminhos de destino podem ser ajustados em ${CONFIG_FILE}.  
+const HELP = `    
+${paint.bold('masked-components')} — instala componentes React + TypeScript no seu projeto    
+    
+${paint.bold('Uso')}    
+  npx masked-components                       escolhe os componentes de forma interativa    
+  npx masked-components masked-buttons ...    instala componentes específicos    
+  npx masked-components --all                 instala tudo    
+    
+${paint.bold('Opções')}    
+  -l, --list           lista os componentes disponíveis    
+  -y, --yes            não pergunta nada (aceita o plano)    
+  -f, --force          sobrescreve arquivos que já existem e são diferentes    
+      --dry-run        mostra o que seria feito, sem escrever nada    
+      --no-install     não instala pacotes npm (só copia os arquivos)    
+      --pm <gerenciador>   npm | pnpm | yarn | bun (padrão: detectado pelo lockfile)    
+      --alias <modo>   auto | keep | relative — como tratar imports "@/..." (padrão: auto)    
+      --cwd <pasta>    roda em outra pasta (padrão: pasta atual)    
+  -h, --help           mostra esta ajuda    
+  -v, --version        mostra a versão    
+    
+Arquivos existentes e diferentes nunca são sobrescritos sem --force.    
+Caminhos de destino podem ser ajustados em ${CONFIG_FILE}.    
 `
 
 /* ============================================================
  * Saídas de terminal
  * ============================================================ */
 
-/** --list: imprime todos os componentes do registry (+ dependências internas). */
+/** Linha de um entry no --list (id alinhado + descrição + requires). */
+function printListEntry(entry: (typeof registry)[number], requiresLabel: string): void {
+  const requires = entry.requires?.length
+    ? paint.dim(`  (${requiresLabel}: ${entry.requires.join(', ')})`)
+    : ''
+  log.info(`  ${entry.id.padEnd(22)} ${entry.description}${requires}`)
+}
+
+/** --list: imprime componentes e presets em seções separadas. */
 function printList(): void {
+  const components = registry.filter((entry) => !entry.preset)
+  const presets = registry.filter((entry) => entry.preset)
+
   log.info(paint.bold('Componentes disponíveis:'))
-  for (const entry of registry) {
-    const requires = entry.requires?.length
-      ? paint.dim(`  (requer: ${entry.requires.join(', ')})`)
-      : ''
-    log.info(`  ${entry.id.padEnd(22)} ${entry.description}${requires}`)
+  for (const entry of components) printListEntry(entry, 'requer')
+
+  if (presets.length) {
+    log.blank()
+    log.info(paint.bold('Presets (instalam o conjunto de uma vez):'))
+    for (const entry of presets) printListEntry(entry, 'instala')
   }
 }
 

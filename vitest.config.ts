@@ -9,16 +9,16 @@ export default defineConfig({
         replacement: path.resolve(__dirname, 'templates/masked-utils')
       },
       {
-        find: /^@\/masked-utils/,
-        replacement: path.resolve(__dirname, 'templates/masked-utils') + '/'
-      },
-      {
         find: /^@\/styles\//,
         replacement: path.resolve(__dirname, 'templates/masked-themes') + '/'
       },
       {
-        find: /^@\/components\/ui\/MaskedConfigProvider$/,
-        replacement: path.resolve(__dirname, 'templates/masked-config/MaskedConfigProvider.tsx')
+        find: /^@\/components\/ui\/MaskedConfigProvider/,
+        replacement: path.resolve(__dirname, 'templates/masked-config/MaskedConfigProvider')
+      },
+      {
+        find: /^@\/components\/ui\/MaskedDrawer\//,
+        replacement: path.resolve(__dirname, 'templates/masked-drawer/MaskedDrawer') + '/'
       }
     ]
   },
