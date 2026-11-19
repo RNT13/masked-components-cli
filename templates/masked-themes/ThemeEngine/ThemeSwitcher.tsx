@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { maskedThemeConfig } from '../MaskedThemes/MaskedThemes'
+import { maskedThemeConfig, media } from '../MaskedThemes/MaskedThemes'
 import { useThemeEngine } from './ThemeEngineProvider'
 
 const Root = styled.div`
   position: relative;
-  display: inline-flex;
+  display: inline-block;
   /* impede que um pai flex/grid estique o Root: o menu (right: 0)
      ficaria ancorado na borda do container, não no botão */
   width: fit-content;
@@ -21,6 +21,10 @@ const SplitRoot = styled.div`
   background: ${({ theme }) => theme.colors.surfaceColor ?? 'transparent'};
   color: ${({ theme }) => theme.colors.textColor ?? 'inherit'};
   overflow: hidden;
+
+  ${media.mobile} {
+    font-size: ${({ theme }) => theme.fontSize.sm};
+  }
 `
 
 const MainButton = styled.button`
@@ -38,6 +42,13 @@ const MainButton = styled.button`
 
   strong {
     text-transform: capitalize;
+  }
+
+  ${media.mobile} {
+    min-height: 40px;
+    padding: 6px 10px;
+    gap: 6px;
+    font-size: 13px;
   }
 `
 
@@ -61,16 +72,21 @@ const ChevronButton = styled.button<{ $open: boolean }>`
   &:hover {
     background: ${({ theme }) => theme.colors.tertiaryColor ?? 'rgba(128,128,128,.15)'};
   }
+
+  ${media.mobile} {
+    width: 40px;
+    min-height: 40px;
+  }
 `
 
 const Menu = styled.ul`
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   right: 0;
-  z-index: ${({ theme }) => theme.zIndex?.dropdown ?? 100};
+  z-index: ${({ theme }) => theme.zIndex?.dropdown ?? 1000};
   min-width: 180px;
   max-width: calc(100vw - 24px);
-  max-height: 320px;
+  max-height: 280px;
   overflow-y: auto;
   margin: 0;
   padding: 6px;
