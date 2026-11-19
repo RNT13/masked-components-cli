@@ -2,10 +2,10 @@
 import { describe, expect, it, vi, afterEach } from 'vitest'
 import React, { useState } from 'react'
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
-import { MaskedConfigProvider } from '../../templates/masked-config/MaskedConfigProvider'
-import { MaskedNewsletter } from '../../templates/masked-marketing/MaskedNewsletter/MaskedNewsletter'
-import { MaskedPricing } from '../../templates/masked-marketing/MaskedPricing/MaskedPricing'
-import { MaskedFAQ } from '../../templates/masked-marketing/MaskedFAQ/MaskedFAQ'
+import { MaskedConfigProvider } from "../../../templates/masked-config/MaskedConfigProvider";  
+import { MaskedNewsletter } from "../../../templates/masked-marketing/MaskedNewsletter/MaskedNewsletter";  
+import { MaskedPricing } from "../../../templates/masked-marketing/MaskedPricing/MaskedPricing";  
+import { MaskedFAQ } from '../../../templates/masked-marketing/MaskedFAQ/MaskedFAQ'
 
 afterEach(cleanup)
 

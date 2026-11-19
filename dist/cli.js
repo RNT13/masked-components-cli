@@ -181,6 +181,111 @@ var registry = [
     ]
   },
   {
+    id: "masked-hero",
+    label: "Masked Hero",
+    description: "Hero de p\xE1gina (eyebrow, t\xEDtulo, descri\xE7\xE3o, bot\xF5es, m\xEDdia): centered, split, gradient, minimal \u2014 tokens --mc-hero-*",
+    templates: [{ dir: "masked-marketing/MaskedHero", to: "components", subdir: "MaskedHero" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-features",
+    label: "Masked Features",
+    description: "Lista de recursos em se\xE7\xE3o: grid, split, spotlight, timeline \u2014 tokens --mc-features-*",
+    templates: [
+      { dir: "masked-marketing/MaskedFeatures", to: "components", subdir: "MaskedFeatures" }
+    ],
+    requires: ["masked-themes", "masked-section"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-stats",
+    label: "Masked Stats",
+    description: "N\xFAmeros de destaque em se\xE7\xE3o (dl acess\xEDvel, tend\xEAncia com texto): row, grid, highlight \u2014 tokens --mc-stats-*",
+    templates: [{ dir: "masked-marketing/MaskedStats", to: "components", subdir: "MaskedStats" }],
+    requires: ["masked-themes", "masked-config", "masked-section"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-cta",
+    label: "Masked CTA",
+    description: "Chamada para a\xE7\xE3o: banner, gradient, split \u2014 tokens --mc-cta-*",
+    templates: [{ dir: "masked-marketing/MaskedCTA", to: "components", subdir: "MaskedCTA" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-logo-cloud",
+    label: "Masked Logo Cloud",
+    description: "Nuvem de logos em se\xE7\xE3o: row, grid, marquee (respeita reduced-motion) \u2014 tokens --mc-logo-cloud-*",
+    templates: [
+      { dir: "masked-marketing/MaskedLogoCloud", to: "components", subdir: "MaskedLogoCloud" }
+    ],
+    requires: ["masked-themes", "masked-section"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-testimonials",
+    label: "Masked Testimonials",
+    description: "Depoimentos em se\xE7\xE3o (figure/blockquote): grid, carousel (CSS puro), spotlight \u2014 tokens --mc-testimonials-*",
+    templates: [
+      { dir: "masked-marketing/MaskedTestimonials", to: "components", subdir: "MaskedTestimonials" }
+    ],
+    requires: ["masked-themes", "masked-config", "masked-section"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-faq",
+    label: "Masked FAQ",
+    description: "Perguntas frequentes com details nativo: list, two-columns, boxed \u2014 tokens --mc-faq-*",
+    templates: [{ dir: "masked-marketing/MaskedFAQ", to: "components", subdir: "MaskedFAQ" }],
+    requires: ["masked-themes", "masked-section"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-pricing",
+    label: "Masked Pricing",
+    description: "Planos e pre\xE7os com alternador mensal/anual: cards, table (tabela acess\xEDvel) \u2014 tokens --mc-pricing-*",
+    templates: [
+      { dir: "masked-marketing/MaskedPricing", to: "components", subdir: "MaskedPricing" }
+    ],
+    requires: ["masked-themes", "masked-config", "masked-section"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-newsletter",
+    label: "Masked Newsletter",
+    description: "Inscri\xE7\xE3o de e-mail com estados e regi\xE3o viva: inline, card, band \u2014 tokens --mc-newsletter-*",
+    templates: [
+      { dir: "masked-marketing/MaskedNewsletter", to: "components", subdir: "MaskedNewsletter" }
+    ],
+    requires: ["masked-themes", "masked-config"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-marketing",
+    label: "Masked Marketing (preset)",
+    description: "Preset de se\xE7\xF5es de marketing: instala o conjunto de uma vez",
+    // preset não copia arquivos próprios: só agrega os ids em `requires`
+    templates: [],
+    preset: true,
+    requires: [
+      "masked-hero",
+      "masked-features",
+      "masked-stats",
+      "masked-cta",
+      "masked-logo-cloud",
+      "masked-testimonials",
+      "masked-faq",
+      "masked-pricing",
+      "masked-newsletter"
+    ]
+  },
+  {
     id: "masked-toaster",
     label: "Masked Toaster",
     description: "Notifica\xE7\xF5es (toast) sem depend\xEAncias: success/error/info/warning/loading/promise, acess\xEDvel e SSR-safe",
