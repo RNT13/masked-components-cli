@@ -17,6 +17,10 @@ export default defineConfig({
         replacement: path.resolve(__dirname, 'templates/masked-config/MaskedConfigProvider')
       },
       {
+        find: /^@\/components\/ui\/MaskedSection\//,
+        replacement: path.resolve(__dirname, 'templates/masked-layout/MaskedSection') + '/'
+      },
+      {
         find: /^@\/components\/ui\/MaskedDrawer\//,
         replacement: path.resolve(__dirname, 'templates/masked-drawer/MaskedDrawer') + '/'
       }

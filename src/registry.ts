@@ -228,6 +228,119 @@ export const registry: ComponentEntry[] = [
     ]
   },
   {
+    id: 'masked-hero',
+    label: 'Masked Hero',
+    description:
+      'Hero de página (eyebrow, título, descrição, botões, mídia): centered, split, gradient, minimal — tokens --mc-hero-*',
+    templates: [{ dir: 'masked-marketing/MaskedHero', to: 'components', subdir: 'MaskedHero' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-features',
+    label: 'Masked Features',
+    description:
+      'Lista de recursos em seção: grid, split, spotlight, timeline — tokens --mc-features-*',
+    templates: [
+      { dir: 'masked-marketing/MaskedFeatures', to: 'components', subdir: 'MaskedFeatures' }
+    ],
+    requires: ['masked-themes', 'masked-section'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-stats',
+    label: 'Masked Stats',
+    description:
+      'Números de destaque em seção (dl acessível, tendência com texto): row, grid, highlight — tokens --mc-stats-*',
+    templates: [{ dir: 'masked-marketing/MaskedStats', to: 'components', subdir: 'MaskedStats' }],
+    requires: ['masked-themes', 'masked-config', 'masked-section'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-cta',
+    label: 'Masked CTA',
+    description: 'Chamada para ação: banner, gradient, split — tokens --mc-cta-*',
+    templates: [{ dir: 'masked-marketing/MaskedCTA', to: 'components', subdir: 'MaskedCTA' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-logo-cloud',
+    label: 'Masked Logo Cloud',
+    description:
+      'Nuvem de logos em seção: row, grid, marquee (respeita reduced-motion) — tokens --mc-logo-cloud-*',
+    templates: [
+      { dir: 'masked-marketing/MaskedLogoCloud', to: 'components', subdir: 'MaskedLogoCloud' }
+    ],
+    requires: ['masked-themes', 'masked-section'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-testimonials',
+    label: 'Masked Testimonials',
+    description:
+      'Depoimentos em seção (figure/blockquote): grid, carousel (CSS puro), spotlight — tokens --mc-testimonials-*',
+    templates: [
+      { dir: 'masked-marketing/MaskedTestimonials', to: 'components', subdir: 'MaskedTestimonials' }
+    ],
+    requires: ['masked-themes', 'masked-config', 'masked-section'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-faq',
+    label: 'Masked FAQ',
+    description:
+      'Perguntas frequentes com details nativo: list, two-columns, boxed — tokens --mc-faq-*',
+    templates: [{ dir: 'masked-marketing/MaskedFAQ', to: 'components', subdir: 'MaskedFAQ' }],
+    requires: ['masked-themes', 'masked-section'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-pricing',
+    label: 'Masked Pricing',
+    description:
+      'Planos e preços com alternador mensal/anual: cards, table (tabela acessível) — tokens --mc-pricing-*',
+    templates: [
+      { dir: 'masked-marketing/MaskedPricing', to: 'components', subdir: 'MaskedPricing' }
+    ],
+    requires: ['masked-themes', 'masked-config', 'masked-section'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-newsletter',
+    label: 'Masked Newsletter',
+    description:
+      'Inscrição de e-mail com estados e região viva: inline, card, band — tokens --mc-newsletter-*',
+    templates: [
+      { dir: 'masked-marketing/MaskedNewsletter', to: 'components', subdir: 'MaskedNewsletter' }
+    ],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-marketing',
+    label: 'Masked Marketing (preset)',
+    description: 'Preset de seções de marketing: instala o conjunto de uma vez',
+    // preset não copia arquivos próprios: só agrega os ids em `requires`
+    templates: [],
+    preset: true,
+    requires: [
+      'masked-hero',
+      'masked-features',
+      'masked-stats',
+      'masked-cta',
+      'masked-logo-cloud',
+      'masked-testimonials',
+      'masked-faq',
+      'masked-pricing',
+      'masked-newsletter'
+    ]
+  },
+  {
     id: 'masked-toaster',
     label: 'Masked Toaster',
     description:

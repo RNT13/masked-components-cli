@@ -35,6 +35,22 @@
   - `masked-page-header`: cabeçalho de página interna com breadcrumbs,  
     título e ações: `simple`, `banner`, `gradient` —  
     tokens `--mc-page-header-*`.
+- **Marketing (Passo 4)**: nove componentes de seção, todos com `colorTheme`, `tokens`  
+  (`--mc-<componente>-*`), contraste WCAG AA e funcionando sem `<ThemeProvider>`:  
+  `masked-hero` (`MaskedHero`: `centered`, `split`, `gradient`, `minimal`), `masked-features`  
+  (`grid`, `split`, `spotlight`, `timeline`), `masked-stats` (`row`, `grid`, `highlight`; lista de  
+  definição, tendência com texto), `masked-cta` (`banner`, `gradient`, `split`), `masked-logo-cloud`  
+  (`row`, `grid`, `marquee` com `prefers-reduced-motion`), `masked-testimonials` (`grid`, `carousel`  
+  em CSS puro, `spotlight`), `masked-faq` (`list`, `two-columns`, `boxed`; `<details>` nativo),  
+  `masked-pricing` (`cards`, `table` acessível; alternador mensal/anual controlado ou não) e  
+  `masked-newsletter` (`inline`, `card`, `band`; estados de envio e região viva). Features, Stats,  
+  LogoCloud, Testimonials, FAQ e Pricing são compostos sobre `MaskedSection` (título, descrição e ações  
+  vêm das props dela; `sectionVariant`/`sectionTokens` controlam a seção). Botões entram por slot  
+  (`actions`) ou como link (`cta` do Pricing): nenhum depende de `masked-buttons`, `masked-animations`  
+  ou `masked-drawer`. O preset `masked-marketing` instala os nove.
+- `masked-themes/surfaceTokens.ts`: `resolveSurface(kind, colorTheme, theme)` e `buildTokenStyle()` —  
+  superfícies (`plain`, `tinted`, `solid`, `gradient`, `outlined`) com texto por contraste, compartilhadas  
+  pelos componentes de marketing.
 - `useMaskedTheme` (em `masked-themes`): lê o tema do styled-components  
   com fallback para `maskedTheme` — componentes funcionam sem  
   `<ThemeProvider>`.

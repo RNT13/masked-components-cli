@@ -35,7 +35,11 @@ describe('registry — fundações de layout e estrutura de página', () => {
 
   it('presets são só agregadores: sem arquivos próprios e marcados como preset', () => {
     const presets = registry.filter((entry) => entry.preset)
-    expect(presets.map((p) => p.id).sort()).toEqual(['masked-layout', 'masked-page'])
+    expect(presets.map((p) => p.id).sort()).toEqual([
+      'masked-layout',
+      'masked-marketing',
+      'masked-page'
+    ])
     for (const preset of presets) expect(preset.templates).toEqual([])
   })
 
@@ -56,6 +60,59 @@ describe('registry — fundações de layout e estrutura de página', () => {
       const installed = ids([id])
       expect(installed).not.toContain('masked-config')
       expect(installed).not.toContain('masked-drawer')
+    }
+  })
+})
+
+describe('registry — marketing', () => {
+  it('masked-marketing instala os 9 componentes (+ section, themes, config, utils)', () => {
+    expect(ids(['masked-marketing'])).toEqual(
+      expect.arrayContaining([
+        'masked-hero',
+        'masked-features',
+        'masked-stats',
+        'masked-cta',
+        'masked-logo-cloud',
+        'masked-testimonials',
+        'masked-faq',
+        'masked-pricing',
+        'masked-newsletter',
+        'masked-section',
+        'masked-themes',
+        'masked-config',
+        'masked-utils'
+      ])
+    )
+  })
+
+  it('instalação granular: Hero e CTA só com o tema; Features puxa a Section; Pricing, a Section e o Config', () => {
+    expect(ids(['masked-hero'])).toEqual(['masked-utils', 'masked-themes', 'masked-hero'])
+    expect(ids(['masked-cta'])).toEqual(['masked-utils', 'masked-themes', 'masked-cta'])
+    expect(ids(['masked-features'])).toEqual([
+      'masked-utils',
+      'masked-themes',
+      'masked-section',
+      'masked-features'
+    ])
+    expect(ids(['masked-pricing'])).toEqual([
+      'masked-utils',
+      'masked-themes',
+      'masked-config',
+      'masked-section',
+      'masked-pricing'
+    ])
+    expect(ids(['masked-newsletter'])).toEqual([
+      'masked-utils',
+      'masked-themes',
+      'masked-config',
+      'masked-newsletter'
+    ])
+  })
+
+  it('nenhum componente de marketing arrasta Drawer, Buttons ou Animations', () => {
+    const installed = ids(['masked-marketing'])
+    for (const heavy of ['masked-drawer', 'masked-buttons', 'masked-animations', 'masked-input']) {
+      expect(installed).not.toContain(heavy)
     }
   })
 })
