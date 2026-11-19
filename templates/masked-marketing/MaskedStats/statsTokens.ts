@@ -19,9 +19,9 @@ export interface ResolveStatsTokensInput {
 }
 
 /**
- * Deriva tokens --mc-stats-*: 'highlight' vira uma faixa de superfície cheia  
- * (texto por contraste WCAG); 'row' e 'grid' herdam a cor da seção e só usam  
- * o destaque (accent) no número. Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-stats-*: 'highlight' vira uma faixa de superfície cheia
+ * (texto por contraste WCAG); 'row' e 'grid' herdam a cor da seção e só usam
+ * o destaque (accent) no número. Precedência: tokens > colorTheme > tema.
  */
 export function resolveStatsTokens(
   input: ResolveStatsTokensInput,

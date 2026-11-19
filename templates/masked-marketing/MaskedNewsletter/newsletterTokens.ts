@@ -20,10 +20,10 @@ export interface ResolveNewsletterTokensInput {
 }
 
 /**
- * Deriva tokens --mc-newsletter-*: band = superfície cheia (texto por  
- * contraste), card = só borda e destaque, inline = sem pintura. O botão usa  
- * accent/accentFg (par com contraste WCAG; na band, o texto da superfície).  
- * Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-newsletter-*: band = superfície cheia (texto por
+ * contraste), card = só borda e destaque, inline = sem pintura. O botão usa
+ * accent/accentFg (par com contraste WCAG; na band, o texto da superfície).
+ * Precedência: tokens > colorTheme > tema.
  */
 export function resolveNewsletterTokens(
   input: ResolveNewsletterTokensInput,

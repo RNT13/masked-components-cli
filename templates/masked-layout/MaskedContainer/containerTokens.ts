@@ -30,9 +30,9 @@ function toKebab(key: string): string {
 }
 
 /**
- * Deriva tokens --mc-container-*. Container é neutro (não pinta): largura  
- * máxima por variante + gutters opcionais (escala theme.spacing).  
- * Precedência: tokens > props > default da variante.  
+ * Deriva tokens --mc-container-*. Container é neutro (não pinta): largura
+ * máxima por variante + gutters opcionais (escala theme.spacing).
+ * Precedência: tokens > props > default da variante.
  */
 export function resolveContainerTokens(
   input: ResolveContainerTokensInput,

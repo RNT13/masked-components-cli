@@ -28,14 +28,14 @@ function toKebab(key: string): string {
 }
 
 /**
- * Deriva tokens --mc-section-*. Por variante:  
- * - plain: nada de cor (herda o fundo do pai);  
- * - tinted: fundo suave (10% da base do colorTheme, ou o `subtle` do tema);  
- * - bordered: bordas superior/inferior (colorTheme ou borda do tema);  
- * - gradient: base → base misturada com o texto (só aumenta o contraste);  
- *   texto por contraste WCAG sobre a base (bg `--mc-section-bg` é o gradiente).  
- * Precedência: tokens > props > colorTheme > tema. tokens.bg sem tokens.fg  
- * só re-deriva o fg quando o bg é uma cor simples.  
+ * Deriva tokens --mc-section-*. Por variante:
+ * - plain: nada de cor (herda o fundo do pai);
+ * - tinted: fundo suave (10% da base do colorTheme, ou o `subtle` do tema);
+ * - bordered: bordas superior/inferior (colorTheme ou borda do tema);
+ * - gradient: base → base misturada com o texto (só aumenta o contraste);
+ *   texto por contraste WCAG sobre a base (bg `--mc-section-bg` é o gradiente).
+ * Precedência: tokens > props > colorTheme > tema. tokens.bg sem tokens.fg
+ * só re-deriva o fg quando o bg é uma cor simples.
  */
 export function resolveSectionTokens(
   input: ResolveSectionTokensInput,

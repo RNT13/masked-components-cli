@@ -27,8 +27,8 @@ function toKebab(key: string): string {
 }
 
 /**
- * Colunas efetivas por breakpoint. Um número `n` já é responsivo:  
- * desktop n, tablet min(n, 2), mobile 1 — overrides do mapa vencem por chave.  
+ * Colunas efetivas por breakpoint. Um número `n` já é responsivo:
+ * desktop n, tablet min(n, 2), mobile 1 — overrides do mapa vencem por chave.
  */
 export function resolveGridCols(cols: GridCols | undefined): Record<GridBreakpoint, number> {
   const desktop = typeof cols === 'number' ? cols : (cols?.desktop ?? 3)
@@ -39,10 +39,10 @@ export function resolveGridCols(cols: GridCols | undefined): Record<GridBreakpoi
 }
 
 /**
- * Deriva tokens --mc-grid-*. Grid é neutro (não pinta superfície): colunas  
- * por breakpoint (consumidas nas media queries do styled), gap,  
- * minChildWidth (variante 'auto') e sidebarWidth (variante 'sidebar').  
- * Do tema usa só a escala de espaçamento (theme.spacing).  
+ * Deriva tokens --mc-grid-*. Grid é neutro (não pinta superfície): colunas
+ * por breakpoint (consumidas nas media queries do styled), gap,
+ * minChildWidth (variante 'auto') e sidebarWidth (variante 'sidebar').
+ * Do tema usa só a escala de espaçamento (theme.spacing).
  */
 export function resolveGridTokens(
   input: ResolveGridTokensInput,

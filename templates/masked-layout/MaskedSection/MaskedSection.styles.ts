@@ -3,8 +3,8 @@ import { maskedTheme, media } from '@/styles/MaskedThemes/MaskedThemes'
 import type { MaskedSectionInternalProps } from './MaskedSection.types'
 
 /**
- * Seção semântica com ritmo vertical. Todo valor cai em  
- * var(--mc-section-*, fallback); o gradiente vive em --mc-section-bg.  
+ * Seção semântica com ritmo vertical. Todo valor cai em
+ * var(--mc-section-*, fallback); o gradiente vive em --mc-section-bg.
  */
 export const MaskedSectionRoot = styled.section<MaskedSectionInternalProps>`
   box-sizing: border-box;

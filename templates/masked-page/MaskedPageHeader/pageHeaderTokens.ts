@@ -20,11 +20,11 @@ export interface ResolvePageHeaderTokensInput {
 }
 
 /**
- * Deriva tokens --mc-page-header-*. Por variante:  
- * - simple: sem fundo, só a borda inferior (borda do tema ou do colorTheme);  
- * - banner: fundo suave (10% da base do colorTheme, ou `subtle` do tema);  
- * - gradient: base → base misturada com o texto, fg por contraste WCAG.  
- * Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-page-header-*. Por variante:
+ * - simple: sem fundo, só a borda inferior (borda do tema ou do colorTheme);
+ * - banner: fundo suave (10% da base do colorTheme, ou `subtle` do tema);
+ * - gradient: base → base misturada com o texto, fg por contraste WCAG.
+ * Precedência: tokens > colorTheme > tema.
  */
 export function resolvePageHeaderTokens(
   input: ResolvePageHeaderTokensInput,

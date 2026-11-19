@@ -34,15 +34,15 @@ function toKebab(key: string): string {
 }
 
 /**
- * Deriva tokens --mc-div-* do colorTheme + tema ativo; overrides do usuário  
- * vencem. Por variante (somente quando há colorTheme):  
- * - plain: nada (caixa neutra, herda a superfície do pai);  
- * - card: bg = base, fg por contraste (WCAG), border = dark20|base;  
- * - outlined: sem bg/fg (superfície neutra), border = dark20|base;  
- * - glass: bg translúcido (color-mix), fg por contraste, border suave.  
+ * Deriva tokens --mc-div-* do colorTheme + tema ativo; overrides do usuário
+ * vencem. Por variante (somente quando há colorTheme):
+ * - plain: nada (caixa neutra, herda a superfície do pai);
+ * - card: bg = base, fg por contraste (WCAG), border = dark20|base;
+ * - outlined: sem bg/fg (superfície neutra), border = dark20|base;
+ * - glass: bg translúcido (color-mix), fg por contraste, border suave.
  *
- * Sem colorTheme, nenhum token de cor é emitido — os fallbacks do styled  
- * assumem. tokens.bg sem tokens.fg re-deriva o fg por contraste.  
+ * Sem colorTheme, nenhum token de cor é emitido — os fallbacks do styled
+ * assumem. tokens.bg sem tokens.fg re-deriva o fg por contraste.
  */
 export function resolveDivTokens(
   input: ResolveDivTokensInput,

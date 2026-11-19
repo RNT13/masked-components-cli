@@ -42,8 +42,8 @@ export const MaskedSidebarRoot = styled.aside<MaskedSidebarInternalProps>`
       border: 1px solid var(--mc-sidebar-border, transparent);
       border-radius: ${maskedTheme.radius.lg};
       box-shadow: ${maskedTheme.boxShadow.md()};
-    `}  
-  
+    `}
+
   ${({ $hideOnMobile }) =>
     $hideOnMobile &&
     css`

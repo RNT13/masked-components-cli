@@ -13,11 +13,11 @@ import { resolveCTATokens } from './ctaTokens'
 import type { MaskedCTAProps } from './MaskedCTA.types'
 
 /**
- * Chamada para ação: título, descrição e botões sobre uma superfície  
- * (cheia, em gradiente ou suave). Os botões entram pelo slot `actions`.  
+ * Chamada para ação: título, descrição e botões sobre uma superfície
+ * (cheia, em gradiente ou suave). Os botões entram pelo slot `actions`.
  *
- * @example  
- * <MaskedCTA title="Pronto para começar?" colorTheme="baseBlue" actions={<MaskedButton>Criar conta</MaskedButton>} />  
+ * @example
+ * <MaskedCTA title="Pronto para começar?" colorTheme="baseBlue" actions={<MaskedButton>Criar conta</MaskedButton>} />
  */
 export function MaskedCTA(props: MaskedCTAProps) {
   const theme = useMaskedTheme()

@@ -22,13 +22,13 @@ import type { FooterColumn as FooterColumnData, MaskedFooterProps } from './Mask
 const NAV_LABEL = { pt: 'Rodapé', en: 'Footer' } as const
 
 /**
- * Rodapé com marca, colunas de links, redes sociais e copyright.  
+ * Rodapé com marca, colunas de links, redes sociais e copyright.
  *
- * Links usam o `linkComponent` do MaskedConfigProvider (ex.: next/link) ou  
- * `<a>` nativo. Cada coluna é um <nav> rotulado pelo próprio título.  
+ * Links usam o `linkComponent` do MaskedConfigProvider (ex.: next/link) ou
+ * `<a>` nativo. Cada coluna é um <nav> rotulado pelo próprio título.
  *
- * @example  
- * <MaskedFooter variant="columns" brand="Acme" columns={[{ title: 'Produto', links: [{ label: 'Preços', href: '/precos' }] }]} copyright="© 2026 Acme" />  
+ * @example
+ * <MaskedFooter variant="columns" brand="Acme" columns={[{ title: 'Produto', links: [{ label: 'Preços', href: '/precos' }] }]} copyright="© 2026 Acme" />
  */
 export function MaskedFooter(props: MaskedFooterProps) {
   const theme = useMaskedTheme()

@@ -13,8 +13,8 @@ export type LogoCloudVariant = 'row' | 'grid' | 'marquee'
 export type MaskedLogoCloudOwnProps = {
   variant?: LogoCloudVariant
   /**
-   * Logos (normalmente <img alt="Nome da empresa" />). Dê `alt` a cada  
-   * imagem: é o nome acessível de cada logo.  
+   * Logos (normalmente <img alt="Nome da empresa" />). Dê `alt` a cada
+   * imagem: é o nome acessível de cada logo.
    */
   logos: ReactNode[]
   /** Duração (s) de uma volta completa no variant 'marquee'. Default 30. */

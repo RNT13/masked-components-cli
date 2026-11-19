@@ -18,11 +18,11 @@ export interface ResolveFooterTokensInput {
 }
 
 /**
- * Deriva tokens --mc-footer-*. Sem colorTheme: superfície/texto/borda do  
- * tema ativo. Com colorTheme: bg = base, fg por contraste WCAG (onBase ou  
- * readableTextOn), muted = fg suavizado, borda = fg a 20%.  
- * Precedência: tokens > colorTheme > tema. tokens.bg sem tokens.fg  
- * re-deriva o fg por contraste.  
+ * Deriva tokens --mc-footer-*. Sem colorTheme: superfície/texto/borda do
+ * tema ativo. Com colorTheme: bg = base, fg por contraste WCAG (onBase ou
+ * readableTextOn), muted = fg suavizado, borda = fg a 20%.
+ * Precedência: tokens > colorTheme > tema. tokens.bg sem tokens.fg
+ * re-deriva o fg por contraste.
  */
 export function resolveFooterTokens(
   input: ResolveFooterTokensInput,

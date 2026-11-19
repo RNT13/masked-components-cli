@@ -14,13 +14,13 @@ import { resolvePageHeaderTokens } from './pageHeaderTokens'
 import type { MaskedPageHeaderProps } from './MaskedPageHeader.types'
 
 /**
- * Cabeçalho de página interna: breadcrumbs, título, descrição e ações.  
+ * Cabeçalho de página interna: breadcrumbs, título, descrição e ações.
  *
- * O título é um <h1> por padrão (um por página); em páginas que já têm h1  
- * use `headingLevel={2}`.  
+ * O título é um <h1> por padrão (um por página); em páginas que já têm h1
+ * use `headingLevel={2}`.
  *
- * @example  
- * <MaskedPageHeader title="Clientes" description="Gerencie sua base" actions={<button>Novo</button>} />  
+ * @example
+ * <MaskedPageHeader title="Clientes" description="Gerencie sua base" actions={<button>Novo</button>} />
  */
 export function MaskedPageHeader(props: MaskedPageHeaderProps) {
   const theme = useMaskedTheme()

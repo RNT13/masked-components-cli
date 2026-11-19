@@ -15,10 +15,10 @@ export interface ResolvePricingTokensInput {
 }
 
 /**
- * Deriva tokens --mc-pricing-*: o destaque (accent/accentFg, par com  
- * contraste WCAG) pinta o plano em destaque, o selo, o botão principal e o  
- * alternador ativo. O texto herda da seção.  
- * Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-pricing-*: o destaque (accent/accentFg, par com
+ * contraste WCAG) pinta o plano em destaque, o selo, o botão principal e o
+ * alternador ativo. O texto herda da seção.
+ * Precedência: tokens > colorTheme > tema.
  */
 export function resolvePricingTokens(
   input: ResolvePricingTokensInput,

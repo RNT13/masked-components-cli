@@ -44,19 +44,19 @@ function MenuIcon({ open }: { open: boolean }) {
 }
 
 /**
- * Navbar com marca, links, ações e menu mobile (Drawer).  
+ * Navbar com marca, links, ações e menu mobile (Drawer).
  *
- * Abaixo de `menuBreakpoint` (default 'tablet') os links e as ações vão para  
- * um MaskedDrawer aberto pelo botão hambúrguer (aria-expanded + rótulo por  
- * locale). Links usam o `linkComponent` do MaskedConfigProvider (ex.:  
- * next/link) ou <a> nativo; o link da página atual recebe aria-current.  
+ * Abaixo de `menuBreakpoint` (default 'tablet') os links e as ações vão para
+ * um MaskedDrawer aberto pelo botão hambúrguer (aria-expanded + rótulo por
+ * locale). Links usam o `linkComponent` do MaskedConfigProvider (ex.:
+ * next/link) ou <a> nativo; o link da página atual recebe aria-current.
  *
- * Atenção: `brand` e `actions` são renderizados duas vezes — na barra e  
- * dentro do menu mobile (o painel fechado fica no DOM, mas com aria-hidden  
- * e inert). Evite `id` fixo nesses slots.  
+ * Atenção: `brand` e `actions` são renderizados duas vezes — na barra e
+ * dentro do menu mobile (o painel fechado fica no DOM, mas com aria-hidden
+ * e inert). Evite `id` fixo nesses slots.
  *
- * @example  
- * <MaskedHeader variant="sticky" brand="Acme" links={[{ label: 'Preços', href: '/precos' }]} actions={<button>Entrar</button>} />  
+ * @example
+ * <MaskedHeader variant="sticky" brand="Acme" links={[{ label: 'Preços', href: '/precos' }]} actions={<button>Entrar</button>} />
  */
 export function MaskedHeader(props: MaskedHeaderProps) {
   const theme = useMaskedTheme()

@@ -33,8 +33,8 @@ export type MaskedFeaturesOwnProps = {
 }
 
 /**
- * A seção (id, title, description, headingLevel, align, actions, paddingY,  
- * colorTheme, as…) usa as mesmas props do MaskedSection.  
+ * A seção (id, title, description, headingLevel, align, actions, paddingY,
+ * colorTheme, as…) usa as mesmas props do MaskedSection.
  */
 export type MaskedFeaturesProps = MaskedFeaturesOwnProps &
   Omit<MaskedSectionProps, keyof MaskedFeaturesOwnProps | 'variant' | 'tokens' | 'children'>

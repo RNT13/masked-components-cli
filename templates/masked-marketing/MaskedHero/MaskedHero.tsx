@@ -15,16 +15,16 @@ import { resolveHeroTokens } from './heroTokens'
 import type { MaskedHeroProps } from './MaskedHero.types'
 
 /**
- * Hero de página: eyebrow, título, descrição, botões e mídia.  
+ * Hero de página: eyebrow, título, descrição, botões e mídia.
  *
- * O título é um <h1> por padrão (um por página); use `headingLevel={2}` se a  
- * página já tem h1. Os botões entram pelo slot `actions` (ex.: MaskedButton),  
- * sem dependência de outros componentes. Respeita `prefers-reduced-motion`  
- * por não animar nada.  
+ * O título é um <h1> por padrão (um por página); use `headingLevel={2}` se a
+ * página já tem h1. Os botões entram pelo slot `actions` (ex.: MaskedButton),
+ * sem dependência de outros componentes. Respeita `prefers-reduced-motion`
+ * por não animar nada.
  *
- * @example  
- * <MaskedHero eyebrow="Novo" title="Agende em segundos" description="…" actions={<MaskedButton>Começar</MaskedButton>} />  
- * <MaskedHero variant="split" title="…" media={<img src="…" alt="…" />} />  
+ * @example
+ * <MaskedHero eyebrow="Novo" title="Agende em segundos" description="…" actions={<MaskedButton>Começar</MaskedButton>} />
+ * <MaskedHero variant="split" title="…" media={<img src="…" alt="…" />} />
  */
 export function MaskedHero(props: MaskedHeroProps) {
   const theme = useMaskedTheme()

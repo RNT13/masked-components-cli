@@ -3,8 +3,8 @@ import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 import type { MaskedStackInternalProps } from './MaskedStack.types'
 
 /**
- * Fluxo flexível com gap semântico. Todo valor cai em var(--mc-stack-*, fallback).  
- * 'inline' troca display; 'spread' distribui no eixo principal.  
+ * Fluxo flexível com gap semântico. Todo valor cai em var(--mc-stack-*, fallback).
+ * 'inline' troca display; 'spread' distribui no eixo principal.
  */
 export const MaskedStackRoot = styled.div<MaskedStackInternalProps>`
   box-sizing: border-box;
@@ -18,26 +18,26 @@ export const MaskedStackRoot = styled.div<MaskedStackInternalProps>`
 
   ${({ $variant }) =>
     $variant === 'inline' &&
-    `  
-      display: inline-flex;  
+    `
+      display: inline-flex;
     `}
 
   ${({ $wrap }) =>
     $wrap &&
-    `  
-      flex-wrap: wrap;  
-    `}  
-  
+    `
+      flex-wrap: wrap;
+    `}
+
   ${({ $fullWidth }) =>
     $fullWidth &&
-    `  
-      width: 100%;  
+    `
+      width: 100%;
     `}
 `
 
 /**
- * Divisor entre itens. $auto = linha automática do tema (cor via  
- * --mc-stack-divider); custom node = wrapper neutro que só distribui.  
+ * Divisor entre itens. $auto = linha automática do tema (cor via
+ * --mc-stack-divider); custom node = wrapper neutro que só distribui.
  */
 export const StackDivider = styled.span<{
   $axis: MaskedStackInternalProps['$direction']
@@ -51,9 +51,9 @@ export const StackDivider = styled.span<{
   ${({ $auto, $axis }) =>
     $auto
       ? $axis === 'row'
-        ? `width: 1px; min-height: 100%; background: var(  
-            --mc-stack-divider,  
-            ${maskedTheme.colors.baseGray.light40}  
+        ? `width: 1px; min-height: 100%; background: var(
+            --mc-stack-divider,
+            ${maskedTheme.colors.baseGray.light40}
           );`
         : `height: 1px; background: var(--mc-stack-divider, ${maskedTheme.colors.baseGray.light40});`
       : ''}

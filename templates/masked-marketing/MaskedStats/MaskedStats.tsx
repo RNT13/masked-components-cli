@@ -22,14 +22,14 @@ const TREND = {
 const ARROW = { up: '▲', down: '▼', flat: '–' } as const
 
 /**
- * Números de destaque dentro de uma MaskedSection.  
+ * Números de destaque dentro de uma MaskedSection.
  *
- * Semântica: lista de definição (<dl>): o rótulo é o <dt> e o número é o  
- * <dd>, com o número aparecendo primeiro na tela. A tendência nunca depende  
- * só de cor/seta: há texto oculto ("Aumento de +12%") para leitores de tela.  
+ * Semântica: lista de definição (<dl>): o rótulo é o <dt> e o número é o
+ * <dd>, com o número aparecendo primeiro na tela. A tendência nunca depende
+ * só de cor/seta: há texto oculto ("Aumento de +12%") para leitores de tela.
  *
- * @example  
- * <MaskedStats items={[{ value: '12k', label: 'Clientes', trend: { value: '+8%', direction: 'up' } }]} />  
+ * @example
+ * <MaskedStats items={[{ value: '12k', label: 'Clientes', trend: { value: '+8%', direction: 'up' } }]} />
  */
 export function MaskedStats(props: MaskedStatsProps) {
   const theme = useMaskedTheme()

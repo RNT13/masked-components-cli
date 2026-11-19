@@ -12,8 +12,8 @@ export type SpacingKey = Extract<keyof DefaultTheme['spacing'], string>
 export type GridBreakpoint = 'mobile' | 'tablet' | 'desktop'
 
 /**
- * Colunas por breakpoint: número fixo (responsivo por padrão — desktop n,  
- * tablet min(n, 2), mobile 1) ou mapa parcial por breakpoint.  
+ * Colunas por breakpoint: número fixo (responsivo por padrão — desktop n,
+ * tablet min(n, 2), mobile 1) ou mapa parcial por breakpoint.
  */
 export type GridCols = number | Partial<Record<GridBreakpoint, number>>
 

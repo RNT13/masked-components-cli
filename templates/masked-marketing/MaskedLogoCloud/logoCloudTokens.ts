@@ -16,9 +16,9 @@ export interface ResolveLogoCloudTokensInput {
 }
 
 /**
- * Deriva tokens --mc-logo-cloud-*. A nuvem de logos é neutra (não pinta):  
- * só opacidade, altura, espaçamento e a duração do marquee.  
- * Precedência: tokens > props > padrão.  
+ * Deriva tokens --mc-logo-cloud-*. A nuvem de logos é neutra (não pinta):
+ * só opacidade, altura, espaçamento e a duração do marquee.
+ * Precedência: tokens > props > padrão.
  */
 export function resolveLogoCloudTokens(input: ResolveLogoCloudTokensInput): Record<string, string> {
   return buildTokenStyle(

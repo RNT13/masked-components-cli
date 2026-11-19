@@ -15,15 +15,15 @@ import { resolveSectionTokens } from './sectionTokens'
 import type { MaskedSectionProps } from './MaskedSection.types'
 
 /**
- * Seção semântica com ritmo vertical, cabeçalho slotável e variantes.  
+ * Seção semântica com ritmo vertical, cabeçalho slotável e variantes.
  *
- * Acessibilidade: quando há `title`, a seção é rotulada por ele  
- * (aria-labelledby) e vira um landmark "region". Sem `title`, é só um  
- * contêiner — passe `aria-label` se ela precisar ser um landmark.  
+ * Acessibilidade: quando há `title`, a seção é rotulada por ele
+ * (aria-labelledby) e vira um landmark "region". Sem `title`, é só um
+ * contêiner — passe `aria-label` se ela precisar ser um landmark.
  *
- * @example  
- * <MaskedSection id="recursos" title="Recursos" description="Tudo que você precisa">…</MaskedSection>  
- * <MaskedSection variant="gradient" colorTheme="baseBlue" align="center" title="Comece hoje" />  
+ * @example
+ * <MaskedSection id="recursos" title="Recursos" description="Tudo que você precisa">…</MaskedSection>
+ * <MaskedSection variant="gradient" colorTheme="baseBlue" align="center" title="Comece hoje" />
  */
 export function MaskedSection(props: MaskedSectionProps) {
   const theme = useMaskedTheme()

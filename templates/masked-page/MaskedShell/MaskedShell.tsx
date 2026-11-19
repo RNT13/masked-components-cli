@@ -16,16 +16,16 @@ import type { MaskedShellProps } from './MaskedShell.types'
 const SKIP_LABEL = { pt: 'Pular para o conteúdo', en: 'Skip to content' } as const
 
 /**
- * Estrutura de página (header + sidebar + conteúdo + footer) por grid areas.  
+ * Estrutura de página (header + sidebar + conteúdo + footer) por grid areas.
  *
- * Acessibilidade: o conteúdo vai num <main id="main-content"> e há um link  
- * "pular para o conteúdo" (visível só com foco do teclado). Use <MaskedHeader>  
- * e <MaskedFooter> nos slots — eles já trazem os landmarks banner e contentinfo.  
+ * Acessibilidade: o conteúdo vai num <main id="main-content"> e há um link
+ * "pular para o conteúdo" (visível só com foco do teclado). Use <MaskedHeader>
+ * e <MaskedFooter> nos slots — eles já trazem os landmarks banner e contentinfo.
  *
- * @example  
- * <MaskedShell variant="app" header={<MaskedHeader … />} sidebar={<MaskedSidebar … />}>  
- *   <MaskedPageHeader title="Painel" />  
- * </MaskedShell>  
+ * @example
+ * <MaskedShell variant="app" header={<MaskedHeader … />} sidebar={<MaskedSidebar … />}>
+ *   <MaskedPageHeader title="Painel" />
+ * </MaskedShell>
  */
 export function MaskedShell(props: MaskedShellProps) {
   const theme = useMaskedTheme()

@@ -19,14 +19,14 @@ import type { MaskedTestimonialsProps } from './MaskedTestimonials.types'
 const REGION = { pt: 'Depoimentos', en: 'Testimonials' } as const
 
 /**
- * Depoimentos dentro de uma MaskedSection.  
+ * Depoimentos dentro de uma MaskedSection.
  *
- * Semântica: cada depoimento é um <figure> com <blockquote> e <figcaption>.  
- * O 'carousel' é CSS puro (scroll-snap, sem JavaScript): a região rolável é  
- * focável e rotulada, então setas do teclado rolam o conteúdo.  
+ * Semântica: cada depoimento é um <figure> com <blockquote> e <figcaption>.
+ * O 'carousel' é CSS puro (scroll-snap, sem JavaScript): a região rolável é
+ * focável e rotulada, então setas do teclado rolam o conteúdo.
  *
- * @example  
- * <MaskedTestimonials title="Clientes" items={[{ quote: 'Ótimo!', author: 'Ana', role: 'Dona de salão' }]} />  
+ * @example
+ * <MaskedTestimonials title="Clientes" items={[{ quote: 'Ótimo!', author: 'Ana', role: 'Dona de salão' }]} />
  */
 export function MaskedTestimonials(props: MaskedTestimonialsProps) {
   const theme = useMaskedTheme()

@@ -32,8 +32,8 @@ export const MaskedDividerRoot = styled.div<MaskedDividerInternalProps>`
       width: var(--mc-divider-thickness, 1px);
       min-height: 1em;
       margin-inline: var(--mc-divider-spacing, 0px);
-    `}  
-  
+    `}
+
   ${({ $variant }) =>
     $variant === 'labeled' &&
     css`

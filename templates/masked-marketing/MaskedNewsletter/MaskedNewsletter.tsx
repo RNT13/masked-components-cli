@@ -36,15 +36,15 @@ const DICT = {
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
 /**
- * Inscrição em newsletter: campo de e-mail + botão, com estados de envio.  
+ * Inscrição em newsletter: campo de e-mail + botão, com estados de envio.
  *
- * Acessibilidade: o campo tem rótulo (oculto) e `type="email"` com validação  
- * nativa; o resultado é anunciado em uma região viva (role="status" para  
- * sucesso, role="alert" para erro). Chama `onSuccess`/`onError` do  
- * MaskedConfigProvider, se definidos (ex.: para exibir um toast).  
+ * Acessibilidade: o campo tem rótulo (oculto) e `type="email"` com validação
+ * nativa; o resultado é anunciado em uma região viva (role="status" para
+ * sucesso, role="alert" para erro). Chama `onSuccess`/`onError` do
+ * MaskedConfigProvider, se definidos (ex.: para exibir um toast).
  *
- * @example  
- * <MaskedNewsletter title="Receba novidades" onSubmit={async (email) => api.subscribe(email)} />  
+ * @example
+ * <MaskedNewsletter title="Receba novidades" onSubmit={async (email) => api.subscribe(email)} />
  */
 export function MaskedNewsletter(props: MaskedNewsletterProps) {
   const theme = useMaskedTheme()

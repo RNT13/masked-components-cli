@@ -43,9 +43,9 @@ export type MaskedSidebarBaseProps = {
   /** Slot no rodapé (perfil, ajuda). */
   footer?: ReactNode
   /**
-   * Habilita o modo mobile: quando definido, a sidebar some abaixo do  
-   * breakpoint tablet e seu conteúdo abre num MaskedDrawer controlado por  
-   * esta prop. Sem ela, a sidebar fica sempre visível.  
+   * Habilita o modo mobile: quando definido, a sidebar some abaixo do
+   * breakpoint tablet e seu conteúdo abre num MaskedDrawer controlado por
+   * esta prop. Sem ela, a sidebar fica sempre visível.
    */
   mobileOpen?: boolean
   /** Chamado ao fechar o drawer mobile (Esc, overlay ou ao escolher um item). */

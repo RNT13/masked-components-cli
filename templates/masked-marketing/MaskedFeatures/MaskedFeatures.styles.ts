@@ -36,8 +36,8 @@ export const FeaturesList = styled.ul<MaskedFeaturesInternalProps>`
         grid-column: 1 / -1;
         padding: ${maskedTheme.spacing.xl};
       }
-    `}  
-  
+    `}
+
   ${({ $variant }) =>
     $variant === 'timeline' &&
     css`
@@ -72,8 +72,8 @@ export const FeatureItemEl = styled.li<Pick<MaskedFeaturesInternalProps, '$varia
     css`
       flex-direction: row;
       gap: ${maskedTheme.spacing.md};
-    `}  
-  
+    `}
+
   ${({ $variant }) =>
     $variant === 'timeline' &&
     css`

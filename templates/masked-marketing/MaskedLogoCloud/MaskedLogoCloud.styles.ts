@@ -2,9 +2,9 @@ import styled, { css, keyframes } from 'styled-components'
 import { maskedTheme, media } from '@/styles/MaskedThemes/MaskedThemes'
 import type { MaskedLogoCloudInternalProps } from './MaskedLogoCloud.types'
 
-const scroll = keyframes`  
-  from { transform: translateX(0); }  
-  to { transform: translateX(-50%); }  
+const scroll = keyframes`
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 `
 
 export const LogoViewport = styled.div<MaskedLogoCloudInternalProps>`
@@ -67,8 +67,8 @@ export const LogoList = styled.ul<MaskedLogoCloudInternalProps>`
       flex-wrap: nowrap;
       flex: none;
       padding-inline-end: var(--mc-logo-cloud-gap, ${maskedTheme.spacing.xl});
-    `}  
-  
+    `}
+
   ${media.mobile} {
     gap: var(--mc-logo-cloud-gap, ${maskedTheme.spacing.lg});
   }

@@ -3,9 +3,9 @@ import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 import type { MaskedDivInternalProps } from './MaskedDiv.types'
 
 /**
- * Caixa base. Todo valor visual cai em var(--mc-div-*, fallback):  
- * colorTheme/tokens preenchem as variáveis via resolveDivTokens (inline  
- * style), e o fallback é o visual neutro do tema ativo.  
+ * Caixa base. Todo valor visual cai em var(--mc-div-*, fallback):
+ * colorTheme/tokens preenchem as variáveis via resolveDivTokens (inline
+ * style), e o fallback é o visual neutro do tema ativo.
  */
 export const MaskedDivRoot = styled.div<MaskedDivInternalProps>`
   box-sizing: border-box;
@@ -35,15 +35,15 @@ export const MaskedDivRoot = styled.div<MaskedDivInternalProps>`
     css`
       border-radius: var(--mc-div-radius, ${maskedTheme.radius.md});
       box-shadow: var(--mc-div-shadow, ${maskedTheme.boxShadow.sm()});
-    `}  
-  
+    `}
+
   ${({ $variant }) =>
     $variant === 'outlined' &&
     css`
       border-color: var(--mc-div-border, ${maskedTheme.colors.baseGray.dark20});
       border-radius: var(--mc-div-radius, ${maskedTheme.radius.md});
-    `}  
-  
+    `}
+
   ${({ $variant }) =>
     $variant === 'glass' &&
     css`
@@ -53,8 +53,8 @@ export const MaskedDivRoot = styled.div<MaskedDivInternalProps>`
       border-radius: var(--mc-div-radius, ${maskedTheme.radius.md});
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-    `}  
-  
+    `}
+
   ${({ $fullWidth }) =>
     $fullWidth &&
     css`

@@ -14,16 +14,16 @@ import { resolveFeaturesTokens } from './featuresTokens'
 import type { MaskedFeaturesProps } from './MaskedFeatures.types'
 
 /**
- * Lista de recursos dentro de uma MaskedSection (título, descrição, ações).  
+ * Lista de recursos dentro de uma MaskedSection (título, descrição, ações).
  *
- * Semântica: <ul> (ou <ol> no 'timeline') de itens; o título de cada item é  
- * um heading um nível abaixo do título da seção. Ícones são decorativos  
- * (aria-hidden). O texto herda a cor da seção, então funciona também sobre  
- * `sectionVariant="gradient"`.  
+ * Semântica: <ul> (ou <ol> no 'timeline') de itens; o título de cada item é
+ * um heading um nível abaixo do título da seção. Ícones são decorativos
+ * (aria-hidden). O texto herda a cor da seção, então funciona também sobre
+ * `sectionVariant="gradient"`.
  *
- * @example  
- * <MaskedFeatures title="Recursos" items={[{ title: 'Agenda', description: 'Online 24h', icon: '📅' }]} />  
- * <MaskedFeatures variant="timeline" title="Como funciona" items={steps} />  
+ * @example
+ * <MaskedFeatures title="Recursos" items={[{ title: 'Agenda', description: 'Online 24h', icon: '📅' }]} />
+ * <MaskedFeatures variant="timeline" title="Como funciona" items={steps} />
  */
 export function MaskedFeatures(props: MaskedFeaturesProps) {
   const theme = useMaskedTheme()

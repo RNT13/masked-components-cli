@@ -26,8 +26,8 @@ export type MaskedStackBaseProps = {
   justify?: CSSProperties['justifyContent']
   wrap?: boolean
   /**
-   * true = linha automática do tema entre itens (cor via tokens.divider);  
-   * ReactNode = separador customizado renderizado entre os itens.  
+   * true = linha automática do tema entre itens (cor via tokens.divider);
+   * ReactNode = separador customizado renderizado entre os itens.
    */
   divider?: boolean | ReactNode
   /** Ocupa 100% da largura do pai. */

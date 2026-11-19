@@ -14,8 +14,8 @@ export interface ResolveTestimonialsTokensInput {
 }
 
 /**
- * Deriva tokens --mc-testimonials-*: destaque (aspas) e borda dos cartões.  
- * O texto herda da seção. Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-testimonials-*: destaque (aspas) e borda dos cartões.
+ * O texto herda da seção. Precedência: tokens > colorTheme > tema.
  */
 export function resolveTestimonialsTokens(
   input: ResolveTestimonialsTokensInput,

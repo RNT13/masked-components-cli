@@ -3,11 +3,11 @@ import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 import type { ShellTokenOverrides } from './shellTokens'
 
 /**
- * Layouts de página:  
- * - 'app': header no topo, sidebar à esquerda, conteúdo e footer (dashboards/SaaS);  
- * - 'site': header, conteúdo e footer em coluna única (a sidebar é ignorada);  
- * - 'split': dois painéis lado a lado — `sidebar` vira o painel visual (login, onboarding);  
- * - 'centered': conteúdo centralizado na tela (login simples, 404, manutenção).  
+ * Layouts de página:
+ * - 'app': header no topo, sidebar à esquerda, conteúdo e footer (dashboards/SaaS);
+ * - 'site': header, conteúdo e footer em coluna única (a sidebar é ignorada);
+ * - 'split': dois painéis lado a lado — `sidebar` vira o painel visual (login, onboarding);
+ * - 'centered': conteúdo centralizado na tela (login simples, 404, manutenção).
  */
 export type ShellVariant = 'app' | 'site' | 'split' | 'centered'
 

@@ -6,16 +6,16 @@ import { resolveDividerTokens } from './dividerTokens'
 import type { MaskedDividerProps } from './MaskedDivider.types'
 
 /**
- * Divisor horizontal, vertical ou com texto.  
+ * Divisor horizontal, vertical ou com texto.
  *
- * Acessibilidade: decorativo por padrão (aria-hidden). Com `decorative={false}`  
- * vira um separador semântico (role="separator" + aria-orientation). O  
- * variant 'labeled' expõe o texto como conteúdo e esconde só as linhas.  
+ * Acessibilidade: decorativo por padrão (aria-hidden). Com `decorative={false}`
+ * vira um separador semântico (role="separator" + aria-orientation). O
+ * variant 'labeled' expõe o texto como conteúdo e esconde só as linhas.
  *
- * @example  
- * <MaskedDivider />  
- * <MaskedDivider variant="labeled" label="ou" spacing="lg" />  
- * <MaskedStack variant="row"><A /><MaskedDivider variant="vertical" /><B /></MaskedStack>  
+ * @example
+ * <MaskedDivider />
+ * <MaskedDivider variant="labeled" label="ou" spacing="lg" />
+ * <MaskedStack variant="row"><A /><MaskedDivider variant="vertical" /><B /></MaskedStack>
  */
 export function MaskedDivider(props: MaskedDividerProps) {
   const theme = useMaskedTheme()

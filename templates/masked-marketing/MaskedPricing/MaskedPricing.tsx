@@ -50,20 +50,20 @@ const DICT = {
 } as const
 
 /**
- * Planos e preços dentro de uma MaskedSection, em cartões ou em tabela.  
+ * Planos e preços dentro de uma MaskedSection, em cartões ou em tabela.
  *
- * Acessibilidade: cada plano é um <article> com heading; o alternador  
- * mensal/anual é um grupo de botões com `aria-pressed`; no 'table' há  
- * <caption>, cabeçalhos de coluna/linha (`scope`) e células com texto  
- * oculto ("Incluído"/"Não incluído"), então o ✓ nunca é a única informação.  
- * Os botões dos planos são links (usam o `linkComponent` do  
- * MaskedConfigProvider). `billing` funciona controlado ou não.  
+ * Acessibilidade: cada plano é um <article> com heading; o alternador
+ * mensal/anual é um grupo de botões com `aria-pressed`; no 'table' há
+ * <caption>, cabeçalhos de coluna/linha (`scope`) e células com texto
+ * oculto ("Incluído"/"Não incluído"), então o ✓ nunca é a única informação.
+ * Os botões dos planos são links (usam o `linkComponent` do
+ * MaskedConfigProvider). `billing` funciona controlado ou não.
  *
- * Nota: o alternador usa botões próprios (sem MaskedButton) para não criar  
- * dependência entre pacotes.  
+ * Nota: o alternador usa botões próprios (sem MaskedButton) para não criar
+ * dependência entre pacotes.
  *
- * @example  
- * <MaskedPricing title="Planos" highlight="pro" plans={[{ id: 'pro', name: 'Pro', price: { monthly: 'R$ 49', yearly: 'R$ 39' }, features: ['Agenda'], cta: { label: 'Assinar', href: '/assinar' } }]} />  
+ * @example
+ * <MaskedPricing title="Planos" highlight="pro" plans={[{ id: 'pro', name: 'Pro', price: { monthly: 'R$ 49', yearly: 'R$ 39' }, features: ['Agenda'], cta: { label: 'Assinar', href: '/assinar' } }]} />
  */
 export function MaskedPricing(props: MaskedPricingProps) {
   const theme = useMaskedTheme()

@@ -28,10 +28,10 @@ function toKebab(key: string): string {
 }
 
 /**
- * Deriva tokens --mc-sidebar-*. Superfície/texto/borda do tema ou, com  
- * colorTheme, base + texto por contraste WCAG. `minimal` não pinta fundo  
- * nem borda (herda do pai). Larguras vêm das props (defaults no CSS).  
- * Precedência: tokens > props > colorTheme > tema.  
+ * Deriva tokens --mc-sidebar-*. Superfície/texto/borda do tema ou, com
+ * colorTheme, base + texto por contraste WCAG. `minimal` não pinta fundo
+ * nem borda (herda do pai). Larguras vêm das props (defaults no CSS).
+ * Precedência: tokens > props > colorTheme > tema.
  */
 export function resolveSidebarTokens(
   input: ResolveSidebarTokensInput,

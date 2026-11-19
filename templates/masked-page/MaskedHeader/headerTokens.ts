@@ -27,14 +27,14 @@ function toKebab(key: string): string {
 }
 
 /**
- * Deriva tokens --mc-header-*. Por variante:  
- * - static/sticky: superfície do tema (ou base do colorTheme) + texto por  
- *   contraste WCAG + borda inferior;  
- * - blur: igual, mas o fundo é 80% opaco (o blur vem do styled);  
- * - transparent: sem fundo e sem borda — texto herdado, a menos que  
- *   tokens.fg seja informado.  
- * `menuFg` (texto do menu mobile, que vive no painel do Drawer) acompanha o  
- * colorTheme; sem ele, usa o texto do tema. Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-header-*. Por variante:
+ * - static/sticky: superfície do tema (ou base do colorTheme) + texto por
+ *   contraste WCAG + borda inferior;
+ * - blur: igual, mas o fundo é 80% opaco (o blur vem do styled);
+ * - transparent: sem fundo e sem borda — texto herdado, a menos que
+ *   tokens.fg seja informado.
+ * `menuFg` (texto do menu mobile, que vive no painel do Drawer) acompanha o
+ * colorTheme; sem ele, usa o texto do tema. Precedência: tokens > colorTheme > tema.
  */
 export function resolveHeaderTokens(
   input: ResolveHeaderTokensInput,

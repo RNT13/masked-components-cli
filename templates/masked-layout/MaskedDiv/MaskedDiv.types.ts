@@ -17,9 +17,9 @@ export type MaskedDivBaseProps = {
   as?: ElementType
   variant?: DivVariant
   /**
-   * Ativa flex (display: flex) nesta direção. Sem `direction` (ou align/  
-   * justify/wrap), Div é block neutro — para fluxo com gap semântico e  
-   * divisor, use MaskedStack.  
+   * Ativa flex (display: flex) nesta direção. Sem `direction` (ou align/
+   * justify/wrap), Div é block neutro — para fluxo com gap semântico e
+   * divisor, use MaskedStack.
    */
   direction?: DivDirection
   align?: CSSProperties['alignItems']
@@ -32,9 +32,9 @@ export type MaskedDivBaseProps = {
   /** Ocupa 100% da largura do pai. */
   fullWidth?: boolean
   /**
-   * Nome de uma paleta registrada via `registerColorTheme()` ou chave da  
-   * paleta. Deriva os tokens --mc-div-*. danger/success vêm do tema, não  
-   * do colorTheme.  
+   * Nome de uma paleta registrada via `registerColorTheme()` ou chave da
+   * paleta. Deriva os tokens --mc-div-*. danger/success vêm do tema, não
+   * do colorTheme.
    */
   colorTheme?: ColorThemeName
   /** Overrides granulares de tokens --mc-div-*. Precedência: tokens > props > colorTheme > default. */

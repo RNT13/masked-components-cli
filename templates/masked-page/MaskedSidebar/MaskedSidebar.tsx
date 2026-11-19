@@ -44,19 +44,19 @@ function Chevron() {
 }
 
 /**
- * Navegação lateral com itens, colapso e modo mobile (Drawer).  
+ * Navegação lateral com itens, colapso e modo mobile (Drawer).
  *
- * Estado: `activeId` e `collapsed` funcionam controlados ou não  
- * (`defaultActiveId`/`defaultCollapsed`). Recolhida, os rótulos continuam  
- * acessíveis a leitores de tela e o `title` mostra o nome no hover.  
- * Passe `mobileOpen` para esconder a sidebar abaixo do tablet e abri-la num  
- * MaskedDrawer. O item ativo recebe aria-current="page".  
+ * Estado: `activeId` e `collapsed` funcionam controlados ou não
+ * (`defaultActiveId`/`defaultCollapsed`). Recolhida, os rótulos continuam
+ * acessíveis a leitores de tela e o `title` mostra o nome no hover.
+ * Passe `mobileOpen` para esconder a sidebar abaixo do tablet e abri-la num
+ * MaskedDrawer. O item ativo recebe aria-current="page".
  *
- * Nota: seleção e colapso são implementações mínimas deste componente —  
- * ponto de unificação futura com useSelectable/useExpandable.  
+ * Nota: seleção e colapso são implementações mínimas deste componente —
+ * ponto de unificação futura com useSelectable/useExpandable.
  *
- * @example  
- * <MaskedSidebar items={[{ id: 'home', label: 'Início', href: '/' }]} activeId="home" />  
+ * @example
+ * <MaskedSidebar items={[{ id: 'home', label: 'Início', href: '/' }]} activeId="home" />
  */
 export function MaskedSidebar(props: MaskedSidebarProps) {
   const theme = useMaskedTheme()

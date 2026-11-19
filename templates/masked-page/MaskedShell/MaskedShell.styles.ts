@@ -3,9 +3,9 @@ import { maskedTheme, media } from '@/styles/MaskedThemes/MaskedThemes'
 import type { MaskedShellInternalProps } from './MaskedShell.types'
 
 /**
- * Estrutura da página por grid areas. O mobile empilha tudo em uma coluna;  
- * a largura da sidebar vem dela mesma (coluna `auto`), então colapsar a  
- * sidebar reflui o conteúdo sem JS.  
+ * Estrutura da página por grid areas. O mobile empilha tudo em uma coluna;
+ * a largura da sidebar vem dela mesma (coluna `auto`), então colapsar a
+ * sidebar reflui o conteúdo sem JS.
  */
 export const MaskedShellRoot = styled.div<MaskedShellInternalProps>`
   box-sizing: border-box;
@@ -44,8 +44,8 @@ export const MaskedShellRoot = styled.div<MaskedShellInternalProps>`
         'header'
         'main'
         'footer';
-    `}  
-  
+    `}
+
   ${({ $variant }) =>
     $variant === 'split' &&
     css`

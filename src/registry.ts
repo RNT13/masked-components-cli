@@ -1,9 +1,9 @@
 import type { Framework, NpmDep, PathRoot } from './types'
 
 /**
- * Registro único de tudo que a CLI instala.  
- * Fonte da verdade: pastas de templates/, dependências entre componentes,  
- * pacotes npm e avisos. Conferido por templates-integrity.test.ts.  
+ * Registro único de tudo que a CLI instala.
+ * Fonte da verdade: pastas de templates/, dependências entre componentes,
+ * pacotes npm e avisos. Conferido por templates-integrity.test.ts.
  */
 
 export interface TemplateMapping {
@@ -30,8 +30,8 @@ export interface ComponentEntry {
   warnings?: ComponentWarning[]
   notes?: string[]
   /**
-   * Preset: não copia arquivos — apenas agrupa ids em `requires` e instala  
-   * o conjunto de uma vez. Exibido em seção separada no --list.  
+   * Preset: não copia arquivos — apenas agrupa ids em `requires` e instala
+   * o conjunto de uma vez. Exibido em seção separada no --list.
    */
   preset?: true
 }
@@ -338,6 +338,141 @@ export const registry: ComponentEntry[] = [
       'masked-faq',
       'masked-pricing',
       'masked-newsletter'
+    ]
+  },
+  {
+    id: 'masked-badge',
+    label: 'Masked Badge',
+    description: 'Selo curto de status/contador: solid, soft, outline, dot — tokens --mc-badge-*',
+    templates: [{ dir: 'masked-app/MaskedBadge', to: 'components', subdir: 'MaskedBadge' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-avatar',
+    label: 'Masked Avatar',
+    description:
+      'Avatar com imagem, iniciais e presença acessível: circle, rounded, square — tokens --mc-avatar-*',
+    templates: [{ dir: 'masked-app/MaskedAvatar', to: 'components', subdir: 'MaskedAvatar' }],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-tooltip',
+    label: 'Masked Tooltip',
+    description: 'Tooltip por hover e teclado (WCAG 1.4.13): dark, light — tokens --mc-tooltip-*',
+    templates: [{ dir: 'masked-app/MaskedTooltip', to: 'components', subdir: 'MaskedTooltip' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-breadcrumb',
+    label: 'Masked Breadcrumb',
+    description: 'Trilha de navegação com colapso: default, compact — tokens --mc-breadcrumb-*',
+    templates: [
+      { dir: 'masked-app/MaskedBreadcrumb', to: 'components', subdir: 'MaskedBreadcrumb' }
+    ],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-empty-state',
+    label: 'Masked Empty State',
+    description:
+      'Estado vazio (ícone, título, ação): default, compact, error, search — tokens --mc-empty-state-*',
+    templates: [
+      { dir: 'masked-app/MaskedEmptyState', to: 'components', subdir: 'MaskedEmptyState' }
+    ],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-tabs',
+    label: 'Masked Tabs',
+    description:
+      'Abas WAI-ARIA com roving tabindex: line, pills, enclosed, vertical — tokens --mc-tabs-*',
+    templates: [{ dir: 'masked-app/MaskedTabs', to: 'components', subdir: 'MaskedTabs' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-accordion',
+    label: 'Masked Accordion',
+    description:
+      'Accordion WAI-ARIA controlado ou não: default, boxed, separated — tokens --mc-accordion-*',
+    templates: [{ dir: 'masked-app/MaskedAccordion', to: 'components', subdir: 'MaskedAccordion' }],
+    requires: ['masked-themes'],
+    dependencies: [STYLED]
+  },
+  {
+    id: 'masked-pagination',
+    label: 'Masked Pagination',
+    description:
+      'Paginação acessível com links reais opcionais: default, compact, edges — tokens --mc-pagination-*',
+    templates: [
+      { dir: 'masked-app/MaskedPagination', to: 'components', subdir: 'MaskedPagination' }
+    ],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-stepper',
+    label: 'Masked Stepper',
+    description:
+      'Etapas com status em texto: horizontal, vertical, dots, progress — tokens --mc-stepper-*',
+    templates: [{ dir: 'masked-app/MaskedStepper', to: 'components', subdir: 'MaskedStepper' }],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-table',
+    label: 'Masked Table',
+    description:
+      'Tabela com ordenação, loading e estado vazio: simple, striped, bordered, card — tokens --mc-table-*',
+    templates: [{ dir: 'masked-app/MaskedTable', to: 'components', subdir: 'MaskedTable' }],
+    requires: ['masked-themes', 'masked-config', 'masked-skeleton'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-dashboard',
+    label: 'Masked Dashboard',
+    description:
+      'Painel pronto (topbar, sidebar com Drawer mobile, cabeçalho de página): analytics, saas, minimal — tokens --mc-dashboard-*',
+    templates: [{ dir: 'masked-app/MaskedDashboard', to: 'components', subdir: 'MaskedDashboard' }],
+    requires: [
+      'masked-themes',
+      'masked-config',
+      'masked-shell',
+      'masked-sidebar',
+      'masked-page-header'
+    ],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-app',
+    label: 'Masked App (preset)',
+    description: 'Preset de componentes de aplicação/dashboard: instala o conjunto de uma vez',
+    // preset não copia arquivos próprios: só agrega os ids em `requires`
+    templates: [],
+    preset: true,
+    requires: [
+      'masked-dashboard',
+      'masked-tabs',
+      'masked-breadcrumb',
+      'masked-table',
+      'masked-pagination',
+      'masked-stepper',
+      'masked-empty-state',
+      'masked-avatar',
+      'masked-badge',
+      'masked-tooltip',
+      'masked-accordion'
     ]
   },
   {

@@ -18,10 +18,10 @@ export interface ResolveHeroTokensInput {
 }
 
 /**
- * Deriva tokens --mc-hero-*. O 'gradient' pinta o fundo (base → base  
- * misturada com o texto) e o texto por contraste WCAG; os demais não pintam  
- * fundo e só usam o colorTheme no destaque (eyebrow).  
- * Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-hero-*. O 'gradient' pinta o fundo (base → base
+ * misturada com o texto) e o texto por contraste WCAG; os demais não pintam
+ * fundo e só usam o colorTheme no destaque (eyebrow).
+ * Precedência: tokens > colorTheme > tema.
  */
 export function resolveHeroTokens(
   input: ResolveHeroTokensInput,

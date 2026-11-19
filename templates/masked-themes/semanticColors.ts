@@ -1,12 +1,12 @@
 import type { DefaultTheme } from 'styled-components'
 
 /**
- * Cores semânticas do tema ativo (as que mudam entre light/dark/paletas),  
- * com fallback seguro — usadas pelos componentes de estrutura da V3 para  
- * pintar superfícies neutras sem exigir `colorTheme`.  
+ * Cores semânticas do tema ativo (as que mudam entre light/dark/paletas),
+ * com fallback seguro — usadas pelos componentes de estrutura da V3 para
+ * pintar superfícies neutras sem exigir `colorTheme`.
  *
- * Função pura: recebe o tema (de `useMaskedTheme()`), não importa o  
- * MaskedThemes, e funciona com ou sem <ThemeProvider>.  
+ * Função pura: recebe o tema (de `useMaskedTheme()`), não importa o
+ * MaskedThemes, e funciona com ou sem <ThemeProvider>.
  */
 export interface SemanticColors {
   /** Fundo de superfície (header, sidebar, footer, página). */

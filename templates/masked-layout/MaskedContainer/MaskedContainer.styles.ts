@@ -3,8 +3,8 @@ import { maskedTheme, media } from '@/styles/MaskedThemes/MaskedThemes'
 import type { MaskedContainerInternalProps } from './MaskedContainer.types'
 
 /**
- * Largura de página + gutters. Todo valor cai em var(--mc-container-*, fallback).  
- * Gutter padrão responsivo: lg no desktop, md no mobile.  
+ * Largura de página + gutters. Todo valor cai em var(--mc-container-*, fallback).
+ * Gutter padrão responsivo: lg no desktop, md no mobile.
  */
 export const MaskedContainerRoot = styled.div<MaskedContainerInternalProps>`
   box-sizing: border-box;
@@ -16,8 +16,8 @@ export const MaskedContainerRoot = styled.div<MaskedContainerInternalProps>`
 
   ${({ $centered }) =>
     $centered &&
-    `  
-      margin-inline: auto;  
+    `
+      margin-inline: auto;
     `}
 
   ${media.mobile} {

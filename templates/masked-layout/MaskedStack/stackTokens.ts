@@ -23,10 +23,10 @@ function toKebab(key: string): string {
 }
 
 /**
- * Deriva tokens --mc-stack-*. Stack é neutro (não pinta superfície); do tema  
- * usa só a escala de espaçamento (theme.spacing):  
- * - gap: prop (default 'md' = theme.spacing.md); tokens.gap vence;  
- * - tokens.divider: cor da linha automática.  
+ * Deriva tokens --mc-stack-*. Stack é neutro (não pinta superfície); do tema
+ * usa só a escala de espaçamento (theme.spacing):
+ * - gap: prop (default 'md' = theme.spacing.md); tokens.gap vence;
+ * - tokens.divider: cor da linha automática.
  */
 export function resolveStackTokens(
   input: ResolveStackTokensInput,

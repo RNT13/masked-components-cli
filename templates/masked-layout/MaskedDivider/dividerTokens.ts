@@ -22,10 +22,10 @@ export interface ResolveDividerTokensInput {
 }
 
 /**
- * Deriva tokens --mc-divider-*. A linha usa a borda do tema (ou a paleta do  
- * colorTheme); o label usa o texto secundário do tema. Divisor é decorativo  
- * por natureza, então não há exigência de contraste na linha — o label usa  
- * sempre a cor de texto do tema. Precedência: tokens > props > colorTheme > tema.  
+ * Deriva tokens --mc-divider-*. A linha usa a borda do tema (ou a paleta do
+ * colorTheme); o label usa o texto secundário do tema. Divisor é decorativo
+ * por natureza, então não há exigência de contraste na linha — o label usa
+ * sempre a cor de texto do tema. Precedência: tokens > props > colorTheme > tema.
  */
 export function resolveDividerTokens(
   input: ResolveDividerTokensInput,

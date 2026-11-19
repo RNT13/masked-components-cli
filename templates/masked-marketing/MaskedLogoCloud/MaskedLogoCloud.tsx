@@ -6,15 +6,15 @@ import { resolveLogoCloudTokens } from './logoCloudTokens'
 import type { MaskedLogoCloudProps } from './MaskedLogoCloud.types'
 
 /**
- * Nuvem de logos (clientes, parceiros) dentro de uma MaskedSection.  
+ * Nuvem de logos (clientes, parceiros) dentro de uma MaskedSection.
  *
- * Semântica: <ul> de itens. No 'marquee' a lista é duplicada para o loop  
- * contínuo e a cópia fica `aria-hidden`; a animação pausa no hover/foco e é  
- * desligada com `prefers-reduced-motion` (a lista volta a quebrar linha).  
- * Dê `alt` a cada imagem de logo.  
+ * Semântica: <ul> de itens. No 'marquee' a lista é duplicada para o loop
+ * contínuo e a cópia fica `aria-hidden`; a animação pausa no hover/foco e é
+ * desligada com `prefers-reduced-motion` (a lista volta a quebrar linha).
+ * Dê `alt` a cada imagem de logo.
  *
- * @example  
- * <MaskedLogoCloud title="Quem confia" logos={[<img src="/a.svg" alt="Acme" />, <img src="/b.svg" alt="Globex" />]} />  
+ * @example
+ * <MaskedLogoCloud title="Quem confia" logos={[<img src="/a.svg" alt="Acme" />, <img src="/b.svg" alt="Globex" />]} />
  */
 export function MaskedLogoCloud(props: MaskedLogoCloudProps) {
   const {

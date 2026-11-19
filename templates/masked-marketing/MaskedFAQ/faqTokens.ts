@@ -14,8 +14,8 @@ export interface ResolveFAQTokensInput {
 }
 
 /**
- * Deriva tokens --mc-faq-*: destaque (indicador de abrir/fechar) e borda.  
- * O texto herda da seção. Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-faq-*: destaque (indicador de abrir/fechar) e borda.
+ * O texto herda da seção. Precedência: tokens > colorTheme > tema.
  */
 export function resolveFAQTokens(
   input: ResolveFAQTokensInput,

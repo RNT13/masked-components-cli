@@ -15,9 +15,9 @@ export type MaskedDividerBaseProps = {
   /** Texto/nó centralizado entre as linhas (variant 'labeled'). */
   label?: ReactNode
   /**
-   * true (padrão) = puramente visual: some da árvore de acessibilidade  
-   * (aria-hidden). false = separador semântico (role="separator" com  
-   * aria-orientation). 'labeled' sempre expõe o label como conteúdo.  
+   * true (padrão) = puramente visual: some da árvore de acessibilidade
+   * (aria-hidden). false = separador semântico (role="separator" com
+   * aria-orientation). 'labeled' sempre expõe o label como conteúdo.
    */
   decorative?: boolean
   /** Margem ao redor: chave de theme.spacing, número (px) ou valor CSS. */

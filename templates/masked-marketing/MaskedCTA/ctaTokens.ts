@@ -18,9 +18,9 @@ export interface ResolveCTATokensInput {
 }
 
 /**
- * Deriva tokens --mc-cta-*: banner = superfície cheia, gradient = gradiente,  
- * split = fundo suave. Texto sempre por contraste WCAG.  
- * Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-cta-*: banner = superfície cheia, gradient = gradiente,
+ * split = fundo suave. Texto sempre por contraste WCAG.
+ * Precedência: tokens > colorTheme > tema.
  */
 export function resolveCTATokens(
   input: ResolveCTATokensInput,

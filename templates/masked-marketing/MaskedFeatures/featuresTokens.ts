@@ -15,10 +15,10 @@ export interface ResolveFeaturesTokensInput {
 }
 
 /**
- * Deriva tokens --mc-features-*: o destaque (accent/accentFg, par com  
- * contraste WCAG) pinta o ícone e a linha do timeline; a borda dos cards vem  
- * do tema ou do colorTheme. O texto herda da seção.  
- * Precedência: tokens > colorTheme > tema.  
+ * Deriva tokens --mc-features-*: o destaque (accent/accentFg, par com
+ * contraste WCAG) pinta o ícone e a linha do timeline; a borda dos cards vem
+ * do tema ou do colorTheme. O texto herda da seção.
+ * Precedência: tokens > colorTheme > tema.
  */
 export function resolveFeaturesTokens(
   input: ResolveFeaturesTokensInput,

@@ -6,11 +6,11 @@ import { resolveContainerTokens } from './containerTokens'
 import type { MaskedContainerProps } from './MaskedContainer.types'
 
 /**
- * Largura de página + gutters laterais, centralizado.  
+ * Largura de página + gutters laterais, centralizado.
  *
- * @example  
- * <MaskedContainer>…</MaskedContainer>  
- * <MaskedContainer variant="narrow" paddingY="xl" as="main">…</MaskedContainer>  
+ * @example
+ * <MaskedContainer>…</MaskedContainer>
+ * <MaskedContainer variant="narrow" paddingY="xl" as="main">…</MaskedContainer>
  */
 export function MaskedContainer(props: MaskedContainerProps) {
   const theme = useMaskedTheme()

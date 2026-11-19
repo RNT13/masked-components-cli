@@ -7,15 +7,15 @@
 export type SpacingValue = string | number
 
 /**
- * Resolve um valor de espaçamento para uma string CSS:  
- * - chave presente na escala ("md") -> valor da escala (ex.: "1rem");  
- * - número -> "24px";  
- * - qualquer outra string ("1.5rem", "10%") -> inalterada;  
- * - undefined -> fallback (ou undefined, para a propriedade não ser emitida).  
+ * Resolve um valor de espaçamento para uma string CSS:
+ * - chave presente na escala ("md") -> valor da escala (ex.: "1rem");
+ * - número -> "24px";
+ * - qualquer outra string ("1.5rem", "10%") -> inalterada;
+ * - undefined -> fallback (ou undefined, para a propriedade não ser emitida).
  *
- * @example resolveSpacing('md', theme.spacing)     // '1rem'  
- * @example resolveSpacing(24, theme.spacing)       // '24px'  
- * @example resolveSpacing('1.5rem', theme.spacing) // '1.5rem'  
+ * @example resolveSpacing('md', theme.spacing)     // '1rem'
+ * @example resolveSpacing(24, theme.spacing)       // '24px'
+ * @example resolveSpacing('1.5rem', theme.spacing) // '1.5rem'
  */
 export function resolveSpacing(
   value: SpacingValue | undefined,

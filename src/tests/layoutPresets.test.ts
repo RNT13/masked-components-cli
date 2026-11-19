@@ -36,6 +36,7 @@ describe('registry — fundações de layout e estrutura de página', () => {
   it('presets são só agregadores: sem arquivos próprios e marcados como preset', () => {
     const presets = registry.filter((entry) => entry.preset)
     expect(presets.map((p) => p.id).sort()).toEqual([
+      'masked-app',
       'masked-layout',
       'masked-marketing',
       'masked-page'

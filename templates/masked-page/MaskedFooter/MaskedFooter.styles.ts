@@ -43,8 +43,8 @@ export const FooterTop = styled.div<MaskedFooterInternalProps>`
       ${media.tablet} {
         flex-direction: column;
       }
-    `}  
-  
+    `}
+
   ${({ $variant }) =>
     $variant === 'centered' &&
     css`

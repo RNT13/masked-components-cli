@@ -6,14 +6,14 @@ import { resolveGridTokens } from './gridTokens'
 import type { MaskedGridProps } from './MaskedGrid.types'
 
 /**
- * Grid responsivo de verdade, com motores padronizados.  
+ * Grid responsivo de verdade, com motores padronizados.
  *
- * @example  
- * <MaskedGrid cols={4} gap="md">  
- *   <Card /> <Card /> <Card /> <Card />  
- * </MaskedGrid>  
- * <MaskedGrid variant="auto" minChildWidth="220px">…</MaskedGrid>  
- * <MaskedGrid variant="sidebar" sidebarWidth="280px">…</MaskedGrid>  
+ * @example
+ * <MaskedGrid cols={4} gap="md">
+ *   <Card /> <Card /> <Card /> <Card />
+ * </MaskedGrid>
+ * <MaskedGrid variant="auto" minChildWidth="220px">…</MaskedGrid>
+ * <MaskedGrid variant="sidebar" sidebarWidth="280px">…</MaskedGrid>
  */
 export function MaskedGrid(props: MaskedGridProps) {
   const theme = useMaskedTheme()
