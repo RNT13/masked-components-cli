@@ -1,6 +1,4 @@
-import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
-import { readableTextOn } from '@/utils/masked-utils'
-import { resolveSemanticColors } from '@/styles/semanticColors'
+import { buildTokenStyle, resolveSurface } from '@/styles/surfaceTokens'
 import type { DefaultTheme } from 'styled-components'
 import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 
@@ -16,27 +14,17 @@ export interface ResolveShellTokensInput {
 }
 
 /**
- * Deriva tokens --mc-shell-*: fundo e texto da página. Sem colorTheme usa a
- * superfície e o texto do tema ativo (assim light/dark trocam a página
- * inteira); com colorTheme, base + texto por contraste WCAG.
- * Precedência: tokens > colorTheme > tema. tokens.bg sem tokens.fg
- * re-deriva o fg por contraste.
+ * Deriva tokens --mc-shell-*: fundo e texto da página sobre a superfície  
+ * `solid` compartilhada. Sem colorTheme usa a superfície e o texto do tema  
+ * ativo (light/dark trocam a página inteira); com colorTheme, base + texto  
+ * por contraste WCAG. Precedência: tokens > colorTheme > tema.  
+ * tokens.bg sem tokens.fg re-deriva o fg por contraste.  
  */
 export function resolveShellTokens(
   input: ResolveShellTokensInput,
   theme: DefaultTheme
 ): Record<string, string> {
-  const colors = resolveColorTheme(input.colorTheme, theme)
-  const semantic = resolveSemanticColors(theme)
+  const surface = resolveSurface('solid', input.colorTheme, theme)
 
-  const bg = input.tokens?.bg ?? colors?.base ?? semantic.surface
-  const fg =
-    input.tokens?.fg ??
-    (input.tokens?.bg
-      ? readableTextOn(input.tokens.bg)
-      : colors
-        ? (colors.onBase ?? readableTextOn(colors.base))
-        : semantic.text)
-
-  return { '--mc-shell-bg': bg, '--mc-shell-fg': fg }
+  return buildTokenStyle('shell', { bg: surface.bg, fg: surface.fg }, input.tokens)
 }

@@ -1,6 +1,5 @@
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
-import { readableTextOn } from '@/utils/masked-utils'
-import { resolveSemanticColors } from '@/styles/semanticColors'
+import { buildTokenStyle, resolveSurface } from '@/styles/surfaceTokens'
 import type { DefaultTheme } from 'styled-components'
 import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 import type { SidebarVariant } from './MaskedSidebar.types'
@@ -22,51 +21,29 @@ export interface ResolveSidebarTokensInput {
   tokens?: SidebarTokenOverrides
 }
 
-/** "collapsedWidth" -> "collapsed-width": o CSS lê --mc-sidebar-collapsed-width. */
-function toKebab(key: string): string {
-  return key.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`)
-}
-
 /**
- * Deriva tokens --mc-sidebar-*. Superfície/texto/borda do tema ou, com
- * colorTheme, base + texto por contraste WCAG. `minimal` não pinta fundo
- * nem borda (herda do pai). Larguras vêm das props (defaults no CSS).
- * Precedência: tokens > props > colorTheme > tema.
+ * Deriva tokens --mc-sidebar-* sobre a superfície `solid` compartilhada.  
+ * `minimal` não pinta fundo nem borda (herda do pai); sem colorTheme também  
+ * não força o fg. Larguras vêm das props (defaults no CSS).  
+ * Precedência: tokens > props > colorTheme > tema.  
  */
 export function resolveSidebarTokens(
   input: ResolveSidebarTokensInput,
   theme: DefaultTheme
 ): Record<string, string> {
   const colors = resolveColorTheme(input.colorTheme, theme)
-  const semantic = resolveSemanticColors(theme)
-
-  const surface = colors?.base ?? semantic.surface
-  const surfaceFg = colors ? (colors.onBase ?? readableTextOn(colors.base)) : semantic.text
-
+  const surface = resolveSurface('solid', input.colorTheme, theme)
   const minimal = input.variant === 'minimal'
 
-  const merged: Record<string, string | undefined> = {
-    bg: minimal ? undefined : surface,
-    fg: minimal && !colors ? undefined : surfaceFg,
-    border: minimal
-      ? undefined
-      : colors
-        ? `color-mix(in srgb, ${surfaceFg} 20%, transparent)`
-        : semantic.border,
-    width: input.width,
-    collapsedWidth: input.collapsedWidth,
-    ...input.tokens
-  }
-
-  if (input.tokens?.bg && !input.tokens?.fg) {
-    merged.fg = readableTextOn(input.tokens.bg)
-  }
-
-  const style: Record<string, string> = {}
-
-  for (const [key, value] of Object.entries(merged)) {
-    if (value !== undefined) style[`--mc-sidebar-${toKebab(key)}`] = value
-  }
-
-  return style
+  return buildTokenStyle(
+    'sidebar',
+    {
+      bg: minimal ? undefined : surface.bg,
+      fg: minimal && !colors ? undefined : surface.fg,
+      border: minimal ? undefined : surface.border,
+      width: input.width,
+      collapsedWidth: input.collapsedWidth
+    },
+    input.tokens
+  )
 }

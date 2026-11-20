@@ -21,6 +21,18 @@ export default defineConfig({
         replacement: path.resolve(__dirname, 'templates/masked-layout/MaskedSection') + '/'
       },
       {
+        find: /^@\/components\/ui\/MaskedEmptyState\/MaskedEmptyState$/,
+        replacement: path.resolve(__dirname, 'templates/masked-app/MaskedEmptyState/MaskedEmptyState.tsx')
+      },
+      {
+        find: /^@\/components\/ui\/MaskedPagination\/MaskedPagination$/,
+        replacement: path.resolve(__dirname, 'templates/masked-app/MaskedPagination/MaskedPagination.tsx')
+      },
+      {
+        find: /^@\/components\/ui\/MaskedSkeleton\/MaskedSkeleton$/,
+        replacement: path.resolve(__dirname, 'templates/masked-skeleton/MaskedSkeleton/MaskedSkeleton.tsx')
+      },
+      {
         find: /^@\/components\/ui\/MaskedShell\//,
         replacement: path.resolve(__dirname, 'templates/masked-page/MaskedShell') + '/'
       },

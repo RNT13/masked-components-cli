@@ -1,5 +1,6 @@
 import { buildTokenStyle, resolveSurface } from '@/styles/surfaceTokens'
 import { resolveSemanticColors } from '@/styles/semanticColors'
+import { normalizeText } from '@/utils/masked-utils'
 import type { DefaultTheme } from 'styled-components'
 import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 import type { TableColumn, TableSort, TableSortValue } from './MaskedTable.types'
@@ -18,10 +19,10 @@ export interface ResolveTableTokensInput {
 }
 
 /**
- * Deriva tokens --mc-table-*: borda e fundo do cabeçalho (superfície do tema,
- * para o cabeçalho fixo não ficar transparente sobre as linhas), faixa das
- * linhas alternadas e destaque. Texto herda do contexto.
- * Precedência: tokens > colorTheme > tema.
+ * Deriva tokens --mc-table-*: borda e fundo do cabeçalho (superfície do tema,  
+ * para o cabeçalho fixo não ficar transparente sobre as linhas), faixa das  
+ * linhas alternadas e destaque. Texto herda do contexto.  
+ * Precedência: tokens > colorTheme > tema.  
  */
 export function resolveTableTokens(
   input: ResolveTableTokensInput,
@@ -55,9 +56,9 @@ function comparable(value: TableSortValue): string | number | null {
 }
 
 /**
- * Ordena uma cópia das linhas (estável). Números e datas comparam como número;
- * textos usam `Intl.Collator` com `numeric` ("2" antes de "10"); valores
- * vazios vão sempre para o fim, em qualquer direção.
+ * Ordena uma cópia das linhas (estável). Números e datas comparam como número;  
+ * textos usam `Intl.Collator` com `numeric` ("2" antes de "10"); valores  
+ * vazios vão sempre para o fim, em qualquer direção.  
  */
 export function sortRows<T>(
   data: T[],
@@ -87,4 +88,96 @@ export function sortRows<T>(
       return result === 0 ? a.index - b.index : result * factor
     })
     .map((entry) => entry.row)
+}
+
+/* ------------------------------------------------------------------ */
+/* DataTable: busca, filtros, seleção, visibilidade e paginação          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Texto pesquisável/filtrável de uma célula: usa `sortValue` quando existe  
+ * (mesmo valor da ordenação) ou `row[key]`. Conteúdo ReactNode de `cell`  
+ * não é pesquisável — forneça `sortValue` para colunas customizadas.  
+ */
+function cellText<T>(row: T, column: TableColumn<T>): string {
+  const value = column.sortValue
+    ? column.sortValue(row)
+    : (row as Record<string, unknown>)[column.key]
+  if (value === null || value === undefined) return ''
+  if (value instanceof Date) return value.toISOString()
+  return String(value)
+}
+
+/**
+ * Busca global: mantém as linhas em que QUALQUER coluna (ou só as de `keys`)  
+ * contém o termo, ignorando acentos e caixa (normalizeText). Vazio = data.  
+ */
+export function filterRows<T>(
+  data: T[],
+  columns: TableColumn<T>[],
+  query: string,
+  keys?: string[]
+): T[] {
+  const term = normalizeText(query)
+  if (!term) return data
+  const cols = keys?.length ? columns.filter((c) => keys.includes(c.key)) : columns
+  return data.filter((row) => cols.some((col) => normalizeText(cellText(row, col)).includes(term)))
+}
+
+/** Filtro ativo de coluna: chave da coluna + valor da opção escolhida. */
+export interface ActiveColumnFilter {
+  key: string
+  value: string
+}
+
+/**
+ * Filtros por coluna (AND entre filtros com valor não vazio).  
+ * `match(row, key, value)` é opcional e chamado por filtro: retornando  
+ * `boolean` ele decide a linha (faixas, datas, múltipla escolha); retornando  
+ * `undefined` cai no padrão — igualdade normalizada entre o texto da célula  
+ * e o valor da opção.  
+ */
+export function applyColumnFilters<T>(
+  data: T[],
+  columns: TableColumn<T>[],
+  active: ActiveColumnFilter[],
+  match?: (row: T, key: string, value: string) => boolean | undefined
+): T[] {
+  const enabled = active.filter((f) => f.value !== '' && f.value !== undefined)
+  if (enabled.length === 0) return data
+
+  return data.filter((row) =>
+    enabled.every((filter) => {
+      const custom = match?.(row, filter.key, filter.value)
+      if (custom !== undefined) return custom
+      const column = columns.find((c) => c.key === filter.key)
+      const raw = column
+        ? cellText(row, column)
+        : String((row as Record<string, unknown>)[filter.key] ?? '')
+      return normalizeText(raw) === normalizeText(filter.value)
+    })
+  )
+}
+
+/** Alterna uma chave no conjunto de selecionados (retorna novo array). */
+export function toggleKey(selected: string[], key: string): string[] {
+  return selected.includes(key) ? selected.filter((k) => k !== key) : [...selected, key]
+}
+
+/** Chaves de todas as linhas (para "selecionar tudo" — respeita a página/filtro atual). */
+export function allRowKeys<T>(rows: T[], keyOf: (row: T, index: number) => string): string[] {
+  return rows.map((row, index) => keyOf(row, index))
+}
+
+/** Colunas visíveis = columns menos as escondidas (ordem preservada). */
+export function visibleColumns<T>(columns: TableColumn<T>[], hidden: string[]): TableColumn<T>[] {
+  if (hidden.length === 0) return columns
+  return columns.filter((c) => !hidden.includes(c.key))
+}
+
+/** Fatia da página atual (base 1). */
+export function paginateRows<T>(rows: T[], page: number, pageSize: number): T[] {
+  const size = Math.max(1, Math.floor(pageSize))
+  const current = Math.max(1, Math.floor(page))
+  return rows.slice((current - 1) * size, current * size)
 }

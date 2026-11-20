@@ -1,5 +1,7 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
 import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
+import type { MaskedEmptyStateProps } from '@/components/ui/MaskedEmptyState/MaskedEmptyState.types'
+import type { PaginationVariant } from '@/components/ui/MaskedPagination/MaskedPagination.types'
 import type { TableTokenOverrides } from './tableTokens'
 
 /** Aparência da tabela. Default 'simple'. */
@@ -22,10 +24,80 @@ export type TableColumn<T> = {
   width?: string
   /** Mostra o botão de ordenar no cabeçalho. */
   sortable?: boolean
-  /** Valor usado para ordenar. Default: `row[key]`. */
+  /** Valor usado para ordenar E para busca/filtro. Default: `row[key]`. */
   sortValue?: (row: T) => TableSortValue
   /** Renderiza esta coluna como cabeçalho de linha (<th scope="row">). */
   rowHeader?: boolean
+  /** Impede esconder esta coluna pelo seletor de visibilidade. */
+  alwaysVisible?: boolean
+}
+
+/** Busca global: `true` usa defaults; o objeto permite controlar o valor e restringir colunas. */
+export type TableSearch =
+  | boolean
+  | {
+      value?: string
+      defaultValue?: string
+      onChange?: (value: string) => void
+      placeholder?: string
+      /** Rótulo acessível do campo. Default por locale. */
+      label?: string
+      /** Restringe a busca a estas colunas. Default: todas. */
+      keys?: string[]
+    }
+
+/** Filtro por coluna (select na barra de ferramentas). */
+export type TableColumnFilter<T> = {
+  /** Coluna filtrada (mesmo `key` de TableColumn). */
+  key: string
+  /** Rótulo acessível do select. Default: header da coluna ou `key`. */
+  label?: string
+  options: { value: string; label: string }[]
+  value?: string
+  defaultValue?: string
+  onChange?: (value: string) => void
+  /** Texto da opção "sem filtro". Default por locale ("Todas"/"All"). */
+  allLabel?: string
+  /**
+   * Comparação customizada: recebe a linha e o valor selecionado.  
+   * Default: `String(sortValue(row) ?? row[key]) === value`.  
+   */
+  match?: (row: T, value: string) => boolean
+}
+
+/** Seleção de linhas com checkbox + barra de ações em massa. */
+export type TableSelection = {
+  /** Chaves selecionadas (controlado). */
+  selected?: string[]
+  defaultSelected?: string[]
+  onChange?: (keys: string[]) => void
+  /** Ações exibidas na barra quando há seleção; recebe as chaves selecionadas. */
+  bulkActions?: (keys: string[]) => ReactNode
+  /** Rótulo do checkbox do cabeçalho. Default por locale. */
+  selectAllLabel?: string
+  /** Rótulo do checkbox de cada linha; recebe a chave. Default por locale. */
+  selectRowLabel?: (key: string) => string
+}
+
+/** Visibilidade de colunas: `true`/`{}` liga o seletor; arrays controlam o estado. */
+export type TableColumnVisibility =
+  | boolean
+  | {
+      hidden?: string[]
+      defaultHidden?: string[]
+      onChange?: (hidden: string[]) => void
+      /** Rótulo do seletor. Default por locale ("Colunas"/"Columns"). */
+      label?: string
+    }
+
+/** Paginação integrada (renderiza MaskedPagination abaixo da tabela). */
+export type TablePagination = {
+  pageSize: number
+  page?: number
+  defaultPage?: number
+  onChange?: (page: number) => void
+  variant?: PaginationVariant
+  siblingCount?: number
 }
 
 /** Props próprias do MaskedTable (API pública). */
@@ -44,14 +116,26 @@ export type MaskedTableBaseProps<T> = {
   loading?: boolean
   /** Quantidade de linhas de carregamento. Default 5. */
   loadingRows?: number
-  /** Conteúdo quando não há dados. Default por locale. */
+  /** Conteúdo quando não há dados. Default por locale. Ignorado se `emptyState` for passado. */
   empty?: ReactNode
+  /** Estado vazio rico (MaskedEmptyState) — ocupa a linha única do tbody. */
+  emptyState?: Omit<MaskedEmptyStateProps, 'title'> & { title?: ReactNode }
   /** Ordenação (controlada). */
   sort?: TableSort
   defaultSort?: TableSort
   onSortChange?: (sort: TableSort | undefined) => void
   /** true = a ordenação é feita fora (servidor): o componente só informa `onSortChange`. */
   manualSort?: boolean
+  /** Busca global na barra de ferramentas. */
+  search?: TableSearch
+  /** Filtros por coluna (selects na barra de ferramentas). */
+  filters?: TableColumnFilter<T>[]
+  /** Seleção de linhas com checkbox e ações em massa. */
+  selection?: TableSelection
+  /** Seletor de visibilidade de colunas. */
+  columnVisibility?: TableColumnVisibility
+  /** Paginação integrada (MaskedPagination). */
+  pagination?: TablePagination
   /** Altura máxima da área rolável; com ela o cabeçalho fica fixo no topo. */
   maxHeight?: string
   /** Rótulo da região rolável. Default: `caption` ou texto por locale. */
@@ -70,6 +154,7 @@ export type MaskedTableInternalProps = {
   $align?: 'start' | 'center' | 'end'
   $clickable?: boolean
   $sticky?: boolean
+  $selected?: boolean
 }
 
 export type MaskedTableProps<T> = MaskedTableBaseProps<T> &

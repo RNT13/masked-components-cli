@@ -2,27 +2,39 @@
 
 import { useId, useRef, useState, type KeyboardEvent } from 'react'
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
+import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 import { MaskedTabsRoot, TabButton, TabList, TabPanel } from './MaskedTabs.styles'
 import { edgeEnabledIndex, nextEnabledIndex, resolveTabsTokens } from './tabsTokens'
 import type { MaskedTabsProps } from './MaskedTabs.types'
 
+const DICT = {
+  pt: { nav: 'Navegação por abas' },
+  en: { nav: 'Tab navigation' }
+} as const
+
 /**
- * Abas acessíveis (padrão WAI-ARIA tabs).
+ * Abas acessíveis (padrão WAI-ARIA tabs).  
  *
- * Semântica: `role="tablist"` > `role="tab"` (aria-selected, aria-controls)
- * e `role="tabpanel"` (aria-labelledby). Só a aba ativa entra na ordem de Tab
- * (roving tabindex); setas ←/→ (↑/↓ no 'vertical'), Home e End movem entre
- * abas habilitadas. `activation="manual"` separa foco de seleção. Os painéis
- * inativos ficam `hidden`; use `lazy` para não renderizar o conteúdo deles.
+ * Semântica: `role="tablist"` > `role="tab"` (aria-selected, aria-controls)  
+ * e `role="tabpanel"` (aria-labelledby). Só a aba ativa entra na ordem de Tab  
+ * (roving tabindex); setas ←/→ (↑/↓ no 'vertical'), Home e End movem entre  
+ * abas habilitadas. `activation="manual"` separa foco de seleção. Os painéis  
+ * inativos ficam `hidden`; use `lazy` para não renderizar o conteúdo deles.  
  *
- * Nota: o estado de seleção é próprio do componente (ponto de unificação
- * futura com `useSelectable`).
+ * `label` nomeia a tablist para leitores de tela; quando omitido, usa o  
+ * padrão localizado do MaskedConfigProvider ('Navegação por abas'/'Tab  
+ * navigation').  
  *
- * @example
- * <MaskedTabs label="Cliente" items={[{ id: 'dados', label: 'Dados', content: <Dados /> }, { id: 'agenda', label: 'Agenda', content: <Agenda /> }]} />
+ * Nota: o estado de seleção é próprio do componente (ponto de unificação  
+ * futura com `useSelectable`).  
+ *
+ * @example  
+ * <MaskedTabs label="Cliente" items={[{ id: 'dados', label: 'Dados', content: <Dados /> }, { id: 'agenda', label: 'Agenda', content: <Agenda /> }]} />  
  */
 export function MaskedTabs(props: MaskedTabsProps) {
   const theme = useMaskedTheme()
+  const config = useMaskedConfig()
+  const dict = DICT[(config.locale ?? 'pt-BR').toLowerCase().startsWith('en') ? 'en' : 'pt']
   const baseId = useId()
   const refs = useRef(new Map<string, HTMLButtonElement>())
   const {
@@ -92,7 +104,7 @@ export function MaskedTabs(props: MaskedTabsProps) {
     >
       <TabList
         role="tablist"
-        aria-label={label}
+        aria-label={label ?? dict.nav}
         aria-orientation={vertical ? 'vertical' : 'horizontal'}
         $variant={variant}
         onKeyDown={onKeyDown}

@@ -16,6 +16,11 @@ export function slugify(value: string): string {
     .replace(/^-|-$/g, '')
 }
 
+/** "cardBg" -> "card-bg": camelCase/PascalCase para kebab-case (nomes de tokens CSS). */
+export function toKebab(key: string): string {
+  return key.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`)
+}
+
 /** Trunca com reticências preservando palavras inteiras quando possível. */
 export function truncate(value: string, max: number, suffix = '…'): string {
   if (!value || value.length <= max) return value

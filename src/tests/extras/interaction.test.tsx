@@ -9,7 +9,10 @@ afterEach(cleanup)
 const dialog = () => document.querySelector('[role="dialog"]') as HTMLElement
 
 describe('Header — interação', () => {
-  const links = [{ label: 'Início', href: '/', active: true }, { label: 'Preços', href: '/precos' }]
+  const links = [
+    { label: 'Início', href: '/', active: true },
+    { label: 'Preços', href: '/precos' }
+  ]
 
   it('abre o menu, fecha ao clicar num link e com Escape', async () => {
     render(<MaskedHeader brand="Acme" links={links} />)
@@ -21,7 +24,9 @@ describe('Header — interação', () => {
     fireEvent.click(toggle)
     await waitFor(() => expect(dialog().getAttribute('aria-hidden')).toBe('false'))
     expect(toggle.getAttribute('aria-label')).toBe('Fechar menu')
-    expect(document.querySelector('button[aria-haspopup]')!.getAttribute('aria-expanded')).toBe('true')
+    expect(document.querySelector('button[aria-haspopup]')!.getAttribute('aria-expanded')).toBe(
+      'true'
+    )
 
     fireEvent.click(within(dialog()).getByText('Preços'))
     await waitFor(() => expect(dialog().getAttribute('aria-hidden')).toBe('true'))
@@ -30,7 +35,9 @@ describe('Header — interação', () => {
     await waitFor(() => expect(dialog().getAttribute('aria-hidden')).toBe('false'))
     fireEvent.keyDown(document, { key: 'Escape' })
     await waitFor(() => expect(dialog().getAttribute('aria-hidden')).toBe('true'))
-    expect(document.querySelector('button[aria-haspopup]')!.getAttribute('aria-expanded')).toBe('false')
+    expect(document.querySelector('button[aria-haspopup]')!.getAttribute('aria-expanded')).toBe(
+      'false'
+    )
   })
 
   it('botão de fechar dentro do painel fecha o menu', async () => {
@@ -52,11 +59,19 @@ describe('Sidebar — interação', () => {
   it('uncontrolled: clicar move o aria-current e dispara onActiveChange + onClick do item', () => {
     const onActiveChange = vi.fn()
     const onClick = vi.fn()
-    render(<MaskedSidebar items={[{ ...items[0], onClick }, items[1]]} defaultActiveId="home" onActiveChange={onActiveChange} />)
+    render(
+      <MaskedSidebar
+        items={[{ ...items[0], onClick }, items[1]]}
+        defaultActiveId="home"
+        onActiveChange={onActiveChange}
+      />
+    )
     expect(screen.getByRole('button', { name: 'Início' }).getAttribute('aria-current')).toBe('page')
     fireEvent.click(screen.getByRole('button', { name: 'Clientes' }))
     expect(onActiveChange).toHaveBeenCalledWith('users')
-    expect(screen.getByRole('button', { name: 'Clientes' }).getAttribute('aria-current')).toBe('page')
+    expect(screen.getByRole('button', { name: 'Clientes' }).getAttribute('aria-current')).toBe(
+      'page'
+    )
     expect(screen.getByRole('button', { name: 'Início' }).getAttribute('aria-current')).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: 'Início' }))
     expect(onClick).toHaveBeenCalledTimes(1)
@@ -69,7 +84,9 @@ describe('Sidebar — interação', () => {
     }
     render(<Host />)
     fireEvent.click(screen.getByRole('button', { name: 'Clientes' }))
-    expect(screen.getByRole('button', { name: 'Clientes' }).getAttribute('aria-current')).toBe('page')
+    expect(screen.getByRole('button', { name: 'Clientes' }).getAttribute('aria-current')).toBe(
+      'page'
+    )
 
     const stuck = vi.fn()
     cleanup()
@@ -111,7 +128,9 @@ describe('Sidebar — interação', () => {
 
   it('mobileOpen: abre o drawer; escolher item chama onMobileClose; Escape também', async () => {
     const onMobileClose = vi.fn()
-    const { rerender } = render(<MaskedSidebar items={items} mobileOpen={false} onMobileClose={onMobileClose} />)
+    const { rerender } = render(
+      <MaskedSidebar items={items} mobileOpen={false} onMobileClose={onMobileClose} />
+    )
     expect(dialog().getAttribute('aria-hidden')).toBe('true')
     rerender(<MaskedSidebar items={items} mobileOpen onMobileClose={onMobileClose} />)
     await waitFor(() => expect(dialog().getAttribute('aria-hidden')).toBe('false'))

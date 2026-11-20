@@ -2,6 +2,146 @@ import styled, { css } from 'styled-components'
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 import type { MaskedTableInternalProps } from './MaskedTable.types'
 
+export const TableWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${maskedTheme.spacing.sm};
+  min-width: 0;
+  max-width: 100%;
+`
+
+export const TableToolbar = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: ${maskedTheme.spacing.sm};
+`
+
+export const ToolbarSpacer = styled.span`
+  flex: 1;
+`
+
+const fieldStyles = css`
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: ${maskedTheme.spacing.xs} ${maskedTheme.spacing.sm};
+  border: 1px solid var(--mc-table-border, ${maskedTheme.colors.baseGray.light40});
+  border-radius: ${maskedTheme.radius.md};
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: ${maskedTheme.fontSize.sm};
+
+  &:focus-visible {
+    outline: 2px solid var(--mc-table-accent, currentColor);
+    outline-offset: 1px;
+  }
+`
+
+export const TableSearchInput = styled.input`
+  ${fieldStyles}
+  flex: 1;
+  min-width: 160px;
+  max-width: 320px;
+`
+
+export const TableFilterSelect = styled.select`
+  ${fieldStyles}
+`
+
+export const ColumnsToggle = styled.details`
+  position: relative;
+
+  > summary {
+    ${fieldStyles}
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+`
+
+export const ColumnsMenu = styled.div`
+  position: absolute;
+  inset-inline-end: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: ${maskedTheme.spacing.xs};
+  min-width: 180px;
+  margin-top: ${maskedTheme.spacing['2xs']};
+  padding: ${maskedTheme.spacing.sm};
+  border: 1px solid var(--mc-table-border, ${maskedTheme.colors.baseGray.light40});
+  border-radius: ${maskedTheme.radius.md};
+  background: var(--mc-table-head-bg, ${maskedTheme.colors.surfaceColor});
+  box-shadow: ${maskedTheme.boxShadow.md()};
+`
+
+export const ColumnsOption = styled.label`
+  display: flex;
+  align-items: center;
+  gap: ${maskedTheme.spacing.sm};
+  font-size: ${maskedTheme.fontSize.sm};
+  cursor: pointer;
+`
+
+export const BulkBar = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: ${maskedTheme.spacing.sm};
+  padding: ${maskedTheme.spacing.xs} ${maskedTheme.spacing.sm};
+  border: 1px solid var(--mc-table-border, ${maskedTheme.colors.baseGray.light40});
+  border-radius: ${maskedTheme.radius.md};
+  background: var(--mc-table-head-bg, ${maskedTheme.colors.surfaceColor});
+  font-size: ${maskedTheme.fontSize.sm};
+`
+
+export const BulkCount = styled.span`
+  font-weight: ${maskedTheme.fontWeight.semibold};
+`
+
+export const TableFooter = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+export const SelectCell = styled.td`
+  width: 44px;
+  text-align: center;
+`
+
+export const SelectHeadCell = styled.th<{ $sticky?: boolean }>`
+  width: 44px;
+  text-align: center;
+  background: var(--mc-table-head-bg, transparent);
+
+  ${({ $sticky }) =>
+    $sticky &&
+    css`
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    `}
+`
+
+export const RowCheckbox = styled.input`
+  width: 16px;
+  height: 16px;
+  accent-color: var(--mc-table-accent, currentColor);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mc-table-accent, currentColor);
+    outline-offset: 2px;
+  }
+`
+
 export const TableScroller = styled.div<Pick<MaskedTableInternalProps, '$variant'>>`
   overflow: auto;
   max-width: 100%;
@@ -48,8 +188,8 @@ export const MaskedTableRoot = styled.table<Pick<MaskedTableInternalProps, '$var
       tbody tr:nth-child(even) {
         background: var(--mc-table-stripe, transparent);
       }
-    `}
-
+    `}  
+  
   ${({ $variant }) =>
     $variant === 'card' &&
     css`
@@ -121,6 +261,12 @@ export const SortIcon = styled.span<{ $active: boolean }>`
 `
 
 export const BodyRow = styled.tr<MaskedTableInternalProps>`
+  ${({ $selected }) =>
+    $selected &&
+    css`
+      background: color-mix(in srgb, var(--mc-table-accent, currentColor) 10%, transparent);
+    `}
+
   ${({ $clickable }) =>
     $clickable &&
     css`

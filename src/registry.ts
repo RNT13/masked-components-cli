@@ -389,13 +389,24 @@ export const registry: ComponentEntry[] = [
     dependencies: [STYLED]
   },
   {
+    id: 'masked-alert',
+    label: 'Masked Alert',
+    description:
+      'Alerta inline acessível (role alert/status): info, success, warning, error — tokens --mc-alert-*',
+    templates: [{ dir: 'masked-app/MaskedAlert', to: 'components', subdir: 'MaskedAlert' }],
+    requires: ['masked-themes', 'masked-config', 'masked-utils'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
     id: 'masked-tabs',
     label: 'Masked Tabs',
     description:
       'Abas WAI-ARIA com roving tabindex: line, pills, enclosed, vertical — tokens --mc-tabs-*',
     templates: [{ dir: 'masked-app/MaskedTabs', to: 'components', subdir: 'MaskedTabs' }],
-    requires: ['masked-themes'],
-    dependencies: [STYLED]
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
   },
   {
     id: 'masked-accordion',
@@ -434,7 +445,14 @@ export const registry: ComponentEntry[] = [
     description:
       'Tabela com ordenação, loading e estado vazio: simple, striped, bordered, card — tokens --mc-table-*',
     templates: [{ dir: 'masked-app/MaskedTable', to: 'components', subdir: 'MaskedTable' }],
-    requires: ['masked-themes', 'masked-config', 'masked-skeleton'],
+    requires: [
+      'masked-themes',
+      'masked-config',
+      'masked-skeleton',
+      'masked-utils',
+      'masked-pagination',
+      'masked-empty-state'
+    ],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },

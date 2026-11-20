@@ -286,6 +286,150 @@ var registry = [
     ]
   },
   {
+    id: "masked-badge",
+    label: "Masked Badge",
+    description: "Selo curto de status/contador: solid, soft, outline, dot \u2014 tokens --mc-badge-*",
+    templates: [{ dir: "masked-app/MaskedBadge", to: "components", subdir: "MaskedBadge" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-avatar",
+    label: "Masked Avatar",
+    description: "Avatar com imagem, iniciais e presen\xE7a acess\xEDvel: circle, rounded, square \u2014 tokens --mc-avatar-*",
+    templates: [{ dir: "masked-app/MaskedAvatar", to: "components", subdir: "MaskedAvatar" }],
+    requires: ["masked-themes", "masked-config"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-tooltip",
+    label: "Masked Tooltip",
+    description: "Tooltip por hover e teclado (WCAG 1.4.13): dark, light \u2014 tokens --mc-tooltip-*",
+    templates: [{ dir: "masked-app/MaskedTooltip", to: "components", subdir: "MaskedTooltip" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-breadcrumb",
+    label: "Masked Breadcrumb",
+    description: "Trilha de navega\xE7\xE3o com colapso: default, compact \u2014 tokens --mc-breadcrumb-*",
+    templates: [
+      { dir: "masked-app/MaskedBreadcrumb", to: "components", subdir: "MaskedBreadcrumb" }
+    ],
+    requires: ["masked-themes", "masked-config"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-empty-state",
+    label: "Masked Empty State",
+    description: "Estado vazio (\xEDcone, t\xEDtulo, a\xE7\xE3o): default, compact, error, search \u2014 tokens --mc-empty-state-*",
+    templates: [
+      { dir: "masked-app/MaskedEmptyState", to: "components", subdir: "MaskedEmptyState" }
+    ],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-alert",
+    label: "Masked Alert",
+    description: "Alerta inline acess\xEDvel (role alert/status): info, success, warning, error \u2014 tokens --mc-alert-*",
+    templates: [{ dir: "masked-app/MaskedAlert", to: "components", subdir: "MaskedAlert" }],
+    requires: ["masked-themes", "masked-config", "masked-utils"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-tabs",
+    label: "Masked Tabs",
+    description: "Abas WAI-ARIA com roving tabindex: line, pills, enclosed, vertical \u2014 tokens --mc-tabs-*",
+    templates: [{ dir: "masked-app/MaskedTabs", to: "components", subdir: "MaskedTabs" }],
+    requires: ["masked-themes", "masked-config"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-accordion",
+    label: "Masked Accordion",
+    description: "Accordion WAI-ARIA controlado ou n\xE3o: default, boxed, separated \u2014 tokens --mc-accordion-*",
+    templates: [{ dir: "masked-app/MaskedAccordion", to: "components", subdir: "MaskedAccordion" }],
+    requires: ["masked-themes"],
+    dependencies: [STYLED]
+  },
+  {
+    id: "masked-pagination",
+    label: "Masked Pagination",
+    description: "Pagina\xE7\xE3o acess\xEDvel com links reais opcionais: default, compact, edges \u2014 tokens --mc-pagination-*",
+    templates: [
+      { dir: "masked-app/MaskedPagination", to: "components", subdir: "MaskedPagination" }
+    ],
+    requires: ["masked-themes", "masked-config"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-stepper",
+    label: "Masked Stepper",
+    description: "Etapas com status em texto: horizontal, vertical, dots, progress \u2014 tokens --mc-stepper-*",
+    templates: [{ dir: "masked-app/MaskedStepper", to: "components", subdir: "MaskedStepper" }],
+    requires: ["masked-themes", "masked-config"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-table",
+    label: "Masked Table",
+    description: "Tabela com ordena\xE7\xE3o, loading e estado vazio: simple, striped, bordered, card \u2014 tokens --mc-table-*",
+    templates: [{ dir: "masked-app/MaskedTable", to: "components", subdir: "MaskedTable" }],
+    requires: [
+      "masked-themes",
+      "masked-config",
+      "masked-skeleton",
+      "masked-utils",
+      "masked-pagination",
+      "masked-empty-state"
+    ],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-dashboard",
+    label: "Masked Dashboard",
+    description: "Painel pronto (topbar, sidebar com Drawer mobile, cabe\xE7alho de p\xE1gina): analytics, saas, minimal \u2014 tokens --mc-dashboard-*",
+    templates: [{ dir: "masked-app/MaskedDashboard", to: "components", subdir: "MaskedDashboard" }],
+    requires: [
+      "masked-themes",
+      "masked-config",
+      "masked-shell",
+      "masked-sidebar",
+      "masked-page-header"
+    ],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: "masked-app",
+    label: "Masked App (preset)",
+    description: "Preset de componentes de aplica\xE7\xE3o/dashboard: instala o conjunto de uma vez",
+    // preset não copia arquivos próprios: só agrega os ids em `requires`
+    templates: [],
+    preset: true,
+    requires: [
+      "masked-dashboard",
+      "masked-tabs",
+      "masked-breadcrumb",
+      "masked-table",
+      "masked-pagination",
+      "masked-stepper",
+      "masked-empty-state",
+      "masked-avatar",
+      "masked-badge",
+      "masked-tooltip",
+      "masked-accordion"
+    ]
+  },
+  {
     id: "masked-toaster",
     label: "Masked Toaster",
     description: "Notifica\xE7\xF5es (toast) sem depend\xEAncias: success/error/info/warning/loading/promise, acess\xEDvel e SSR-safe",
@@ -871,28 +1015,28 @@ function resolveProjectPaths(info, config = null) {
 // src/cli.ts
 var PACKAGE_MANAGERS = ["npm", "pnpm", "yarn", "bun"];
 var ALIAS_MODES = ["auto", "keep", "relative"];
-var HELP = `    
-${paint.bold("masked-components")} \u2014 instala componentes React + TypeScript no seu projeto    
-    
-${paint.bold("Uso")}    
-  npx masked-components                       escolhe os componentes de forma interativa    
-  npx masked-components masked-buttons ...    instala componentes espec\xEDficos    
-  npx masked-components --all                 instala tudo    
-    
-${paint.bold("Op\xE7\xF5es")}    
-  -l, --list           lista os componentes dispon\xEDveis    
-  -y, --yes            n\xE3o pergunta nada (aceita o plano)    
-  -f, --force          sobrescreve arquivos que j\xE1 existem e s\xE3o diferentes    
-      --dry-run        mostra o que seria feito, sem escrever nada    
-      --no-install     n\xE3o instala pacotes npm (s\xF3 copia os arquivos)    
-      --pm <gerenciador>   npm | pnpm | yarn | bun (padr\xE3o: detectado pelo lockfile)    
-      --alias <modo>   auto | keep | relative \u2014 como tratar imports "@/..." (padr\xE3o: auto)    
-      --cwd <pasta>    roda em outra pasta (padr\xE3o: pasta atual)    
-  -h, --help           mostra esta ajuda    
-  -v, --version        mostra a vers\xE3o    
-    
-Arquivos existentes e diferentes nunca s\xE3o sobrescritos sem --force.    
-Caminhos de destino podem ser ajustados em ${CONFIG_FILE}.    
+var HELP = `  
+${paint.bold("masked-components")} \u2014 instala componentes React + TypeScript no seu projeto  
+  
+${paint.bold("Uso")}  
+  npx masked-components                       escolhe os componentes de forma interativa  
+  npx masked-components masked-buttons ...    instala componentes espec\xEDficos  
+  npx masked-components --all                 instala tudo  
+  
+${paint.bold("Op\xE7\xF5es")}  
+  -l, --list           lista os componentes dispon\xEDveis  
+  -y, --yes            n\xE3o pergunta nada (aceita o plano)  
+  -f, --force          sobrescreve arquivos que j\xE1 existem e s\xE3o diferentes  
+      --dry-run        mostra o que seria feito, sem escrever nada  
+      --no-install     n\xE3o instala pacotes npm (s\xF3 copia os arquivos)  
+      --pm <gerenciador>   npm | pnpm | yarn | bun (padr\xE3o: detectado pelo lockfile)  
+      --alias <modo>   auto | keep | relative \u2014 como tratar imports "@/..." (padr\xE3o: auto)  
+      --cwd <pasta>    roda em outra pasta (padr\xE3o: pasta atual)  
+  -h, --help           mostra esta ajuda  
+  -v, --version        mostra a vers\xE3o  
+  
+Arquivos existentes e diferentes nunca s\xE3o sobrescritos sem --force.  
+Caminhos de destino podem ser ajustados em ${CONFIG_FILE}.  
 `;
 function printListEntry(entry, requiresLabel) {
   const requires = entry.requires?.length ? paint.dim(`  (${requiresLabel}: ${entry.requires.join(", ")})`) : "";
