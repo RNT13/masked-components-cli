@@ -378,6 +378,15 @@ var registry = [
     notes: [CONFIG_PROVIDER_NOTE]
   },
   {
+    id: "masked-progress",
+    label: "Masked Progress",
+    description: "Progresso acess\xEDvel (role progressbar): linear e circle, determinado/indeterminado \u2014 tokens --mc-progress-*",
+    templates: [{ dir: "masked-app/MaskedProgress", to: "components", subdir: "MaskedProgress" }],
+    requires: ["masked-themes", "masked-config"],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
     id: "masked-table",
     label: "Masked Table",
     description: "Tabela com ordena\xE7\xE3o, loading e estado vazio: simple, striped, bordered, card \u2014 tokens --mc-table-*",

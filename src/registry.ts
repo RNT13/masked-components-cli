@@ -440,6 +440,16 @@ export const registry: ComponentEntry[] = [
     notes: [CONFIG_PROVIDER_NOTE]
   },
   {
+    id: 'masked-progress',
+    label: 'Masked Progress',
+    description:
+      'Progresso acessível (role progressbar): linear e circle, determinado/indeterminado — tokens --mc-progress-*',
+    templates: [{ dir: 'masked-app/MaskedProgress', to: 'components', subdir: 'MaskedProgress' }],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
     id: 'masked-table',
     label: 'Masked Table',
     description:
