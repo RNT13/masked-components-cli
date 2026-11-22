@@ -2,9 +2,11 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { createPortal } from 'react-dom'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 
 import {
   ErrorDiv,
+  HelperDiv,
   InputIconWrapper,
   InputLabel,
   MaskedInputContainer
@@ -12,6 +14,7 @@ import {
 import { InputVariantMap } from '../../MaskedInput.types'
 import { resolveInputTokens } from '../../inputTokens'
 import { SelectDropdown, SelectOption, SelectTrigger } from './SelectInput.styles'
+import { useControllable } from '@/hooks/useControllable'
 
 type Props = { variant: 'select' } & InputVariantMap['select']
 
@@ -25,10 +28,11 @@ export function SelectInput(props: Props) {
   const [activeIndex, setActiveIndex] = useState(-1)
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 })
 
-  /* Híbrido: se `value` for passado, o pai controla; senão, estado interno. */
-  const isControlled = props.value !== undefined
-  const [internal, setInternal] = useState('')
-  const current = isControlled ? props.value : internal
+  const [current, setCurrent] = useControllable({
+    value: props.value,
+    defaultValue: '',
+    onChange: props.onChange
+  })
 
   const containerRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -36,11 +40,20 @@ export function SelectInput(props: Props) {
   const optionRefs = useRef<Array<HTMLDivElement | null>>([])
 
   const hasError = props.touched && Boolean(props.error)
+  const helperId = `${triggerId}-helper`
+  const describedBy =
+    [hasError ? `${triggerId}-error` : null, props.helperText ? helperId : null]
+      .filter(Boolean)
+      .join(' ') || undefined
   const options = props.options
   const lastIndex = options.length - 1
   const selectedIndex = options.findIndex((opt) => opt.value === current)
   const selectedOption = selectedIndex >= 0 ? options[selectedIndex] : undefined
-  const tokenStyle = resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens })
+  const theme = useMaskedTheme()
+  const tokenStyle = resolveInputTokens(
+    { colorTheme: props.colorTheme, tokens: props.tokens },
+    theme
+  )
 
   function updateDropdownPosition() {
     if (!triggerRef.current) return
@@ -63,8 +76,7 @@ export function SelectInput(props: Props) {
   function choose(index: number) {
     const option = options[index]
     if (!option) return
-    if (!isControlled) setInternal(option.value)
-    props.onChange?.(option.value)
+    setCurrent(option.value)
     closeList()
     triggerRef.current?.focus()
   }
@@ -173,7 +185,7 @@ export function SelectInput(props: Props) {
         aria-controls={open ? listboxId : undefined}
         aria-activedescendant={open && activeIndex >= 0 ? optionId(activeIndex) : undefined}
         aria-invalid={hasError ? 'true' : undefined}
-        aria-describedby={hasError ? `${triggerId}-error` : undefined}
+        aria-describedby={describedBy}
         onClick={() => (open ? closeList() : openList())}
         onKeyDown={handleKeyDown}
         /* Espaço dispara "click" no keyup em alguns navegadores */
@@ -222,6 +234,7 @@ export function SelectInput(props: Props) {
         )}
 
       {hasError && <ErrorDiv id={`${triggerId}-error`}>{props.error}</ErrorDiv>}
+      {props.helperText && <HelperDiv id={helperId}>{props.helperText}</HelperDiv>}
     </MaskedInputContainer>
   )
 }

@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, type ChangeEvent, type CSSProperties } from 'react'
+import { useId, useState, type ChangeEvent, type CSSProperties } from 'react'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { resolveInputTokens } from '../../inputTokens'
-import { ErrorDiv, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import { ErrorDiv, HelperDiv, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
 import { CurrencyWrapper } from './CurrencyInput.styles'
 
@@ -27,7 +28,15 @@ function toCents(value: unknown): number {
 }
 
 export function CurrencyInput(props: Props) {
+  const theme = useMaskedTheme()
   const hasError = props.touched && Boolean(props.error)
+  const uid = useId()
+  const inputId = props.id ?? uid
+  const helperId = `${inputId}-helper`
+  const describedBy =
+    [hasError ? `${inputId}-error` : null, props.helperText ? helperId : null]
+      .filter(Boolean)
+      .join(' ') || undefined
 
   const cfg = props.currencyConfig ?? {}
   const locale = cfg.locale ?? 'pt-BR'
@@ -66,12 +75,12 @@ export function CurrencyInput(props: Props) {
       data-error={hasError}
       className={props.className}
       style={{
-        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }, theme),
         ...props.containerStyle
       }}
     >
       {props.label && (
-        <InputLabel htmlFor={props.id} $required={props.required}>
+        <InputLabel htmlFor={inputId} $required={props.required}>
           {props.icon}
           <span>{props.label}</span>
         </InputLabel>
@@ -84,7 +93,7 @@ export function CurrencyInput(props: Props) {
         <span aria-hidden="true">{symbol}</span>
 
         <input
-          id={props.id}
+          id={inputId}
           name={props.name}
           inputMode="numeric"
           autoComplete="off"
@@ -94,13 +103,14 @@ export function CurrencyInput(props: Props) {
           disabled={props.disabled}
           className={hasError ? 'error' : ''}
           aria-invalid={hasError ? 'true' : undefined}
-          aria-describedby={hasError ? `${props.id}-error` : undefined}
+          aria-describedby={describedBy}
         />
       </CurrencyWrapper>
 
       {props.showError !== false && hasError && (
-        <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>
+        <ErrorDiv id={`${inputId}-error`}>{props.error}</ErrorDiv>
       )}
+      {props.helperText && <HelperDiv id={helperId}>{props.helperText}</HelperDiv>}
     </MaskedInputContainer>
   )
 }

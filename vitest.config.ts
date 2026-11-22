@@ -9,6 +9,14 @@ export default defineConfig({
         replacement: path.resolve(__dirname, 'templates/masked-utils')
       },
       {
+        find: /^@\/hooks\//,
+        replacement: path.resolve(__dirname, 'templates/masked-hooks') + '/'
+      },
+      {
+        find: /^@\/styles\/MaskedAnimations\//,
+        replacement: path.resolve(__dirname, 'templates/masked-animations/MaskedAnimations') + '/'
+      },
+      {
         find: /^@\/styles\//,
         replacement: path.resolve(__dirname, 'templates/masked-themes') + '/'
       },

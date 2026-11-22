@@ -585,7 +585,7 @@ export const registry: ComponentEntry[] = [
     label: 'Masked Input',
     description: 'texto, textarea, senha, máscara, moeda, select, hora, arquivo, busca',
     templates: [{ dir: 'masked-input', to: 'components' }],
-    requires: ['masked-animations', 'masked-themes', 'masked-config', 'masked-utils'],
+    requires: ['masked-animations', 'masked-themes', 'masked-config', 'masked-utils', 'masked-hooks'],
     dependencies: [STYLED]
     // sem next/image e sem react-hot-toast: upload/imagem/erros são injetáveis
   },

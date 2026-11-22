@@ -15,6 +15,7 @@ export type BaseProps = {
 
   icon?: ReactNode
   label?: string
+  /** Texto auxiliar exibido abaixo do campo (some quando há erro). Entra no aria-describedby. */
   helperText?: string
 
   error?: string
@@ -128,7 +129,12 @@ export type InputVariantMap = {
   }
 
   masked: BaseProps & {
-    mask: string | ((value: string) => string)
+    /**
+     * Máscara do campo. Aceita string de padrão (apenas dígitos `0` são
+     * substituídos — ex.: '(00) 00000-0000') ou função `(value) => masked`.
+     * Letras e outros placeholders não são suportados na versão atual.
+     */
+    mask?: string | ((value: string) => string)
   }
 
   select: BaseProps & {

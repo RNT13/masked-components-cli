@@ -1,14 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
+import { normalizeText } from '@/utils/masked-utils'
 import type { DateFilterKey, SortOption, SortValueType } from '../MaskedInput.types'
-
-/** Remove acentos, baixa a caixa e faz trim — ideal para busca/comparação. */
-function normalizeText(value: unknown): string {
-  return String(value ?? '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim()
-}
 
 /** Data LOCAL de hoje em "YYYY-MM-DD" (toISOString() usaria UTC e erraria o dia à noite no Brasil). */
 function getLocalToday(now: Date = new Date()): string {

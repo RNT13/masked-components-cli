@@ -1,14 +1,17 @@
 'use client'
 
-import { useState, type ChangeEvent } from 'react'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
+  HelperDiv,
   InputIconWrapper,
   InputLabel,
   MaskedInputContainer
 } from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
+import { useControllable } from '@/hooks/useControllable'
+import { ChangeEvent, useId } from 'react'
 
 type Props = { variant: 'masked' } & InputVariantMap['masked']
 
@@ -48,21 +51,28 @@ function resolveMask(mask: string | ((value: string) => string), value: string) 
 }
 
 export function MaskedTextInput(props: Props) {
+  const theme = useMaskedTheme()
+  const uid = useId()
+  const inputId = props.id ?? uid
   const hasError = props.touched && props.error
+  const helperId = `${inputId}-helper`
+  const describedBy =
+    [hasError ? `${inputId}-error` : null, props.helperText ? helperId : null]
+      .filter(Boolean)
+      .join(' ') || undefined
 
-  /* Híbrido: se `value` for passado, o componente é controlado pelo pai.
-     Se não, mantém estado interno — o campo funciona sozinho em demos. */
-  const isControlled = props.value !== undefined
-  const [internal, setInternal] = useState('')
-  const current = isControlled ? props.value : internal
+  const [current, setCurrent] = useControllable({
+    value: props.value,
+    defaultValue: '',
+    onChange: props.onChange
+  })
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value
-    const currentMask = resolveMask(props.mask, rawValue)
-    const masked = applyMask(rawValue, currentMask)
+    const masked =
+      props.mask === undefined ? rawValue : applyMask(rawValue, resolveMask(props.mask, rawValue))
 
-    if (!isControlled) setInternal(masked)
-    props.onChange?.(masked)
+    setCurrent(masked)
   }
 
   return (
@@ -73,12 +83,12 @@ export function MaskedTextInput(props: Props) {
       $icon={!props.icon}
       className={props.className}
       style={{
-        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }, theme),
         ...props.containerStyle
       }}
     >
       {props.label && (
-        <InputLabel htmlFor={props.id} $required={props.required}>
+        <InputLabel htmlFor={inputId} $required={props.required}>
           <span>{props.label}</span>
         </InputLabel>
       )}
@@ -86,7 +96,7 @@ export function MaskedTextInput(props: Props) {
       {props.icon && <InputIconWrapper>{props.icon}</InputIconWrapper>}
 
       <input
-        id={props.id}
+        id={inputId}
         name={props.name}
         inputMode="numeric"
         value={current ?? ''}
@@ -94,11 +104,12 @@ export function MaskedTextInput(props: Props) {
         placeholder={props.placeholder}
         className={hasError ? 'error' : ''}
         aria-invalid={hasError ? 'true' : undefined}
-        aria-describedby={hasError ? `${props.id}-error` : undefined}
+        aria-describedby={describedBy}
         disabled={props.disabled}
       />
 
-      {hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
+      {hasError && <ErrorDiv id={`${inputId}-error`}>{props.error}</ErrorDiv>}
+      {props.helperText && <HelperDiv id={helperId}>{props.helperText}</HelperDiv>}
     </MaskedInputContainer>
   )
 }

@@ -1,12 +1,16 @@
-// Resolve colorTheme + overrides em CSS vars --mc-input-*.
-// Padrão F.26: --mc-<componente>-<propriedade>[-<estado>]
-// Precedência: tokens (prop) > colorTheme (registro) > fallback do CSS.
+import type { CSSProperties } from 'react'
+import type { DefaultTheme } from 'styled-components'
 
-import type { CSSProperties } from 'react'  
-import { resolveColorTheme, type ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'  
+import { resolveColorTheme, type ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
+
 import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
 
-
+/**
+ * Propriedades disponíveis para os tokens CSS dos inputs.
+ *
+ * Padrão F.26:
+ * --mc-input-<propriedade>[-<estado>]
+ */
 export const INPUT_TOKEN_PROPS = [
   'bg',
   'bg-focus',
@@ -15,6 +19,7 @@ export const INPUT_TOKEN_PROPS = [
   'border-hover',
   'focus-ring',
   'placeholder',
+  'helper-fg',
   'label-fg',
   'icon-fg',
   'error-bg',
@@ -25,23 +30,38 @@ export const INPUT_TOKEN_PROPS = [
 ] as const
 
 export type InputTokenProp = (typeof INPUT_TOKEN_PROPS)[number]
+
 export type InputTokens = Partial<Record<InputTokenProp, string | number>>
 
-/** Tema de cor aceito pela prop `colorTheme` dos inputs. */  
-export type InputColorTheme = ColorThemeName  
-  
-/** Overrides de tokens `--mc-input-*` aceitos pela prop `tokens`. */  
+/** Tema de cor aceito pela prop `colorTheme` dos inputs. */
+export type InputColorTheme = ColorThemeName
+
+/** Overrides de tokens `--mc-input-*` aceitos pela prop `tokens`. */
 export type InputTokenOverrides = InputTokens
 
-export function resolveInputTokens(opts: {
-  colorTheme?: ColorThemeName
-  tokens?: InputTokens | Record<string, string | number>
-}): CSSProperties {
+/**
+ * Resolve os tokens CSS dos inputs.
+ *
+ * Precedência:
+ * 1. Overrides recebidos pela prop `tokens`.
+ * 2. Valores derivados do `colorTheme`.
+ * 3. Fallbacks definidos no CSS do componente.
+ *
+ * O parâmetro `theme` permite utilizar um tema customizado.
+ * Quando omitido, utiliza `maskedTheme` para manter a retrocompatibilidade.
+ */
+export function resolveInputTokens(
+  input: {
+    colorTheme?: ColorThemeName
+    tokens?: InputTokens | Record<string, string | number>
+  },
+  theme: DefaultTheme = maskedTheme
+): CSSProperties {
   const vars: Record<string, string | number> = {}
 
   const values =
-    opts.colorTheme && opts.colorTheme !== 'default'
-      ? resolveColorTheme(opts.colorTheme, maskedTheme)
+    input.colorTheme && input.colorTheme !== 'default'
+      ? resolveColorTheme(input.colorTheme, theme)
       : undefined
 
   if (values) {
@@ -53,14 +73,30 @@ export function resolveInputTokens(opts: {
     vars['--mc-input-focus-ring'] = ring
     vars['--mc-input-label-fg'] = values.dark20 ?? values.base
     vars['--mc-input-icon-fg'] = values.base
-    if (values.light08) vars['--mc-input-bg-focus'] = values.light08
-    if (values.onBase) vars['--mc-input-fg'] = values.onBase
+
+    const muted = (values as unknown as { semantic?: { muted?: string } }).semantic?.muted
+
+    if (muted) {
+      vars['--mc-input-helper-fg'] = muted
+    }
+
+    if (values.light08) {
+      vars['--mc-input-bg-focus'] = values.light08
+    }
+
+    if (values.onBase) {
+      vars['--mc-input-fg'] = values.onBase
+    }
   }
 
-  const tokens = opts.tokens as Record<string, string | number> | undefined
+  const tokens = input.tokens as Record<string, string | number> | undefined
+
   for (const key of INPUT_TOKEN_PROPS) {
-    const v = tokens?.[key]
-    if (v !== undefined) vars[`--mc-input-${key}`] = v
+    const value = tokens?.[key]
+
+    if (value !== undefined) {
+      vars[`--mc-input-${key}`] = value
+    }
   }
 
   return vars as CSSProperties

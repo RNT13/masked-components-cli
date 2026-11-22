@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
+  HelperDiv,
   InputIconWrapper,
   InputLabel,
   MaskedInputContainer
@@ -11,23 +13,27 @@ import {
 import { InputVariantMap } from '../../MaskedInput.types'
 import { PasswordToggle } from './PasswordInput.styles'
 import { EyeIcon, EyeOffIcon } from '../../icons'
+import { useControllable } from '@/hooks/useControllable'
 
 type Props = { variant: 'password' } & InputVariantMap['password']
 
 export function PasswordInput(props: Props) {
   const [show, setShow] = useState(false)
+  const uid = useId()
+  const inputId = props.id ?? uid
+  const theme = useMaskedTheme()
   const hasError = props.touched && props.error
+  const helperId = `${inputId}-helper`
+  const describedBy =
+    [hasError ? `${inputId}-error` : null, props.helperText ? helperId : null]
+      .filter(Boolean)
+      .join(' ') || undefined
 
-  /* Híbrido: se `value` for passado, o componente é controlado pelo pai.
-     Se não, mantém estado interno — o campo funciona sozinho em demos. */
-  const isControlled = props.value !== undefined
-  const [internal, setInternal] = useState('')
-  const current = isControlled ? props.value : internal
-
-  const handleChange = (v: string) => {
-    if (!isControlled) setInternal(v)
-    props.onChange?.(v)
-  }
+  const [current, setCurrent] = useControllable({
+    value: props.value,
+    defaultValue: '',
+    onChange: props.onChange
+  })
 
   const showIcon = props.showIcon ?? <EyeIcon />
   const hideIcon = props.hideIcon ?? <EyeOffIcon />
@@ -43,12 +49,12 @@ export function PasswordInput(props: Props) {
       $icon={!props.icon}
       className={props.className}
       style={{
-        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }, theme),
         ...props.containerStyle
       }}
     >
       {props.label && (
-        <InputLabel htmlFor={props.id} $required={props.required}>
+        <InputLabel htmlFor={inputId} $required={props.required}>
           <span>{props.label}</span>
         </InputLabel>
       )}
@@ -56,15 +62,15 @@ export function PasswordInput(props: Props) {
       {props.icon && <InputIconWrapper>{props.icon}</InputIconWrapper>}
 
       <input
-        id={props.id}
+        id={inputId}
         name={props.name}
         type={show ? 'text' : 'password'}
         value={current ?? ''}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => setCurrent(e.target.value)}
         className={hasError ? 'error' : ''}
         placeholder={props.placeholder}
         aria-invalid={hasError ? 'true' : undefined}
-        aria-describedby={hasError ? `${props.id}-error` : undefined}
+        aria-describedby={describedBy}
         disabled={props.disabled}
       />
 
@@ -78,7 +84,8 @@ export function PasswordInput(props: Props) {
         {show ? showIcon : hideIcon}
       </PasswordToggle>
 
-      {hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
+      {hasError && <ErrorDiv id={`${inputId}-error`}>{props.error}</ErrorDiv>}
+      {props.helperText && <HelperDiv id={helperId}>{props.helperText}</HelperDiv>}
     </MaskedInputContainer>
   )
 }

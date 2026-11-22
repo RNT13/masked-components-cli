@@ -1,9 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useId } from 'react'
+import { useControllable } from '@/hooks/useControllable'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { resolveInputTokens } from '../../inputTokens'
 import {
   ErrorDiv,
+  HelperDiv,
   InputIconWrapper,
   InputLabel,
   MaskedInputContainer
@@ -13,18 +16,21 @@ import { InputVariantMap } from '../../MaskedInput.types'
 type Props = { variant: 'textarea' } & InputVariantMap['textarea']
 
 export function TextareaInput(props: Props) {
+  const theme = useMaskedTheme()
+  const uid = useId()
+  const inputId = props.id ?? uid
   const hasError = props.touched && props.error
+  const helperId = `${inputId}-helper`
+  const describedBy =
+    [hasError ? `${inputId}-error` : null, props.helperText ? helperId : null]
+      .filter(Boolean)
+      .join(' ') || undefined
 
-  /* Híbrido: se `value` for passado, o componente é controlado pelo pai.
-     Se não, mantém estado interno — o campo funciona sozinho em demos. */
-  const isControlled = props.value !== undefined
-  const [internal, setInternal] = useState('')
-  const current = isControlled ? props.value : internal
-
-  const handleChange = (v: string) => {
-    if (!isControlled) setInternal(v)
-    props.onChange?.(v)
-  }
+  const [current, setCurrent] = useControllable({
+    value: props.value,
+    defaultValue: '',
+    onChange: props.onChange
+  })
 
   return (
     <MaskedInputContainer
@@ -34,12 +40,12 @@ export function TextareaInput(props: Props) {
       $icon={!props.icon}
       className={props.className}
       style={{
-        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }, theme),
         ...props.containerStyle
       }}
     >
       {props.label && (
-        <InputLabel htmlFor={props.id} $required={props.required}>
+        <InputLabel htmlFor={inputId} $required={props.required}>
           <span>{props.label}</span>
         </InputLabel>
       )}
@@ -47,18 +53,19 @@ export function TextareaInput(props: Props) {
       {props.icon && <InputIconWrapper>{props.icon}</InputIconWrapper>}
 
       <textarea
-        id={props.id}
+        id={inputId}
         name={props.name}
         value={current ?? ''}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => setCurrent(e.target.value)}
         className={hasError ? 'error' : ''}
         placeholder={props.placeholder}
         aria-invalid={hasError ? 'true' : undefined}
-        aria-describedby={hasError ? `${props.id}-error` : undefined}
+        aria-describedby={describedBy}
         disabled={props.disabled}
       />
 
-      {hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
+      {hasError && <ErrorDiv id={`${inputId}-error`}>{props.error}</ErrorDiv>}
+      {props.helperText && <HelperDiv id={helperId}>{props.helperText}</HelperDiv>}
     </MaskedInputContainer>
   )
 }

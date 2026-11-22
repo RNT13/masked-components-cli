@@ -1,6 +1,6 @@
 'use client'
 
-import { JSX } from 'react'
+import type { ReactElement } from 'react'
 import type { InputProps, SearchInputProps } from './MaskedInput.types'
 import { CurrencyInput } from './variants/CurrencyInput/CurrencyInput'
 import { FileInput } from './variants/FileInput/FileInput'
@@ -14,8 +14,8 @@ import { TimeInput } from './variants/TimeInput/TimeInput'
 
 export function MaskedInput<T = any>(
   props: SearchInputProps<T> & { variant: 'search' }
-): JSX.Element
-export function MaskedInput(props: InputProps): JSX.Element
+): ReactElement
+export function MaskedInput(props: InputProps): ReactElement
 export function MaskedInput(props: InputProps) {
   switch (props.variant) {
     case 'default':

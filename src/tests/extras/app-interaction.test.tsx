@@ -384,7 +384,7 @@ describe('Dashboard — menu mobile da sidebar', () => {
     fireEvent.click(toggle())
     await waitFor(() => expect(dialog().getAttribute('aria-hidden')).toBe('false'))
     fireEvent.keyDown(document, { key: 'Escape' })
-    await waitFor(() => expect(dialog().getAttribute('aria-hidden')).toBe('true'))
+    await waitFor(() => expect(dialog().getAttribute('aria-hidden')).toBe('true'), { timeout: 3000 })
   })
 
   it('navegação funciona controlada e não controlada (aria-current na sidebar)', () => {

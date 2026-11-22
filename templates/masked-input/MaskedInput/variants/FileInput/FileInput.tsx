@@ -12,13 +12,14 @@
 
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import type { ComponentType, CSSProperties, DragEvent } from 'react'
 
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 
 import { ImageIcon } from '../../icons'
-import { ErrorDiv, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
+import { ErrorDiv, HelperDiv, InputLabel, MaskedInputContainer } from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
 import type { ImageComponentProps } from '../../MaskedInput.types'
 import { resolveInputTokens } from '../../inputTokens'
@@ -69,6 +70,8 @@ function matchesAccept(file: File, accept?: string): boolean {
 
 export function FileInput(props: Props) {
   const config = useMaskedConfig()
+  const theme = useMaskedTheme()
+  const uid = useId()
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   const [previews, setPreviews] = useState<string[]>([])
@@ -80,6 +83,13 @@ export function FileInput(props: Props) {
   const hasError = props.touched && props.error
   const multiple = Boolean(props.multiple)
   const isSingleCard = !multiple
+
+  const inputId = props.id ?? uid
+  const helperId = `${inputId}-helper`
+  const describedBy =
+    [hasError ? `${inputId}-error` : null, props.helperText ? helperId : null]
+      .filter(Boolean)
+      .join(' ') || undefined
 
   const existingValue = Array.isArray(props.value) ? props.value[0] : props.value
   const hasNewSelection = previews.length > 0
@@ -249,14 +259,15 @@ export function FileInput(props: Props) {
       $variant="file"
       $radius={props.radius}
       style={{
-        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+        ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }, theme),
         ...props.containerStyle
       }}
     >
       <input
         ref={inputRef}
-        id={props.id}
+        id={inputId}
         type="file"
+        aria-describedby={describedBy}
         hidden
         accept={props.accept}
         multiple={multiple}
@@ -268,7 +279,7 @@ export function FileInput(props: Props) {
       />
 
       {props.label && (
-        <InputLabel htmlFor={props.id} $required={props.required}>
+        <InputLabel htmlFor={inputId} $required={props.required}>
           {props.icon}
           <span>{props.label}</span>
         </InputLabel>
@@ -291,7 +302,12 @@ export function FileInput(props: Props) {
           </FileCardPreviewBox>
 
           <FileCardFooter>
-            <FileTrigger type="button" onClick={() => inputRef.current?.click()} disabled={busy}>
+            <FileTrigger
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={busy}
+              aria-describedby={describedBy}
+            >
               {isUploading
                 ? (props.uploadingLabel ?? 'Enviando...')
                 : (props.chooseFileLabel ?? 'Escolher arquivo')}
@@ -309,7 +325,12 @@ export function FileInput(props: Props) {
         </FileCard>
       ) : (
         <>
-          <FileTrigger type="button" onClick={() => inputRef.current?.click()} disabled={busy}>
+          <FileTrigger
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+            aria-describedby={describedBy}
+          >
             {isUploading
               ? (props.uploadingLabel ?? 'Enviando...')
               : (props.selectFilesLabel ?? 'Selecionar arquivos')}
@@ -327,7 +348,8 @@ export function FileInput(props: Props) {
         </>
       )}
 
-      {hasError && <ErrorDiv id={`${props.id}-error`}>{props.error}</ErrorDiv>}
+      {hasError && <ErrorDiv id={`${inputId}-error`}>{props.error}</ErrorDiv>}
+      {props.helperText && <HelperDiv id={helperId}>{props.helperText}</HelperDiv>}
     </MaskedInputContainer>
   )
 }

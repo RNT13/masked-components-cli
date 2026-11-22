@@ -113,7 +113,7 @@ export const MaskedInputContainer = styled.div<props>`
  * ERROR
  * ============================================================ */
 
-export const ErrorDiv = styled.div`
+export const ErrorDiv = styled.div.attrs({ role: 'alert' })`
   color: var(--mc-input-error-fg, ${maskedTheme.colors.baseRed.dark30});
   font-size: 0.85rem;
   font-weight: 500;
@@ -163,4 +163,10 @@ export const InputIconWrapper = styled.div`
   svg {
     font-size: 1.5rem;
   }
+`
+
+export const HelperDiv = styled.div`
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--mc-input-helper-fg, ${maskedTheme.colors.baseBlue.dark20});
 `

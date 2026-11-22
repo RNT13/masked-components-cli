@@ -3,9 +3,11 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { ClockIcon } from '../../icons'
 import {
   ErrorDiv,
+  HelperDiv,
   InputIconWrapper,
   InputLabel,
   MaskedInputContainer
@@ -24,6 +26,7 @@ import {
   TimeTrigger,
   TimeTriggerValue
 } from './TimeInput.styles'
+import { useControllable } from '@/hooks/useControllable'
 
 type Props = { variant: 'time' } & InputVariantMap['time']
 
@@ -43,17 +46,21 @@ function parseTime(value?: string | null): { hour: string; minute: string } {
 }
 
 export function TimeInput(props: Props) {
+  const theme = useMaskedTheme()
   const autoId = useId()
   const triggerId = props.id ?? autoId
   const dialogId = `${triggerId}-dialog`
+  const id = triggerId
+  const helperId = `${id}-helper`
 
   const [open, setOpen] = useState(false)
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 })
 
-  /* Híbrido: se `value` for passado, o pai controla; senão, estado interno. */
-  const isControlled = props.value !== undefined
-  const [internal, setInternal] = useState('')
-  const current = isControlled ? props.value : internal
+  const [current, setCurrent] = useControllable({
+    value: props.value,
+    defaultValue: '',
+    onChange: props.onChange
+  })
 
   const containerRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -62,6 +69,10 @@ export function TimeInput(props: Props) {
   const minuteRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
   const hasError = props.touched && Boolean(props.error)
+  const describedBy =
+    [hasError ? `${id}-error` : null, props.helperText ? helperId : null]
+      .filter(Boolean)
+      .join(' ') || undefined
   const minutes = buildMinutes(props.minuteStep ?? 5)
   const { hour, minute } = parseTime(current)
   const align = props.align ?? 'left'
@@ -72,7 +83,10 @@ export function TimeInput(props: Props) {
   })
 
   // o dropdown vive em um portal (fora do container): recebe as mesmas variáveis
-  const tokenStyle = resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens })
+  const tokenStyle = resolveInputTokens(
+    { colorTheme: props.colorTheme, tokens: props.tokens },
+    theme
+  )
 
   function updateDropdownPosition() {
     if (!triggerRef.current) return
@@ -149,13 +163,11 @@ export function TimeInput(props: Props) {
   function emit(nextHour: string, nextMinute: string) {
     if (!nextHour || !nextMinute) return
     const next = `${nextHour}:${nextMinute}`
-    if (!isControlled) setInternal(next)
-    props.onChange?.(next)
+    setCurrent(next)
   }
 
   function handleClear() {
-    if (!isControlled) setInternal('')
-    props.onChange?.('')
+    setCurrent('')
     closeAndFocus()
   }
 
@@ -188,7 +200,7 @@ export function TimeInput(props: Props) {
         disabled={props.disabled}
         onClick={() => !props.disabled && setOpen((o) => !o)}
         aria-invalid={hasError ? 'true' : undefined}
-        aria-describedby={hasError ? `${triggerId}-error` : undefined}
+        aria-describedby={describedBy}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={open ? dialogId : undefined}
@@ -264,7 +276,8 @@ export function TimeInput(props: Props) {
           document.body
         )}
 
-      {hasError && <ErrorDiv id={`${triggerId}-error`}>{props.error}</ErrorDiv>}
+      {hasError && <ErrorDiv id={`${id}-error`}>{props.error}</ErrorDiv>}
+      {props.helperText && <HelperDiv id={helperId}>{props.helperText}</HelperDiv>}
     </MaskedInputContainer>
   )
 }

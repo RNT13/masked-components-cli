@@ -1,7 +1,9 @@
 'use client'
 
+import { useId } from 'react'
 import {
   ErrorDiv,
+  HelperDiv,
   InputIconWrapper,
   InputLabel,
   MaskedInputContainer
@@ -9,6 +11,7 @@ import {
 import type { SearchInputProps } from '../../MaskedInput.types'
 import { useSmartSearch } from '../../hooks/useSmartSearch'
 import { resolveInputTokens } from '../../inputTokens'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import {
   DateChip,
   DateChipRow,
@@ -23,6 +26,9 @@ import {
 } from './SearchInput.style'
 
 export function SearchInput<T = any>(props: SearchInputProps<T>) {
+  const theme = useMaskedTheme()
+  const uid = useId()
+
   const {
     id,
     label,
@@ -49,7 +55,13 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
     showResultCount = true
   } = props
 
+  const inputId = id ?? uid
   const hasError = Boolean(touched && error)
+  const helperId = `${inputId}-helper`
+  const describedBy =
+    [hasError ? `${inputId}-error` : null, props.helperText ? helperId : null]
+      .filter(Boolean)
+      .join(' ') || undefined
 
   const state = useSmartSearch(data, {
     searchFields,
@@ -92,12 +104,12 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
         data-error={hasError}
         $icon={!icon}
         style={{
-          ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }),
+          ...resolveInputTokens({ colorTheme: props.colorTheme, tokens: props.tokens }, theme),
           ...props.containerStyle
         }}
       >
         {label && (
-          <InputLabel htmlFor={id} $required={required}>
+          <InputLabel htmlFor={inputId} $required={required}>
             {label}
           </InputLabel>
         )}
@@ -105,7 +117,7 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
         {props.icon && <InputIconWrapper>{props.icon}</InputIconWrapper>}
 
         <input
-          id={id}
+          id={inputId}
           type="search"
           value={search}
           onChange={(e) => {
@@ -116,7 +128,7 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
           placeholder={placeholder}
           disabled={disabled}
           aria-invalid={hasError ? 'true' : undefined}
-          aria-describedby={hasError ? `${id}-error` : undefined}
+          aria-describedby={describedBy}
         />
 
         {hasFilters && (
@@ -191,7 +203,8 @@ export function SearchInput<T = any>(props: SearchInputProps<T>) {
           </ResultsCount>
         )}
 
-        {hasError && <ErrorDiv id={`${id}-error`}>{error}</ErrorDiv>}
+        {hasError && <ErrorDiv id={`${inputId}-error`}>{error}</ErrorDiv>}
+        {props.helperText && <HelperDiv id={helperId}>{props.helperText}</HelperDiv>}
       </MaskedInputContainer>
 
       {children?.(state)}
