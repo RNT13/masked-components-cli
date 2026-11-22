@@ -378,6 +378,38 @@ export const registry: ComponentEntry[] = [
     notes: [CONFIG_PROVIDER_NOTE]
   },
   {
+    id: 'masked-dropdown-menu',
+    label: 'Masked Dropdown Menu',
+    description:
+      'Menu de ações WAI-ARIA (role menu): teclado completo, separadores, atalhos — tokens --mc-menu-*',
+    templates: [
+      { dir: 'masked-app/MaskedDropdownMenu', to: 'components', subdir: 'MaskedDropdownMenu' }
+    ],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-modal',
+    label: 'Masked Modal',
+    description:
+      'Diálogo modal WAI-ARIA (focus trap, scroll lock, Escape/overlay): sm, md, lg, full — tokens --mc-modal-*',
+    templates: [{ dir: 'masked-app/MaskedModal', to: 'components', subdir: 'MaskedModal' }],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-select',
+    label: 'Masked Select',
+    description:
+      'Select WAI-ARIA (combobox + listbox): teclado completo, typeahead, placeholder — tokens --mc-select-*',
+    templates: [{ dir: 'masked-app/MaskedSelect', to: 'components', subdir: 'MaskedSelect' }],
+    requires: ['masked-themes', 'masked-config', 'masked-utils'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
     id: 'masked-empty-state',
     label: 'Masked Empty State',
     description:
