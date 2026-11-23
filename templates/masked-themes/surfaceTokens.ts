@@ -1,15 +1,15 @@
-import { readableTextOn, toKebab } from '@/utils/masked-utils'
+import { readableTextOn } from '@/utils/masked-utils'
 import { resolveColorTheme, type ColorThemeName } from './MaskedThemes/ColorThemes'
 import { resolveSemanticColors } from './semanticColors'
 import type { DefaultTheme } from 'styled-components'
 
 /**
- * Tipos de superfície que os componentes de marketing e app compartilham.  
- * - plain: sem pintura (herda o fundo do pai); só destaque (accent);  
- * - tinted: fundo suave;  
- * - solid: cor cheia do colorTheme (ou superfície do tema) com texto por contraste;  
- * - gradient: base → base misturada com o texto (só aumenta o contraste);  
- * - outlined: só a borda.  
+ * Tipos de superfície que os componentes de marketing e app compartilham.
+ * - plain: sem pintura (herda o fundo do pai); só destaque (accent);
+ * - tinted: fundo suave;
+ * - solid: cor cheia do colorTheme (ou superfície do tema) com texto por contraste;
+ * - gradient: base → base misturada com o texto (só aumenta o contraste);
+ * - outlined: só a borda.
  */
 export type SurfaceKind = 'plain' | 'tinted' | 'solid' | 'gradient' | 'outlined'
 
@@ -26,10 +26,10 @@ export interface SurfaceTokens {
 }
 
 /**
- * Deriva as cores de uma superfície a partir do colorTheme e do tema ativo.  
- * Função pura, sem dependência de React. Texto sempre por contraste WCAG  
- * (`onBase` do tema ou `readableTextOn`); em superfícies pintadas o accent é  
- * o próprio texto, o que garante leitura.  
+ * Deriva as cores de uma superfície a partir do colorTheme e do tema ativo.
+ * Função pura, sem dependência de React. Texto sempre por contraste WCAG
+ * (`onBase` do tema ou `readableTextOn`); em superfícies pintadas o accent é
+ * o próprio texto, o que garante leitura.
  */
 export function resolveSurface(
   kind: SurfaceKind,
@@ -84,11 +84,16 @@ export function resolveSurface(
   }
 }
 
+/** "cardBg" -> "card-bg". */
+function toKebab(key: string): string {
+  return key.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`)
+}
+
 /**
- * Monta o objeto `style` com variáveis `--mc-<prefix>-*`. Os overrides do  
- * usuário vencem; `fg` explícito sem `muted` leva o muted junto, e `bg`  
- * explícito sem `fg` re-deriva o texto por contraste (só quando o bg é cor  
- * simples, não gradiente/color-mix).  
+ * Monta o objeto `style` com variáveis `--mc-<prefix>-*`. Os overrides do
+ * usuário vencem; `fg` explícito sem `muted` leva o muted junto, e `bg`
+ * explícito sem `fg` re-deriva o texto por contraste (só quando o bg é cor
+ * simples, não gradiente/color-mix).
  */
 export function buildTokenStyle(
   prefix: string,

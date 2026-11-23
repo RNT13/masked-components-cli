@@ -25,6 +25,8 @@ export function MaskedPopup({
   zIndex = maskedTheme.zIndex.popover,
   closeOnOverlay = true,
   closeOnEscape = true,
+  ariaLabel,
+  ariaLabelledBy,
   lockScroll = true,
   portal = true,
   colorTheme,
@@ -155,6 +157,8 @@ export function MaskedPopup({
         aria-modal="true"
         aria-hidden={!panelOpen}
         inert={!panelOpen}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
         $isOpen={panelOpen}
         $instant={!visible}
         $width={width}

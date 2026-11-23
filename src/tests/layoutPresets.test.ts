@@ -37,6 +37,7 @@ describe('registry — fundações de layout e estrutura de página', () => {
     const presets = registry.filter((entry) => entry.preset)
     expect(presets.map((p) => p.id).sort()).toEqual([
       'masked-app',
+      'masked-forms',
       'masked-layout',
       'masked-marketing',
       'masked-page'
@@ -115,5 +116,50 @@ describe('registry — marketing', () => {
     for (const heavy of ['masked-drawer', 'masked-buttons', 'masked-animations', 'masked-input']) {
       expect(installed).not.toContain(heavy)
     }
+  })
+})
+
+describe('registry — forms e complementos', () => {
+  it('masked-forms instala slider, rating, date-picker e command-palette (+ popup e config)', () => {
+    expect(ids(['masked-forms'])).toEqual(
+      expect.arrayContaining([
+        'masked-slider',
+        'masked-rating',
+        'masked-date-picker',
+        'masked-command-palette',
+        'masked-popup',
+        'masked-config',
+        'masked-themes'
+      ])
+    )
+  })
+
+  it('instalação granular: Slider só com o tema; DatePicker com o config; CommandPalette com o Popup', () => {
+    expect(ids(['masked-slider'])).toEqual(['masked-utils', 'masked-themes', 'masked-slider'])
+    expect(ids(['masked-date-picker'])).toEqual([
+      'masked-utils',
+      'masked-themes',
+      'masked-config',
+      'masked-date-picker'
+    ])
+    expect(ids(['masked-command-palette'])).toEqual([
+      'masked-utils',
+      'masked-themes',
+      'masked-config',
+      'masked-popup',
+      'masked-command-palette'
+    ])
+  })
+
+  it('Team puxa Section e Avatar; Contact puxa Section; ambos entram no preset de marketing', () => {
+    expect(ids(['masked-team'])).toEqual(
+      expect.arrayContaining(['masked-section', 'masked-avatar'])
+    )
+    expect(ids(['masked-contact'])).toEqual(
+      expect.arrayContaining(['masked-section', 'masked-config'])
+    )
+    expect(ids(['masked-marketing'])).toEqual(
+      expect.arrayContaining(['masked-team', 'masked-contact'])
+    )
   })
 })

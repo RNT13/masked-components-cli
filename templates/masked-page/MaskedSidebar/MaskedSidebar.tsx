@@ -191,6 +191,7 @@ export function MaskedSidebar(props: MaskedSidebarProps) {
           side="left"
           width={{ mobile: '85%', tablet: '300px' }}
           colorTheme={colorTheme}
+          ariaLabel={label}
         >
           <SidebarDrawerPanel style={tokenStyle}>
             {header}

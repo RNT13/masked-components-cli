@@ -27,6 +27,8 @@ export function MaskedDrawer({
   transition = 'slide',
   zIndex = maskedTheme.zIndex.modal,
   closeOnEscape = true,
+  ariaLabel,
+  ariaLabelledBy,
   lockScroll = true,
   portal = true,
   colorTheme,
@@ -200,6 +202,8 @@ export function MaskedDrawer({
         aria-modal="true"
         aria-hidden={!open}
         inert={!open}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
         $side={shownSide}
         $isOpen={open}
         $size={size}

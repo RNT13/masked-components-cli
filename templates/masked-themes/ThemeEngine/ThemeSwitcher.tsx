@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import styled from 'styled-components'
 import { maskedThemeConfig, media } from '../MaskedThemes/MaskedThemes'
 import { useThemeEngine } from './ThemeEngineProvider'
@@ -147,6 +147,8 @@ export function ThemeSwitcher({ label = 'Theme', className }: ThemeSwitcherProps
   const { themeName, availableThemes, setThemeName } = useThemeEngine()
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
+  const chevronRef = useRef<HTMLButtonElement>(null)
+  const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   useEffect(() => {
     if (!open) return
@@ -154,15 +156,36 @@ export function ThemeSwitcher({ label = 'Theme', className }: ThemeSwitcherProps
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false)
     }
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false)
+      if (e.key === 'Escape') {
+        setOpen(false)
+        chevronRef.current?.focus()
+      }
     }
     document.addEventListener('pointerdown', onPointerDown)
     document.addEventListener('keydown', onKey)
+    /* teclado: ao abrir, o foco vai para o tema atual */
+    const current = availableThemes.indexOf(themeName)
+    itemRefs.current[current >= 0 ? current : 0]?.focus()
     return () => {
       document.removeEventListener('pointerdown', onPointerDown)
       document.removeEventListener('keydown', onKey)
     }
-  }, [open])
+  }, [open, availableThemes, themeName])
+
+  /** ↑/↓ movem entre temas (com volta), Home/End vão às pontas; Tab fecha o menu. */
+  function onMenuKeyDown(e: ReactKeyboardEvent<HTMLUListElement>) {
+    const count = availableThemes.length
+    const index = itemRefs.current.findIndex((el) => el === document.activeElement)
+    let target: number | undefined
+    if (e.key === 'ArrowDown') target = (index + 1) % count
+    else if (e.key === 'ArrowUp') target = (index - 1 + count) % count
+    else if (e.key === 'Home') target = 0
+    else if (e.key === 'End') target = count - 1
+    else if (e.key === 'Tab') setOpen(false)
+    if (target === undefined) return
+    e.preventDefault()
+    itemRefs.current[target]?.focus()
+  }
 
   return (
     <Root ref={rootRef} className={className}>
@@ -177,6 +200,7 @@ export function ThemeSwitcher({ label = 'Theme', className }: ThemeSwitcherProps
           <strong>{themeName}</strong>
         </MainButton>
         <ChevronButton
+          ref={chevronRef}
           type="button"
           $open={open}
           aria-haspopup="listbox"
@@ -199,10 +223,18 @@ export function ThemeSwitcher({ label = 'Theme', className }: ThemeSwitcherProps
       </SplitRoot>
 
       {open && (
-        <Menu role="listbox" aria-label="Themes" aria-activedescendant={themeName}>
-          {availableThemes.map((name) => (
+        <Menu
+          role="listbox"
+          aria-label="Themes"
+          aria-activedescendant={themeName}
+          onKeyDown={onMenuKeyDown}
+        >
+          {availableThemes.map((name, index) => (
             <li key={name} role="presentation">
               <Item
+                ref={(el) => {
+                  itemRefs.current[index] = el
+                }}
                 type="button"
                 role="option"
                 id={name}

@@ -81,9 +81,7 @@ describe('Pricing — alternador mensal/anual', () => {
     expect(screen.getByText('R$ 39')).toBeTruthy()
     expect(screen.getByText('/ano')).toBeTruthy()
     expect(screen.getByRole('button', { name: 'Anual' }).getAttribute('aria-pressed')).toBe('true')
-    expect(screen.getByRole('button', { name: 'Mensal' }).getAttribute('aria-pressed')).toBe(
-      'false'
-    )
+    expect(screen.getByRole('button', { name: 'Mensal' }).getAttribute('aria-pressed')).toBe('false')
     expect(onBillingChange).toHaveBeenCalledWith('yearly')
   })
 

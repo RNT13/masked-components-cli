@@ -37,6 +37,10 @@ export default defineConfig({
         replacement: path.resolve(__dirname, 'templates/masked-app/MaskedPagination/MaskedPagination.tsx')
       },
       {
+        find: /^@\/components\/ui\/MaskedAvatar\//,
+        replacement: path.resolve(__dirname, 'templates/masked-app/MaskedAvatar') + '/'
+      },
+      {
         find: /^@\/components\/ui\/MaskedSkeleton\/MaskedSkeleton$/,
         replacement: path.resolve(__dirname, 'templates/masked-skeleton/MaskedSkeleton/MaskedSkeleton.tsx')
       },
@@ -59,6 +63,26 @@ export default defineConfig({
       {
         find: /^@\/components\/ui\/MaskedDrawer\//,
         replacement: path.resolve(__dirname, 'templates/masked-drawer/MaskedDrawer') + '/'
+      },
+      {
+        find: /^@\/components\/ui\/MaskedPopup\//,
+        replacement: path.resolve(__dirname, 'templates/masked-popup/MaskedPopup') + '/'
+      },
+      {
+        find: /^@\/components\/ui\/MaskedSlider\//,
+        replacement: path.resolve(__dirname, 'templates/masked-forms/MaskedSlider') + '/'
+      },
+      {
+        find: /^@\/components\/ui\/MaskedRating\//,
+        replacement: path.resolve(__dirname, 'templates/masked-forms/MaskedRating') + '/'
+      },
+      {
+        find: /^@\/components\/ui\/MaskedDatePicker\//,
+        replacement: path.resolve(__dirname, 'templates/masked-forms/MaskedDatePicker') + '/'
+      },
+      {
+        find: /^@\/components\/ui\/MaskedCommandPalette\//,
+        replacement: path.resolve(__dirname, 'templates/masked-forms/MaskedCommandPalette') + '/'
       }
     ]
   },

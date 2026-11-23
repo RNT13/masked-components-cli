@@ -70,4 +70,17 @@ describe('ThemeSwitcher — template sincronizado com o site', () => {
       expect(source).toContain(snippet)
     }
   })
+
+  it('navega o menu por teclado (setas, Home/End), foca o tema atual e devolve o foco ao fechar', () => {
+    for (const snippet of [
+      "e.key === 'ArrowDown'",
+      "e.key === 'ArrowUp'",
+      "e.key === 'Home'",
+      "e.key === 'End'",
+      'itemRefs.current[current >= 0 ? current : 0]?.focus()',
+      'chevronRef.current?.focus()'
+    ]) {
+      expect(source).toContain(snippet)
+    }
+  })
 })

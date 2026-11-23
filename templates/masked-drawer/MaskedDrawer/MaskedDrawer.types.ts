@@ -41,6 +41,12 @@ export type MaskedDrawerProps = {
   /* ---- theming (F.26) ---- */
   colorTheme?: ColorThemeName
   tokens?: DrawerTokens
+  /**
+   * Nome acessível do diálogo (leitores de tela). Informe `ariaLabel` OU
+   * `ariaLabelledBy` (id de um título dentro do painel).
+   */
+  ariaLabel?: string
+  ariaLabelledBy?: string
   className?: string
   style?: CSSProperties
 }

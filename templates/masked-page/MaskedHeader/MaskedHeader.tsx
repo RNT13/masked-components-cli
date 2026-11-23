@@ -140,6 +140,7 @@ export function MaskedHeader(props: MaskedHeaderProps) {
           side="right"
           width={{ mobile: '85%', tablet: '320px' }}
           colorTheme={colorTheme}
+          ariaLabel={label}
         >
           <MenuPanel style={tokenStyle}>
             <MenuPanelTop>

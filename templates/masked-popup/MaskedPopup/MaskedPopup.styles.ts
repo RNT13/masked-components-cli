@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { DefaultTheme } from 'styled-components'
-import { media } from '@/styles/MaskedThemes/MaskedThemes'
+import { maskedTheme, media } from '@/styles/MaskedThemes/MaskedThemes'
 import type { PopupTransition } from './MaskedPopup.types'
 
 const transitionMap: Record<PopupTransition, string> = {
@@ -24,11 +24,25 @@ const getTransform = (transition: PopupTransition, isOpen: boolean): string => {
   }
 }
 
-const surface = (theme: DefaultTheme) => theme.colors.surfaceColor ?? theme.colors.baseBlack.light08
+/*
+ * Os helpers leem o tema com optional chaining e caem no tema base da lib:
+ * sem <ThemeProvider> o styled-components entrega `theme = {}`, e o Popup
+ * precisa continuar funcionando (como o Drawer e os componentes da V3).
+ */
+const surface = (theme: DefaultTheme) =>
+  theme.colors?.surfaceColor ??
+  theme.colors?.baseBlack?.light08 ??
+  maskedTheme.colors.baseBlack.light08
 
-const textColor = (theme: DefaultTheme) => theme.colors.textColor ?? theme.colors.basePureWhite.base
+const textColor = (theme: DefaultTheme) =>
+  theme.colors?.textColor ??
+  theme.colors?.basePureWhite?.base ??
+  maskedTheme.colors.basePureWhite.base
 
-const borderColor = (theme: DefaultTheme) => theme.colors.borderColor ?? theme.colors.baseGlass.light08
+const borderColor = (theme: DefaultTheme) =>
+  theme.colors?.borderColor ??
+  theme.colors?.baseGlass?.light08 ??
+  maskedTheme.colors.baseGlass.light08
 
 export const PopupOverlay = styled.div<{
   $isOpen: boolean

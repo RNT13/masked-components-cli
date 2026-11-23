@@ -236,6 +236,6 @@ describe('instalação ponta a ponta', () => {
         base,
         templates
       )
-    ).rejects.toThrow(/templates\/masked-popup/)
+    ).rejects.toThrow(/Template ausente para "masked-(config|popup)"/)
   })
 })

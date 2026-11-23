@@ -95,7 +95,7 @@ export const registry: ComponentEntry[] = [
     description:
       'Container base polimórfico (as): plain, card, outlined, glass — tokens --mc-div-*',
     templates: [{ dir: 'masked-layout/MaskedDiv', to: 'components', subdir: 'MaskedDiv' }],
-    requires: ['masked-themes'],
+    requires: ['masked-themes', 'masked-config'],
     dependencies: [STYLED]
   },
   {
@@ -322,6 +322,28 @@ export const registry: ComponentEntry[] = [
     notes: [CONFIG_PROVIDER_NOTE]
   },
   {
+    id: 'masked-team',
+    label: 'Masked Team',
+    description:
+      'Equipe em seção (avatar com fallback, cargo, links acessíveis): grid, list, cards — tokens --mc-team-*',
+    templates: [{ dir: 'masked-marketing/MaskedTeam', to: 'components', subdir: 'MaskedTeam' }],
+    requires: ['masked-themes', 'masked-config', 'masked-section', 'masked-avatar'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-contact',
+    label: 'Masked Contact',
+    description:
+      'Contato em seção (labels reais, estados de envio, região viva): split, card, minimal — tokens --mc-contact-*',
+    templates: [
+      { dir: 'masked-marketing/MaskedContact', to: 'components', subdir: 'MaskedContact' }
+    ],
+    requires: ['masked-themes', 'masked-config', 'masked-section'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
     id: 'masked-marketing',
     label: 'Masked Marketing (preset)',
     description: 'Preset de seções de marketing: instala o conjunto de uma vez',
@@ -337,7 +359,9 @@ export const registry: ComponentEntry[] = [
       'masked-testimonials',
       'masked-faq',
       'masked-pricing',
-      'masked-newsletter'
+      'masked-newsletter',
+      'masked-team',
+      'masked-contact'
     ]
   },
   {
@@ -490,10 +514,10 @@ export const registry: ComponentEntry[] = [
     requires: [
       'masked-themes',
       'masked-config',
-      'masked-skeleton',
       'masked-utils',
       'masked-pagination',
-      'masked-empty-state'
+      'masked-empty-state',
+      'masked-skeleton'
     ],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
@@ -536,6 +560,56 @@ export const registry: ComponentEntry[] = [
     ]
   },
   {
+    id: 'masked-slider',
+    label: 'Masked Slider',
+    description: 'Slider acessível (role slider) com variantes — tokens --mc-slider-*',
+    templates: [{ dir: 'masked-forms/MaskedSlider', to: 'components', subdir: 'MaskedSlider' }],
+    requires: ['masked-utils', 'masked-themes'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-rating',
+    label: 'Masked Rating',
+    description: 'Avaliação por estrelas/corações/números — tokens --mc-rating-*',
+    templates: [{ dir: 'masked-forms/MaskedRating', to: 'components', subdir: 'MaskedRating' }],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-date-picker',
+    label: 'Masked DatePicker',
+    description: 'Seleção de data com calendário acessível — tokens --mc-datepicker-*',
+    templates: [
+      { dir: 'masked-forms/MaskedDatePicker', to: 'components', subdir: 'MaskedDatePicker' }
+    ],
+    requires: ['masked-themes', 'masked-config', 'masked-utils'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-command-palette',
+    label: 'Masked CommandPalette',
+    description: 'Paleta de comandos (⌘K) com busca e hotkey — tokens --mc-palette-*',
+    templates: [
+      { dir: 'masked-forms/MaskedCommandPalette', to: 'components', subdir: 'MaskedCommandPalette' }
+    ],
+    requires: ['masked-themes', 'masked-config', 'masked-utils', 'masked-popup'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
+  },
+  {
+    id: 'masked-forms',
+    label: 'Masked Forms (preset)',
+    description:
+      'Preset de campos e atalhos (slider, rating, data, paleta): instala o conjunto de uma vez',
+    // preset não copia arquivos próprios: só agrega os ids em `requires`
+    templates: [],
+    preset: true,
+    requires: ['masked-slider', 'masked-rating', 'masked-date-picker', 'masked-command-palette']
+  },
+  {
     id: 'masked-toaster',
     label: 'Masked Toaster',
     description:
@@ -575,10 +649,13 @@ export const registry: ComponentEntry[] = [
   {
     id: 'masked-popup',
     label: 'Masked Popup',
-    description: 'Modal centralizado com overlay, portal SSR-safe e focus-trap',
-    templates: [{ dir: 'masked-popup', to: 'components' }],
-    requires: ['masked-themes'],
-    dependencies: [STYLED]
+    description: 'Popup/diálogo acessível (role dialog, portal, overlay) — tokens --mc-popup-*',
+    templates: [
+      { dir: 'masked-popup/MaskedPopup', to: 'components', subdir: 'MaskedPopup' }
+    ],
+    requires: ['masked-themes', 'masked-config'],
+    dependencies: [STYLED],
+    notes: [CONFIG_PROVIDER_NOTE]
   },
   {
     id: 'masked-input',
@@ -594,7 +671,7 @@ export const registry: ComponentEntry[] = [
     label: 'Masked Input — camada Formik',
     description: 'Versões ligadas ao Formik (useField) de cada variante do Masked Input',
     templates: [{ dir: 'masked-input-formik', to: 'components' }],
-    requires: ['masked-input'],
+    requires: ['masked-input', 'masked-config'],
     dependencies: [FORMIK]
   },
   {
