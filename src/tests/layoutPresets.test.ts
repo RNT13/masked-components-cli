@@ -135,11 +135,17 @@ describe('registry — forms e complementos', () => {
   })
 
   it('instalação granular: Slider só com o tema; DatePicker com o config; CommandPalette com o Popup', () => {
-    expect(ids(['masked-slider'])).toEqual(['masked-utils', 'masked-themes', 'masked-slider'])
+    expect(ids(['masked-slider'])).toEqual([
+      'masked-utils',
+      'masked-themes',
+      'masked-hooks',
+      'masked-slider'
+    ])
     expect(ids(['masked-date-picker'])).toEqual([
       'masked-utils',
       'masked-themes',
       'masked-config',
+      'masked-hooks',
       'masked-date-picker'
     ])
     expect(ids(['masked-command-palette'])).toEqual([
@@ -147,6 +153,7 @@ describe('registry — forms e complementos', () => {
       'masked-themes',
       'masked-config',
       'masked-popup',
+      'masked-hooks',
       'masked-command-palette'
     ])
   })

@@ -564,7 +564,7 @@ export const registry: ComponentEntry[] = [
     label: 'Masked Slider',
     description: 'Slider acessível (role slider) com variantes — tokens --mc-slider-*',
     templates: [{ dir: 'masked-forms/MaskedSlider', to: 'components', subdir: 'MaskedSlider' }],
-    requires: ['masked-utils', 'masked-themes'],
+    requires: ['masked-utils', 'masked-themes', 'masked-hooks'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -573,7 +573,7 @@ export const registry: ComponentEntry[] = [
     label: 'Masked Rating',
     description: 'Avaliação por estrelas/corações/números — tokens --mc-rating-*',
     templates: [{ dir: 'masked-forms/MaskedRating', to: 'components', subdir: 'MaskedRating' }],
-    requires: ['masked-themes', 'masked-config'],
+    requires: ['masked-themes', 'masked-config', 'masked-hooks'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -584,7 +584,7 @@ export const registry: ComponentEntry[] = [
     templates: [
       { dir: 'masked-forms/MaskedDatePicker', to: 'components', subdir: 'MaskedDatePicker' }
     ],
-    requires: ['masked-themes', 'masked-config', 'masked-utils'],
+    requires: ['masked-themes', 'masked-config', 'masked-utils', 'masked-hooks'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -595,7 +595,7 @@ export const registry: ComponentEntry[] = [
     templates: [
       { dir: 'masked-forms/MaskedCommandPalette', to: 'components', subdir: 'MaskedCommandPalette' }
     ],
-    requires: ['masked-themes', 'masked-config', 'masked-utils', 'masked-popup'],
+    requires: ['masked-themes', 'masked-config', 'masked-utils', 'masked-popup', 'masked-hooks'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -607,7 +607,14 @@ export const registry: ComponentEntry[] = [
     // preset não copia arquivos próprios: só agrega os ids em `requires`
     templates: [],
     preset: true,
-    requires: ['masked-slider', 'masked-rating', 'masked-date-picker', 'masked-command-palette']
+    requires: [
+      'masked-slider',
+      'masked-rating',
+      'masked-date-picker',
+      'masked-command-palette',
+      'masked-utils',
+      'masked-hooks'
+    ]
   },
   {
     id: 'masked-toaster',

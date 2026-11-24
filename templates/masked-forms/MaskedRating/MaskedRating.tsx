@@ -1,6 +1,7 @@
 'use client'
 
 import { useId, useState } from 'react'
+import { useControllable } from '@/hooks/useControllable'
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { MaskedRatingRoot, RatingGlyph, RatingItem, RatingRadio } from './MaskedRating.styles'
@@ -38,14 +39,12 @@ export function MaskedRating(props: MaskedRatingProps) {
   const theme = useMaskedTheme()
   const config = useMaskedConfig()
   const generatedName = useId()
-  const [inner, setInner] = useState(props.defaultValue ?? 0)
   const [hover, setHover] = useState<number | undefined>(undefined)
   const {
     variant = 'stars',
     size = 'md',
     max = 5,
     value: valueProp,
-    defaultValue: _defaultValue,
     onChange,
     readOnly = false,
     allowClear = false,
@@ -57,18 +56,22 @@ export function MaskedRating(props: MaskedRatingProps) {
     style,
     ...rest
   } = props
-  void _defaultValue
+
+  const [rawValue, setRawValue] = useControllable<number>({
+    value: valueProp,
+    defaultValue: props.defaultValue ?? 0,
+    onChange
+  })
 
   const total = Math.max(1, Math.floor(max))
-  const value = clampRating(valueProp ?? inner, total)
+  const value = clampRating(rawValue, total)
   const shown = hover ?? value
   const dict = DICT[(config.locale ?? 'pt-BR').toLowerCase().startsWith('en') ? 'en' : 'pt']
   const tokenStyle = resolveRatingTokens({ variant, colorTheme, tokens }, theme)
   const items = Array.from({ length: total }, (_, index) => index + 1)
 
   function choose(next: number) {
-    setInner(next)
-    onChange?.(next)
+    setRawValue(next)
   }
 
   const glyphOf = (n: number, filled: boolean) =>

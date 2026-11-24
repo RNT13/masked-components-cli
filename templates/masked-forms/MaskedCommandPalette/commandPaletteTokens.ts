@@ -3,6 +3,8 @@ import { resolveSemanticColors } from '@/styles/semanticColors'
 import type { DefaultTheme } from 'styled-components'
 import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 import type { CommandItem } from './MaskedCommandPalette.types'
+import { normalizeText } from '@/utils/masked-utils'
+export { normalizeText }
 
 /** Overrides granulares de tokens --mc-command-palette-* (chave = nome sem prefixo). */
 export interface CommandPaletteTokenOverrides {
@@ -17,11 +19,11 @@ export interface ResolveCommandPaletteTokensInput {
 }
 
 /**
- * Deriva tokens --mc-command-palette-*: a barra do item ativo usa o accent
- * (em painel pintado, o próprio texto da superfície); borda e texto
- * secundário vêm do tema, ou do texto suavizado quando há colorTheme.
- * O fundo e o texto do painel são do MaskedPopup (que recebe o colorTheme).
- * Precedência: tokens > colorTheme > tema.
+ * Deriva tokens --mc-command-palette-*: a barra do item ativo usa o accent  
+ * (em painel pintado, o próprio texto da superfície); borda e texto  
+ * secundário vêm do tema, ou do texto suavizado quando há colorTheme.  
+ * O fundo e o texto do painel são do MaskedPopup (que recebe o colorTheme).  
+ * Precedência: tokens > colorTheme > tema.  
  */
 export function resolveCommandPaletteTokens(
   input: ResolveCommandPaletteTokensInput,
@@ -40,20 +42,11 @@ export function resolveCommandPaletteTokens(
   )
 }
 
-/** Minúsculas e sem acentos: "Configurações" casa com "configuracoes". */
-export function normalizeText(value: string): string {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim()
-}
-
 /** Pontuação de um item para os termos da busca (menor = melhor); null se algum termo não casa. */
 export function scoreCommand(item: CommandItem, terms: string[]): number | null {
   const label = normalizeText(item.label)
   const words = label.split(/\s+/)
-  const keywords = (item.keywords ?? []).map(normalizeText)
+  const keywords = (item.keywords ?? []).map((k: string) => normalizeText(k))
   const description = normalizeText(item.description ?? '')
   const group = normalizeText(item.group ?? '')
 
@@ -66,12 +59,12 @@ export function scoreCommand(item: CommandItem, terms: string[]): number | null 
     consider(0, label.startsWith(term))
     consider(
       1,
-      words.some((w) => w.startsWith(term))
+      words.some((w: string) => w.startsWith(term))
     )
     consider(2, label.includes(term))
     consider(
       3,
-      keywords.some((k) => k.includes(term))
+      keywords.some((k: string) => k.includes(term))
     )
     consider(4, group.includes(term))
     consider(5, description.includes(term))

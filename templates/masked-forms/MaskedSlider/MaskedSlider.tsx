@@ -1,6 +1,7 @@
 'use client'
 
-import { useId, useState } from 'react'
+import { useId } from 'react'
+import { useControllable } from '@/hooks/useControllable'
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import {
   MaskedSliderRoot,
@@ -49,8 +50,11 @@ export function MaskedSlider(props: MaskedSliderProps) {
     ...input
   } = props
 
-  const [inner, setInner] = useState(defaultValue ?? min)
-  const value = valueProp ?? inner
+  const [value, setValue] = useControllable<number>({
+    value: valueProp,
+    defaultValue: defaultValue ?? min,
+    onChange
+  })
   const inputId = id ?? generatedId
   const shown = formatValue ? formatValue(value) : String(value)
   const percent = percentOf(value, min, max)
@@ -77,9 +81,7 @@ export function MaskedSlider(props: MaskedSliderProps) {
           $variant={variant}
           aria-valuetext={formatValue ? shown : undefined}
           onChange={(event) => {
-            const next = Number(event.target.value)
-            setInner(next)
-            onChange?.(next)
+            setValue(Number(event.target.value))
           }}
         />
         {marks.length > 0 && (

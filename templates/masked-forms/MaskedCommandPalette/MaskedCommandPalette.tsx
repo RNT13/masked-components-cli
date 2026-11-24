@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useId, useMemo, useState, type KeyboardEvent } from 'react'
+import { useControllable } from '@/hooks/useControllable'
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 import { MaskedPopup } from '@/components/ui/MaskedPopup/MaskedPopup'
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
@@ -81,21 +82,19 @@ export function MaskedCommandPalette(props: MaskedCommandPaletteProps) {
     style
   } = props
 
-  const [innerOpen, setInnerOpen] = useState(defaultOpen)
+  const [open, setOpen] = useControllable<boolean>({
+    value: openProp,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange
+  })
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
-  const open = openProp ?? innerOpen
   const dict = DICT[(config.locale ?? 'pt-BR').toLowerCase().startsWith('en') ? 'en' : 'pt']
   const tokenStyle = resolveCommandPaletteTokens({ colorTheme, tokens }, theme)
 
   const groups = useMemo(() => groupCommands(filterCommands(items, query)), [items, query])
   const flat = useMemo(() => groups.flatMap((g) => g.items), [groups])
   const optionId = (index: number) => `${listId}-option-${index}`
-
-  function setOpen(next: boolean) {
-    setInnerOpen(next)
-    onOpenChange?.(next)
-  }
 
   /* abrir: busca limpa e primeiro item habilitado ativo */
   useEffect(() => {

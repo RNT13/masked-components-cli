@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
+import { useControllable } from '@/hooks/useControllable'
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import {
@@ -105,8 +106,11 @@ export function MaskedDatePicker(props: MaskedDatePickerProps) {
   const gridRef = useRef<HTMLTableElement>(null)
   const pendingFocus = useRef(false)
 
-  const [inner, setInner] = useState<string | null>(defaultValue)
-  const value = valueProp !== undefined ? valueProp : inner
+  const [value, setValue] = useControllable<string | null>({
+    value: valueProp,
+    defaultValue,
+    onChange
+  })
   const today = todayISO()
   const initialFocus = () => clampISO(value && parseISO(value) ? value : today, min, max)
   const [focusIso, setFocusIso] = useState<string>(initialFocus)
@@ -152,8 +156,7 @@ export function MaskedDatePicker(props: MaskedDatePickerProps) {
   }, [open, inline])
 
   function commit(next: string | null) {
-    setInner(next)
-    onChange?.(next)
+    setValue(next)
   }
 
   function select(iso: string) {
