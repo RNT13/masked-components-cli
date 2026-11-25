@@ -83,6 +83,12 @@ export const registry: ComponentEntry[] = [
     templates: [{ dir: 'masked-config', to: 'components' }]
   },
   {
+    id: 'masked-primitives',
+    label: 'Masked Primitives',
+    description: 'Portal, focus-trap, scroll-lock, click-outside, escape, mounted, composeRefs',
+    templates: [{ dir: 'masked-primitives', to: 'hooks', subdir: 'masked-primitives' }]
+  },
+  {
     id: 'masked-skeleton',
     label: 'Masked Skeleton',
     description: 'Placeholder de carregamento (autossuficiente, tokens --mc-skeleton-*)',
@@ -177,7 +183,7 @@ export const registry: ComponentEntry[] = [
     description:
       'Rodapé com marca, colunas de links, redes e copyright: simple, columns, centered — tokens --mc-footer-*',
     templates: [{ dir: 'masked-page/MaskedFooter', to: 'components', subdir: 'MaskedFooter' }],
-    requires: ['masked-themes', 'masked-config'],
+    requires: ['masked-themes', 'masked-config', 'masked-primitives'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -218,7 +224,7 @@ export const registry: ComponentEntry[] = [
     description:
       'Estrutura de página (header, sidebar, conteúdo, footer): app, site, split, centered — tokens --mc-shell-*',
     templates: [{ dir: 'masked-page/MaskedShell', to: 'components', subdir: 'MaskedShell' }],
-    requires: ['masked-themes', 'masked-config'],
+    requires: ['masked-themes', 'masked-config', 'masked-primitives'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
