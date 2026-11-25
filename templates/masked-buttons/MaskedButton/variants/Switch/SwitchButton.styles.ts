@@ -12,8 +12,20 @@ export const SwitchWrapper = styled.div<{
 export const SwitchLabel = styled.span`
   font-size: 14px;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.textColor ?? theme.colors.baseBlack.light40};
+  color: ${({ theme }) => theme.colors?.textColor ?? theme.colors?.baseBlack?.light40 ?? '#4b5563'};
   user-select: none;
+`
+
+export const HiddenInput = styled.input`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 `
 
 /**
@@ -22,7 +34,7 @@ export const SwitchLabel = styled.span`
  *  - ::after  = marcação "I" (ligado) / "O" (desligado) sobre a tecla
  * Cores: --mc-switch-track-on / --mc-switch-track-off / --mc-switch-knob-bg
  */
-export const SwitchContainer = styled.button<{ $isChecked?: boolean }>`
+export const SwitchContainer = styled.label<{ $isChecked?: boolean; $hasError?: boolean }>`
   position: relative;
   flex: none;
   width: 34px;
@@ -32,8 +44,12 @@ export const SwitchContainer = styled.button<{ $isChecked?: boolean }>`
   cursor: pointer;
   background-color: var(--mc-switch-housing, rgba(0, 0, 0, 0.45));
   border: 2px solid
-    ${({ $isChecked, theme }) =>
-      $isChecked ? `var(--mc-switch-border-on, ${theme.colors.baseBlue.base})` : `var(--mc-switch-border-off, ${theme.colors.baseBlack.base})`};
+    ${({ $isChecked, $hasError, theme }) =>
+      $hasError
+        ? `var(--mc-input-error, ${theme.colors.baseRed?.base ?? '#dc2626'})`
+        : $isChecked
+          ? `var(--mc-switch-border-on, ${theme.colors.baseBlue.base})`
+          : `var(--mc-switch-border-off, ${theme.colors?.borderColor ?? theme.colors?.baseBlack?.light20 ?? '#9ca3af'})`};
   box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5);
   transition:
     border-color 0.2s ease,
@@ -78,20 +94,20 @@ export const SwitchContainer = styled.button<{ $isChecked?: boolean }>`
     transition: top 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  &:focus-visible {
+  &:has(${HiddenInput}:focus-visible) {
     outline: 2px solid var(--mc-switch-ring-focus, ${({ theme }) => theme.colors.baseBlue.base});
     outline-offset: 3px;
   }
 
-  &:hover:not(:disabled) {
+  &:has(${HiddenInput}:not(:disabled)):hover {
     filter: brightness(1.12);
   }
 
-  &:active:not(:disabled) {
+  &:has(${HiddenInput}:not(:disabled)):active {
     transform: translateY(1px);
   }
 
-  &:disabled {
+  &:has(${HiddenInput}:disabled) {
     cursor: not-allowed;
     opacity: 0.5;
   }
@@ -103,3 +119,4 @@ export const SwitchContainer = styled.button<{ $isChecked?: boolean }>`
     }
   }
 `
+

@@ -99,6 +99,9 @@ export type ButtonVariantMap = {
     onCheckedChange?: (checked: boolean) => void
     defaultChecked?: boolean
     switchLabel?: string
+    required?: boolean
+    error?: string
+    helperText?: string
   }
 
   toggle: FieldButtonProps & {
@@ -111,6 +114,10 @@ export type ButtonVariantMap = {
     onCheckedChange?: (checked: boolean) => void
     $checkboxLabel?: string
     defaultChecked?: boolean
+    indeterminate?: boolean
+    required?: boolean
+    error?: string
+    helperText?: string
   }
 
   /** radio visual: mesmo conjunto de tokens --mc-switch-* do checkbox */
@@ -121,6 +128,9 @@ export type ButtonVariantMap = {
     defaultChecked?: boolean
     /** permite desmarcar clicando de novo (radio avulso). Padrão: false */
     deselectable?: boolean
+    required?: boolean
+    error?: string
+    helperText?: string
   }
 
   /** botão duplo estilo GitHub: ação principal + menu de opções */
@@ -159,6 +169,10 @@ export type ButtonProps = BaseButtonProps & {
   checked?: boolean
   defaultChecked?: boolean
   onCheckedChange?: (checked: boolean) => void
+  indeterminate?: boolean
+  required?: boolean
+  error?: string
+  helperText?: string
   /** radio avulso pode ser desmarcado (padrão: false) */
   deselectable?: boolean
 

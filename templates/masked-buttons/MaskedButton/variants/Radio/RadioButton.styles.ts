@@ -5,16 +5,31 @@ export const RadioWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+`
+
+export const HiddenInput = styled.input`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 `
 
 export const RadioLabel = styled.span`
   font-size: 14px;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.baseBlack.light40};
+  color: ${({ theme }) => theme.colors?.baseBlack?.light40 ?? '#4b5563'};
   user-select: none;
+  cursor: pointer;
 `
 
-export const RadioDot = styled.button<{ $isChecked?: boolean }>`
+export const RadioDot = styled.label<{ $isChecked?: boolean; $hasError?: boolean }>`
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -26,39 +41,37 @@ export const RadioDot = styled.button<{ $isChecked?: boolean }>`
   background-color: transparent;
 
   border: 2px solid
-    var(
-      --mc-switch-border-off,
-      ${({ theme, $isChecked }) =>
-        $isChecked ? theme.colors.baseBlue.base : theme.colors.baseBlack.base}
-    );
+    ${({ theme, $isChecked, $hasError }) =>
+      $hasError
+        ? `var(--mc-input-error, ${theme.colors?.baseRed?.base ?? '#ef4444'})`
+        : $isChecked
+          ? `var(--mc-switch-border-on, ${theme.colors?.baseBlue?.base ?? '#3b82f6'})`
+          : `var(--mc-switch-border-off, ${theme.colors?.borderColor ?? theme.colors?.baseBlack?.light20 ?? '#9ca3af'})`};
 
-  ${({ $isChecked, theme }) =>
-    $isChecked && `border-color: var(--mc-switch-border-on, ${theme.colors.baseBlue.base});`}
+  ${transitions.fast}
 
-  ${transitions.fast}  
-  
   &::before {
     content: '';
     width: 10px;
     height: 10px;
     border-radius: 50%;
     transform: ${({ $isChecked }) => ($isChecked ? 'scale(1)' : 'scale(0)')};
-    background-color: var(--mc-switch-track-on, ${({ theme }) => theme.colors.baseBlue.base});
+    background-color: var(--mc-switch-track-on, ${({ theme }) => theme.colors?.baseBlue?.base ?? '#3b82f6'});
     ${transitions.fast}
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--mc-switch-ring-focus, ${({ theme }) => theme.colors.baseBlue.base});
+  &:has(${HiddenInput}:focus-visible) {
+    outline: 2px solid var(--mc-switch-ring-focus, ${({ theme }) => theme.colors?.baseBlue?.base ?? '#3b82f6'});
     outline-offset: 2px;
   }
 
-  &:hover:not(:disabled) {
+  &:has(${HiddenInput}:not(:disabled)):hover {
     transform: scale(1.05);
   }
-  &:active:not(:disabled) {
+  &:has(${HiddenInput}:not(:disabled)):active {
     transform: scale(0.95);
   }
-  &:disabled {
+  &:has(${HiddenInput}:disabled) {
     cursor: not-allowed;
     opacity: 0.5;
   }

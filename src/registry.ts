@@ -633,7 +633,7 @@ export const registry: ComponentEntry[] = [
     description:
       'default, outline, ghost, soft, link, gradient, neon, split, toggle, switch, checkbox, radio, group',
     templates: [{ dir: 'masked-buttons', to: 'components' }],
-    requires: ['masked-animations', 'masked-themes', 'masked-config'],
+    requires: ['masked-animations', 'masked-themes', 'masked-config', 'masked-hooks'],
     dependencies: [STYLED],
     notes: [THEME_PROVIDER_NOTE, CONFIG_PROVIDER_NOTE]
   },

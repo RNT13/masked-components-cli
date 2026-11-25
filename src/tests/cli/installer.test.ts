@@ -32,6 +32,8 @@ function makeTemplates(root: string): string {
     path.join(t, 'hooks/useAnimationEngine.ts'),
     "import '../animations/nao-existe'\n"
   )
+  fs.ensureDirSync(path.join(t, 'masked-hooks'))
+  fs.writeFileSync(path.join(t, 'masked-hooks/useControllable.ts'), 'export const useControllable = 1\n')
   fs.outputFileSync(
     path.join(t, 'masked-config/MaskedConfigProvider.tsx'),
     'export const MaskedConfigProvider = () => null\n'
@@ -92,6 +94,7 @@ describe('instalação ponta a ponta', () => {
       'masked-utils',
       'masked-themes',
       'masked-config',
+      'masked-hooks',
       'masked-buttons'
     ])
     expect(plan.toInstall.map((dep) => dep.name)).toEqual(['styled-components'])

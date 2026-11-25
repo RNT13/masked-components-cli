@@ -3,8 +3,8 @@
 import {
   createContext,
   useContext,
+  useId,
   useRef,
-  useState,
   type CSSProperties,
   type KeyboardEvent,
   type ReactNode
@@ -12,10 +12,12 @@ import {
 import { styled, type DefaultTheme } from 'styled-components'
 import type { ColorThemeName } from '@/styles/MaskedThemes/ColorThemes'
 import { readableTextOn } from '@/utils/masked-utils'
+import { useControllable } from '@/hooks/useControllable'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { MaskedButton } from './MaskedButton'
 import { resolveButtonTokens } from './buttonTokens'
+import { ErrorDiv, HelperDiv } from './group.styles'
 import type { ButtonProps } from './MaskedButton.types'
-import { useTheme } from 'styled-components'  
 
 /* ================= Tipos ================= */
 
@@ -34,12 +36,21 @@ export type MaskedButtonGroupProps = {
   defaultValue?: string
   onChange?: (value: string) => void
   /**
-   * 'segmented' (padrão): controle segmentado com indicador deslizante.
-   * Os demais renderizam um grupo de campos (toggle/checkbox/radio/switch).
+   * 'segmented' (padrão): controle segmentado com indicador deslizante.  
+   * Os demais renderizam um grupo de campos (toggle/checkbox/radio/switch).  
    */
   variant?: 'segmented' | 'toggle' | 'checkbox' | 'radio' | 'switch'
   /** direção dos grupos de campos (padrão: horizontal) */
   orientation?: 'horizontal' | 'vertical'
+  /**
+   * name compartilhado dos inputs do grupo (variant 'radio'/'checkbox').  
+   * Sem ele, os radios não se comportam como grupo nativo no <form>.  
+   */
+  name?: string
+  /** rótulo visível do grupo (renderizado como <legend> quando há label/error/helperText) */
+  label?: ReactNode
+  error?: string
+  helperText?: string
   colorTheme?: ColorThemeName
   tokens?: Record<string, string | number>
   fullWidth?: boolean
@@ -48,9 +59,9 @@ export type MaskedButtonGroupProps = {
   ariaLabel?: string
 }
 
-/* ================= Helpers de tema (funcionam sem ThemeProvider) ================= */
+/* ================= Helpers de tema ================= */
 
-const accentOf = (theme: DefaultTheme) => theme.colors?.accentColor ?? '#2563eb'
+const accentOf = (theme: DefaultTheme): string => theme.colors?.accentColor ?? '#2563eb'
 
 /* ================= Estilos: segmented ================= */
 
@@ -112,9 +123,9 @@ const Segment = styled.button<{ $selected: boolean }>`
 
   &:hover:not(:disabled) {
     color: ${({ $selected, theme }) =>
-    $selected
-      ? `var(--mc-btn-fg, ${readableTextOn(accentOf(theme))})`
-      : (theme.colors?.textColor ?? 'inherit')};
+      $selected
+        ? `var(--mc-btn-fg, ${readableTextOn(accentOf(theme))})`
+        : (theme.colors?.textColor ?? 'inherit')};
   }
 
   &:focus-visible {
@@ -130,6 +141,21 @@ const Segment = styled.button<{ $selected: boolean }>`
 
 /* ================= Estilos: grupo de campos ================= */
 
+const GroupFieldset = styled.fieldset`
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+`
+
+const GroupLegend = styled.legend`
+  padding: 0;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors?.textColor ?? 'inherit'};
+`
+
 const FieldsContainer = styled.div<{ $vertical?: boolean; $fullWidth?: boolean }>`
   display: inline-flex;
   flex-wrap: wrap;
@@ -141,7 +167,7 @@ const FieldsContainer = styled.div<{ $vertical?: boolean; $fullWidth?: boolean }
 
 /* ================= Segmented ================= */
 
-function Segmented(props: {
+interface SegmentedProps {
   options: ButtonGroupOption[]
   current?: string
   select: (value: string) => void
@@ -149,7 +175,9 @@ function Segmented(props: {
   fullWidth?: boolean
   className?: string
   ariaLabel?: string
-}) {
+}
+
+function Segmented(props: SegmentedProps) {
   const { options, current, select, tokenStyle, fullWidth, className, ariaLabel } = props
   const refs = useRef<Array<HTMLButtonElement | null>>([])
 
@@ -158,7 +186,7 @@ function Segmented(props: {
   const hasSelection = found >= 0
   const index = hasSelection ? found : 0
 
-  const isDisabled = (i: number) => Boolean(options[i]?.buttonProps?.disabled)
+  const isDisabled = (i: number): boolean => Boolean(options[i]?.buttonProps?.disabled)
 
   function nextEnabled(from: number, step: 1 | -1): number {
     for (let n = 1; n <= count; n++) {
@@ -232,15 +260,22 @@ function Segmented(props: {
 
 /* ================= Contexto dos grupos de campos ================= */
 
-const GroupContext = createContext<{
+interface GroupContextValue {
   value?: string
   select: (v: string) => void
   variant: Exclude<NonNullable<MaskedButtonGroupProps['variant']>, 'segmented'>
+  name?: string
   colorTheme?: ColorThemeName
   tokens?: Record<string, string | number>
-} | null>(null)
+}
 
-function GroupItem({ option }: { option: ButtonGroupOption }) {
+interface GroupItemProps {
+  option: ButtonGroupOption
+}
+
+const GroupContext = createContext<GroupContextValue | null>(null)
+
+function GroupItem({ option }: GroupItemProps) {
   const ctx = useContext(GroupContext)
   if (!ctx) return null
 
@@ -249,7 +284,6 @@ function GroupItem({ option }: { option: ButtonGroupOption }) {
   const textLabel =
     typeof label === 'string' || typeof label === 'number' ? String(label) : option.value
 
-  /* as variants de campo não renderizam children: o rótulo vai pela prop de cada uma */
   const labelProps =
     ctx.variant === 'switch'
       ? { switchLabel: textLabel }
@@ -263,7 +297,7 @@ function GroupItem({ option }: { option: ButtonGroupOption }) {
     <MaskedButton
       variant={ctx.variant}
       optionValue={option.value}
-      name={ctx.variant === 'radio' ? 'masked-button-group' : undefined}
+      name={ctx.name}
       active={checked}
       checked={checked}
       colorTheme={ctx.colorTheme}
@@ -279,14 +313,18 @@ function GroupItem({ option }: { option: ButtonGroupOption }) {
 /* ================= Componente ================= */
 
 export function MaskedButtonGroup(props: MaskedButtonGroupProps) {
-  const theme = useTheme()
+  const theme = useMaskedTheme()
+  const uid = useId()
   const {
     options,
     value,
     defaultValue,
-    onChange,
     variant = 'segmented',
     orientation = 'horizontal',
+    name,
+    label,
+    error,
+    helperText,
     colorTheme,
     tokens,
     fullWidth,
@@ -295,14 +333,20 @@ export function MaskedButtonGroup(props: MaskedButtonGroupProps) {
     ariaLabel
   } = props
 
-  const isControlled = value !== undefined
-  const [internal, setInternal] = useState(defaultValue)
-  const current = isControlled ? value : internal
+  const [current, select] = useControllable<string | undefined>({
+    value,
+    defaultValue,
+    onChange: (v: string | undefined) => {
+      if (v !== undefined) props.onChange?.(v)
+    }
+  })
 
-  const select = (v: string) => {
-    if (!isControlled) setInternal(v)
-    onChange?.(v)
-  }
+  const hasError = Boolean(error)
+  const groupName = name ?? `masked-group-${uid.replace(/:/g, '')}`
+  const describedby =
+    [hasError ? `${groupName}-error` : null, helperText ? `${groupName}-helper` : null]
+      .filter(Boolean)
+      .join(' ') || undefined
 
   if (variant === 'segmented') {
     return (
@@ -319,20 +363,42 @@ export function MaskedButtonGroup(props: MaskedButtonGroupProps) {
   }
 
   const resolvedRole = role ?? (variant === 'radio' ? 'radiogroup' : 'group')
+  const hasWrapper = label != null || hasError || helperText != null
+
+  const fields = (
+    <FieldsContainer
+      role={hasWrapper ? undefined : resolvedRole}
+      aria-label={hasWrapper ? undefined : ariaLabel}
+      aria-describedby={describedby}
+      $vertical={orientation === 'vertical'}
+      $fullWidth={fullWidth}
+      className={hasWrapper ? undefined : className}
+    >
+      {options.map((opt) => (
+        <GroupItem key={opt.value} option={opt} />
+      ))}
+    </FieldsContainer>
+  )
 
   return (
-    <GroupContext.Provider value={{ value: current, select, variant, colorTheme, tokens }}>
-      <FieldsContainer
-        role={resolvedRole}
-        aria-label={ariaLabel}
-        $vertical={orientation === 'vertical'}
-        $fullWidth={fullWidth}
-        className={className}
-      >
-        {options.map((opt) => (
-          <GroupItem key={opt.value} option={opt} />
-        ))}
-      </FieldsContainer>
+    <GroupContext.Provider
+      value={{ value: current, select, variant, name: groupName, colorTheme, tokens }}
+    >
+      {hasWrapper ? (
+        <GroupFieldset
+          role={resolvedRole}
+          aria-label={ariaLabel}
+          aria-describedby={describedby}
+          className={className}
+        >
+          {label != null && <GroupLegend>{label}</GroupLegend>}
+          {fields}
+          {hasError && <ErrorDiv id={`${groupName}-error`}>{error}</ErrorDiv>}
+          {helperText && <HelperDiv id={`${groupName}-helper`}>{helperText}</HelperDiv>}
+        </GroupFieldset>
+      ) : (
+        fields
+      )}
     </GroupContext.Provider>
   )
 }

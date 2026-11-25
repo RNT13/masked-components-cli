@@ -17,13 +17,15 @@ describe('registry', () => {
       'masked-utils',
       'masked-themes',
       'masked-config',
+      'masked-hooks',
       'masked-buttons'
     ])
     expect(addedByDependency).toEqual([
       'masked-animations',
       'masked-utils',
       'masked-themes',
-      'masked-config'
+      'masked-config',
+      'masked-hooks'
     ])
   })
 

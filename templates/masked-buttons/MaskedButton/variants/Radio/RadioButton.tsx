@@ -1,10 +1,11 @@
 'use client'
 
-import { MouseEvent, useState } from 'react'
+import { useId } from 'react'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
+import { useControllable } from '@/hooks/useControllable'
 import { resolveButtonTokens } from '../../buttonTokens'
 import { ButtonVariantMap } from '../../MaskedButton.types'
-import { RadioDot, RadioLabel, RadioWrapper } from './RadioButton.styles'
-import { useTheme } from 'styled-components'  
+import { HiddenInput, RadioDot, RadioLabel, RadioWrapper } from './RadioButton.styles'
 
 type Props = { $variant: 'radio' } & ButtonVariantMap['radio']
 
@@ -22,48 +23,78 @@ export default function RadioButton({
   ariaLabel,
   className,
   colorTheme,
-  tokens
+  tokens,
+  required = false,
+  error,
+  helperText
 }: Props) {
-  const theme = useTheme()  
-  const isControlled = checked !== undefined
-  const [internal, setInternal] = useState(defaultChecked)
-  const isChecked = isControlled ? checked : internal
+  const theme = useMaskedTheme()
+  const uid = useId()
+  const inputId = `${uid}-radio`
+
+  const [isChecked, setChecked] = useControllable<boolean>({
+    value: checked,
+    defaultValue: defaultChecked,
+    onChange: onCheckedChange
+  })
+
   const isDisabled = state === 'disabled' || state === 'loading'
+  const hasError = Boolean(error)
 
-  function handleClick(event: MouseEvent<HTMLButtonElement>) {
-    if (isDisabled) return
-
-    if (isChecked) {
-      // radio de grupo não desmarca; radio avulso pode (deselectable)
-      if (!deselectable) return
-      if (!isControlled) setInternal(false)
-      onCheckedChange?.(false)
-      onClick?.(event)
-      return
-    }
-
-    if (!isControlled) setInternal(true)
-    onCheckedChange?.(true)
-    onClick?.(event)
-  }
+  const describedby =
+    [hasError ? `${inputId}-error` : null, helperText ? `${inputId}-helper` : null]
+      .filter(Boolean)
+      .join(' ') || undefined
 
   return (
     <RadioWrapper>
       <RadioDot
-        type="button"
-        role="radio"
-        aria-checked={isChecked}
-        aria-label={ariaLabel ?? radioLabel}
-        name={name}
-        value={value ?? optionValue}
-        disabled={isDisabled}
-        onClick={handleClick}
+        as="label"
+        htmlFor={inputId}
+        aria-label={radioLabel ? undefined : ariaLabel}
         className={className}
         $isChecked={isChecked}
+        $hasError={hasError}
         data-testid="radio-button"
         style={resolveButtonTokens({ colorTheme, tokens, theme })}
-      />
-      {radioLabel && <RadioLabel>{radioLabel}</RadioLabel>}
+      >
+        <HiddenInput
+          id={inputId}
+          type="radio"
+          checked={isChecked}
+          name={name}
+          value={value ?? optionValue}
+          required={required}
+          disabled={isDisabled}
+          aria-invalid={hasError || undefined}
+          aria-describedby={describedby}
+          onChange={() => {
+            if (isDisabled) return
+            setChecked(true)
+            onClick?.({} as React.MouseEvent<HTMLButtonElement>)
+          }}
+          onClick={(e) => {
+            // radio de grupo não desmarca; avulso pode (deselectable)
+            if (isChecked && deselectable) {
+              e.preventDefault()
+              setChecked(false)
+            }
+          }}
+        />
+      </RadioDot>
+
+      {radioLabel && (
+        <RadioLabel as="label" htmlFor={inputId}>
+          {radioLabel}
+        </RadioLabel>
+      )}
+
+      {hasError && (
+        <span id={`${inputId}-error`} role="alert">
+          {error}
+        </span>
+      )}
+      {helperText && <span id={`${inputId}-helper`}>{helperText}</span>}
     </RadioWrapper>
   )
 }
