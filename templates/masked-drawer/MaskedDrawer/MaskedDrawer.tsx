@@ -112,7 +112,19 @@ export function MaskedDrawer({
     return () => cancelAnimationFrame(raf)
   }, [isOpen, side, shownSide])
 
-  // Escape + focus inicial + focus trap
+  // Escape acompanha o estado semântico, sem esperar o rAF de abertura.
+  useEffect(() => {
+    if (!isOpen || !closeOnEscape) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCloseRef.current()
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [isOpen, closeOnEscape])
+
+  // Focus inicial + focus trap: o painel precisa estar visível.
   useEffect(() => {
     if (!open) return
 
@@ -122,11 +134,6 @@ export function MaskedDrawer({
     panel?.querySelector<HTMLElement>(FOCUSABLE)?.focus()
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && closeOnEscape) {
-        onCloseRef.current()
-        return
-      }
-
       if (e.key !== 'Tab' || !panel) return
 
       const items = [...panel.querySelectorAll<HTMLElement>(FOCUSABLE)]
@@ -154,7 +161,7 @@ export function MaskedDrawer({
       document.removeEventListener('keydown', onKeyDown)
       prevActive?.focus?.()
     }
-  }, [open, closeOnEscape])
+  }, [open])
 
   // Scroll lock
   useEffect(() => {
