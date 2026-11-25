@@ -11,7 +11,7 @@ import {
   MaskedInputContainer
 } from '../../MaskedInput.styles'
 import { InputVariantMap } from '../../MaskedInput.types'
-import { PasswordToggle } from './PasswordInput.styles'
+import { PasswordFieldWrapper, PasswordToggle } from './PasswordInput.styles'
 import { EyeIcon, EyeOffIcon } from '../../icons'
 import { useControllable } from '@/hooks/useControllable'
 
@@ -59,30 +59,32 @@ export function PasswordInput(props: Props) {
         </InputLabel>
       )}
 
-      {props.icon && <InputIconWrapper>{props.icon}</InputIconWrapper>}
+      <PasswordFieldWrapper>
+        {props.icon && <InputIconWrapper>{props.icon}</InputIconWrapper>}
 
-      <input
-        id={inputId}
-        name={props.name}
-        type={show ? 'text' : 'password'}
-        value={current ?? ''}
-        onChange={(e) => setCurrent(e.target.value)}
-        className={hasError ? 'error' : ''}
-        placeholder={props.placeholder}
-        aria-invalid={hasError ? 'true' : undefined}
-        aria-describedby={describedBy}
-        disabled={props.disabled}
-      />
+        <input
+          id={inputId}
+          name={props.name}
+          type={show ? 'text' : 'password'}
+          value={current ?? ''}
+          onChange={(e) => setCurrent(e.target.value)}
+          className={hasError ? 'error' : ''}
+          placeholder={props.placeholder}
+          aria-invalid={hasError ? 'true' : undefined}
+          aria-describedby={describedBy}
+          disabled={props.disabled}
+        />
 
-      <PasswordToggle
-        type="button"
-        onClick={() => setShow((s) => !s)}
-        aria-label={toggleLabel}
-        aria-pressed={show}
-        disabled={props.disabled}
-      >
-        {show ? showIcon : hideIcon}
-      </PasswordToggle>
+        <PasswordToggle
+          type="button"
+          onClick={() => setShow((s) => !s)}
+          aria-label={toggleLabel}
+          aria-pressed={show}
+          disabled={props.disabled}
+        >
+          {show ? showIcon : hideIcon}
+        </PasswordToggle>
+      </PasswordFieldWrapper>
 
       {hasError && <ErrorDiv id={`${inputId}-error`}>{props.error}</ErrorDiv>}
       {props.helperText && <HelperDiv id={helperId}>{props.helperText}</HelperDiv>}

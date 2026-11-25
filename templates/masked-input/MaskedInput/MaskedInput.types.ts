@@ -143,7 +143,10 @@ export type InputVariantMap = {
 
   file: BaseProps & {
     multiple?: boolean
-    fileMode?: 'local' | 'cloudinary'
+    /** Upload injetável — qualquer backend. Tem precedência sobre cloudName/uploadPreset. */
+    uploadHandler?: (file: File) => Promise<{ url: string; publicId?: string }>
+    /** 'local' = arquivo no submit; 'remote'/'cloudinary' = upload imediato. */
+    fileMode?: 'local' | 'remote' | 'cloudinary'
     previewMode?: 'normal' | 'replace'
     uploadPreset?: string
     cloudName?: string

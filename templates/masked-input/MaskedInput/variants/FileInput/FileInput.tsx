@@ -3,7 +3,11 @@
  *
  * Upload com preview, drag-and-drop e dois modos:  
  * - fileMode="local": o arquivo vai no submit do formulário  
- * - fileMode="cloudinary": sobe direto e devolve a URL  
+ * - fileMode="remote" (ou "cloudinary", legado): sobe via uploadHandler  
+ *
+ * Upload injetável:  
+ * - props.uploadHandler(file) => Promise<{ url: string }> — qualquer backend  
+ * - sem uploadHandler + cloudName/uploadPreset → fallback Cloudinary (retrocompatível)  
  *
  * Imagem de preview e notificações são injetáveis:  
  * - props.imageComponent ou <MaskedConfigProvider config={{ imageComponent }}>, fallback <img>  
@@ -68,6 +72,25 @@ function matchesAccept(file: File, accept?: string): boolean {
   })
 }
 
+/** Fallback legado: upload direto ao Cloudinary (unsigned preset). */
+async function cloudinaryUpload(file: File, cloudName: string, uploadPreset: string) {
+  const fd = new FormData()
+  fd.append('file', file)
+  fd.append('upload_preset', uploadPreset)
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+    method: 'POST',
+    body: fd
+  })
+
+  if (!res.ok) throw new Error(`Falha no upload de "${file.name}"`)
+
+  const data = await res.json()
+  if (!data.secure_url) throw new Error(`Resposta inválida do upload para "${file.name}"`)
+
+  return { url: data.secure_url as string, publicId: data.public_id as string | undefined }
+}
+
 export function FileInput(props: Props) {
   const config = useMaskedConfig()
   const theme = useMaskedTheme()
@@ -108,7 +131,7 @@ export function FileInput(props: Props) {
   const ImageComponent: ComponentType<ImageComponentProps> | undefined =
     props.imageComponent ?? config.imageComponent
   const renderImage = (src: string, alt: string, style?: CSSProperties) =>
-    ImageComponent ? (
+    !src ? null : ImageComponent ? (
       <ImageComponent src={src} alt={alt} fill style={style} />
     ) : (
       // Fallback agnóstico de framework; em Next, injete next/image via imageComponent.
@@ -152,9 +175,12 @@ export function FileInput(props: Props) {
     const files = validateFiles(Array.from(filesList))
     if (files.length === 0) return
 
-    const urls = files.map((f) => URL.createObjectURL(f))
+    const canPreview = typeof URL.createObjectURL === 'function'
+    const urls = files.map((f) => (canPreview ? URL.createObjectURL(f) : ''))
 
-    prev.current.forEach(URL.revokeObjectURL)
+    if (typeof URL.revokeObjectURL === 'function') {
+      prev.current.forEach((url) => url && URL.revokeObjectURL(url))
+    }
     prev.current = urls
 
     setPreviews(urls)
@@ -167,13 +193,22 @@ export function FileInput(props: Props) {
       return
     }
 
-    uploadToCloudinary(files)
+    uploadFiles(files)
   }
 
-  async function uploadToCloudinary(files: File[]) {
-    if (!props.uploadPreset || !props.cloudName) {
+  async function uploadFiles(files: File[]) {
+    // Handler injetável tem precedência; Cloudinary é o fallback legado.
+    const handler =
+      props.uploadHandler ??
+      (props.cloudName && props.uploadPreset
+        ? (file: File) =>
+            cloudinaryUpload(file, props.cloudName as string, props.uploadPreset as string)
+        : undefined)
+
+    if (!handler) {
       notifyError(
-        props.uploadConfigMessage ?? 'Configuração de upload ausente (cloudName/uploadPreset)'
+        props.uploadConfigMessage ??
+          'Configuração de upload ausente (passe uploadHandler ou cloudName/uploadPreset)'
       )
       return
     }
@@ -182,33 +217,11 @@ export function FileInput(props: Props) {
     props.onUploadingChange?.(true)
 
     try {
-      const results = await Promise.allSettled(
-        files.map(async (file) => {
-          const fd = new FormData()
-          fd.append('file', file)
-          fd.append('upload_preset', props.uploadPreset as string)
-
-          const res = await fetch(
-            `https://api.cloudinary.com/v1_1/${props.cloudName}/image/upload`,
-            { method: 'POST', body: fd }
-          )
-
-          if (!res.ok) {
-            throw new Error(`Falha no upload de "${file.name}"`)
-          }
-
-          const data = await res.json()
-          if (!data.secure_url) {
-            throw new Error(`Resposta inválida do Cloudinary para "${file.name}"`)
-          }
-
-          return data.secure_url as string
-        })
-      )
+      const results = await Promise.allSettled(files.map((file) => handler(file)))
 
       const uploaded = results
-        .filter((r): r is PromiseFulfilledResult<string> => r.status === 'fulfilled')
-        .map((r) => r.value)
+        .filter((r): r is PromiseFulfilledResult<{ url: string }> => r.status === 'fulfilled')
+        .map((r) => r.value.url)
 
       const failedCount = results.length - uploaded.length
       if (failedCount > 0) {
@@ -232,7 +245,9 @@ export function FileInput(props: Props) {
   }
 
   function handleRemove() {
-    prev.current.forEach(URL.revokeObjectURL)
+    if (typeof URL.revokeObjectURL === 'function') {
+      prev.current.forEach((url) => url && URL.revokeObjectURL(url))
+    }
     prev.current = []
     setPreviews([])
     setFileNames([])
@@ -249,7 +264,11 @@ export function FileInput(props: Props) {
   }
 
   useEffect(() => {
-    return () => prev.current.forEach(URL.revokeObjectURL)
+    return () => {
+      if (typeof URL.revokeObjectURL === 'function') {
+        prev.current.forEach((url) => url && URL.revokeObjectURL(url))
+      }
+    }
   }, [])
 
   const busy = isUploading || props.disabled
