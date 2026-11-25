@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 
-import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import { readableTextOn } from '@/utils/masked-utils'
 
@@ -25,7 +25,7 @@ export function MaskedDrawer({
   overlay = true,
   overlayBlur = false,
   transition = 'slide',
-  zIndex = maskedTheme.zIndex.modal,
+  zIndex,
   closeOnEscape = true,
   ariaLabel,
   ariaLabelledBy,
@@ -36,6 +36,8 @@ export function MaskedDrawer({
   className,
   style
 }: MaskedDrawerProps) {
+  const theme = useMaskedTheme()
+  const resolvedZIndex = zIndex ?? theme.zIndex.modal
   const panelRef = useRef<HTMLDivElement>(null)
 
   /* onClose via ref: trocar a callback não re-executa o efeito de foco */
@@ -170,7 +172,7 @@ export function MaskedDrawer({
   const size = isHorizontal ? width : height
   const fallback = isHorizontal ? '280px' : '60dvh'
 
-  const themeVars = resolveColorTheme(colorTheme, maskedTheme)
+  const themeVars = resolveColorTheme(colorTheme, theme)
 
   const vars = {
     ...(themeVars?.base
@@ -189,7 +191,7 @@ export function MaskedDrawer({
         <DrawerOverlay
           $isOpen={open}
           $blur={overlayBlur}
-          $zIndex={zIndex}
+          $zIndex={resolvedZIndex}
           style={vars}
           aria-hidden="true"
           onClick={() => onCloseRef.current()}
@@ -209,7 +211,7 @@ export function MaskedDrawer({
         $size={size}
         $fallback={fallback}
         $transition={transition}
-        $zIndex={zIndex}
+        $zIndex={resolvedZIndex}
         className={className}
         style={{ ...vars, ...style, ...(!visible ? { transition: 'none' } : {}) }}
       >

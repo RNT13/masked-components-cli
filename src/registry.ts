@@ -685,7 +685,8 @@ export const registry: ComponentEntry[] = [
     id: 'masked-hooks',
     label: 'Masked Hooks',
     description: 'useDebounce, useLocalStorage, useMediaQuery, useScrollToTop',
-    templates: [{ dir: 'masked-hooks', to: 'hooks' }]
+    templates: [{ dir: 'masked-hooks', to: 'hooks' }],
+    requires: ['masked-themes']
     // useInView sai com masked-animations; useSmartSearch sai com masked-input
   },
   {

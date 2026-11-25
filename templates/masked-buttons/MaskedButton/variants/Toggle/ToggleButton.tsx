@@ -4,6 +4,7 @@ import { MouseEvent, useState } from 'react'
 import { resolveButtonTokens } from '../../buttonTokens'
 import { ButtonVariantMap } from '../../MaskedButton.types'
 import { ToggleButtonContainer, ToggleLabel, ToggleWrapper } from './ToggleButton.styles'
+import { useTheme } from 'styled-components'  
 
 type Props = { $variant: 'toggle' } & ButtonVariantMap['toggle']
 
@@ -20,6 +21,7 @@ export default function ToggleButton({
   tokens
 }: Props) {
   // sincroniza quando controlado por fora (ex.: MaskedButtonGroup)
+  const theme = useTheme()
   const [active, setActive] = useState($isActive)
   const [prevActive, setPrevActive] = useState($isActive)
   if (prevActive !== $isActive) {
@@ -48,7 +50,7 @@ export default function ToggleButton({
         className={className}
         $isActive={active}
         data-testid="toggle-button"
-        style={resolveButtonTokens({ colorTheme, tokens })}
+        style={resolveButtonTokens({ colorTheme, tokens, theme })}
       />
       {$toggleLabel && <ToggleLabel>{$toggleLabel}</ToggleLabel>}
     </ToggleWrapper>

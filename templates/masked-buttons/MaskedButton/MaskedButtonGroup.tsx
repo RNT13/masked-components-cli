@@ -15,6 +15,7 @@ import { readableTextOn } from '@/utils/masked-utils'
 import { MaskedButton } from './MaskedButton'
 import { resolveButtonTokens } from './buttonTokens'
 import type { ButtonProps } from './MaskedButton.types'
+import { useTheme } from 'styled-components'  
 
 /* ================= Tipos ================= */
 
@@ -278,6 +279,7 @@ function GroupItem({ option }: { option: ButtonGroupOption }) {
 /* ================= Componente ================= */
 
 export function MaskedButtonGroup(props: MaskedButtonGroupProps) {
+  const theme = useTheme()
   const {
     options,
     value,
@@ -308,7 +310,7 @@ export function MaskedButtonGroup(props: MaskedButtonGroupProps) {
         options={options}
         current={current}
         select={select}
-        tokenStyle={resolveButtonTokens({ colorTheme, tokens })}
+        tokenStyle={resolveButtonTokens({ colorTheme, tokens, theme })}
         fullWidth={fullWidth}
         className={className}
         ariaLabel={ariaLabel}

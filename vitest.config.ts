@@ -21,6 +21,10 @@ export default defineConfig({
         replacement: path.resolve(__dirname, 'templates/masked-themes') + '/'
       },
       {
+        find: /^@\/themes\//,
+        replacement: path.resolve(__dirname, 'templates/masked-themes') + '/'
+      },
+      {
         find: /^@\/components\/ui\/MaskedConfigProvider/,
         replacement: path.resolve(__dirname, 'templates/masked-config/MaskedConfigProvider')
       },

@@ -5,6 +5,7 @@ import { CheckIcon, SpinnerIcon } from '../../Base/icons'
 import { resolveButtonTokens } from '../../buttonTokens'
 import { ButtonVariantMap } from '../../MaskedButton.types'
 import { CheckboxBox, CheckboxLabel, CheckboxWrapper } from './CheckboxButton.styles'
+import { useTheme } from 'styled-components'  
 
 type Props = {
   $variant: 'checkbox'
@@ -23,6 +24,7 @@ export default function CheckboxButton({
   colorTheme,
   tokens
 }: Props) {
+  const theme = useTheme()  
   const isControlled = checked !== undefined
   const [internal, setInternal] = useState(defaultChecked)
   const isChecked = isControlled ? checked : internal
@@ -52,7 +54,7 @@ export default function CheckboxButton({
         $isChecked={isChecked}
         $isLoading={isLoading}
         data-testid="checkbox-button"
-        style={resolveButtonTokens({ colorTheme, tokens })}
+        style={resolveButtonTokens({ colorTheme, tokens, theme })}
       >
         {isLoading ? <SpinnerIcon /> : isChecked && <CheckIcon />}
       </CheckboxBox>

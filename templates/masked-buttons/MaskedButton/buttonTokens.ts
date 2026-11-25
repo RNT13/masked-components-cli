@@ -86,10 +86,7 @@ export function resolveButtonTokens(opts: {
 }): ButtonTokensStyle {
   const vars: Record<string, string | number> = {}
 
-  const c =
-    opts.colorTheme && opts.colorTheme !== 'default'
-      ? resolveColorTheme(opts.colorTheme, maskedTheme)
-      : undefined
+  const c = resolveColorTheme(opts.colorTheme, opts.theme ?? maskedTheme)
 
   if (c) {
     const bg = c.base

@@ -4,6 +4,7 @@ import { MouseEvent, useState } from 'react'
 import { ButtonVariantMap } from '../../MaskedButton.types'
 import { SwitchContainer, SwitchLabel, SwitchWrapper } from './SwitchButton.styles'
 import { resolveButtonTokens } from '../../buttonTokens'
+import { useTheme } from 'styled-components'  
 
 type Props = { $variant: 'switch' } & ButtonVariantMap['switch']
 
@@ -20,6 +21,7 @@ export default function SwitchButton({
   colorTheme,
   tokens
 }: Props) {
+  const theme = useTheme()
   const isControlled = checked !== undefined
   const [internal, setInternal] = useState(defaultChecked)
   const isChecked = isControlled ? checked : internal
@@ -45,7 +47,7 @@ export default function SwitchButton({
         className={className}
         $isChecked={isChecked}
         data-testid="switch-button"
-        style={resolveButtonTokens({ colorTheme, tokens })}
+        style={resolveButtonTokens({ colorTheme, tokens, theme })}
       />
       {switchLabel && <SwitchLabel>{switchLabel}</SwitchLabel>}
     </SwitchWrapper>

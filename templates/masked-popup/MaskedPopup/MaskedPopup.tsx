@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
-import { maskedTheme } from '@/styles/MaskedThemes/MaskedThemes'
+import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import { PopupOverlay, PopupPanel } from './MaskedPopup.styles'
 import { MaskedPopupProps } from './MaskedPopup.types'
@@ -22,7 +22,7 @@ export function MaskedPopup({
   maxWidth = '480px',
   overlayBlur = false,
   transition = 'pop',
-  zIndex = maskedTheme.zIndex.popover,
+  zIndex,
   closeOnOverlay = true,
   closeOnEscape = true,
   ariaLabel,
@@ -34,6 +34,8 @@ export function MaskedPopup({
   className,
   style
 }: MaskedPopupProps) {
+  const theme = useMaskedTheme()
+  const resolvedZIndex = zIndex ?? theme.zIndex.popover
   const panelRef = useRef<HTMLDivElement>(null)
 
   /* onClose via ref: trocar a callback não re-executa o efeito de foco */
@@ -121,7 +123,7 @@ export function MaskedPopup({
     }
   }, [isOpen, lockScroll])
 
-  const themeVars = resolveColorTheme(colorTheme, maskedTheme)
+  const themeVars = resolveColorTheme(colorTheme, theme)
 
   /* prefixo --mc-popup-* (o styles lê --mc-popup-*); aplicado no overlay E no painel */
   const vars = {
@@ -146,7 +148,7 @@ export function MaskedPopup({
       <PopupOverlay
         $isOpen={panelOpen}
         $blur={overlayBlur}
-        $zIndex={zIndex}
+        $zIndex={resolvedZIndex}
         style={vars}
         aria-hidden="true"
         onClick={closeOnOverlay ? () => onCloseRef.current() : undefined}
@@ -164,7 +166,7 @@ export function MaskedPopup({
         $width={width}
         $maxWidth={maxWidth}
         $transition={transition}
-        $zIndex={zIndex}
+        $zIndex={resolvedZIndex}
         className={className}
         style={{ ...vars, ...style }}
       >

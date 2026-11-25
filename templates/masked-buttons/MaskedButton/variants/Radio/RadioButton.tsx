@@ -4,6 +4,7 @@ import { MouseEvent, useState } from 'react'
 import { resolveButtonTokens } from '../../buttonTokens'
 import { ButtonVariantMap } from '../../MaskedButton.types'
 import { RadioDot, RadioLabel, RadioWrapper } from './RadioButton.styles'
+import { useTheme } from 'styled-components'  
 
 type Props = { $variant: 'radio' } & ButtonVariantMap['radio']
 
@@ -23,6 +24,7 @@ export default function RadioButton({
   colorTheme,
   tokens
 }: Props) {
+  const theme = useTheme()  
   const isControlled = checked !== undefined
   const [internal, setInternal] = useState(defaultChecked)
   const isChecked = isControlled ? checked : internal
@@ -59,7 +61,7 @@ export default function RadioButton({
         className={className}
         $isChecked={isChecked}
         data-testid="radio-button"
-        style={resolveButtonTokens({ colorTheme, tokens })}
+        style={resolveButtonTokens({ colorTheme, tokens, theme })}
       />
       {radioLabel && <RadioLabel>{radioLabel}</RadioLabel>}
     </RadioWrapper>
