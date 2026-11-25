@@ -158,8 +158,18 @@ export const registry: ComponentEntry[] = [
       'masked-grid',
       'masked-container',
       'masked-section',
-      'masked-divider'
+      'masked-divider',
+      'masked-form'
     ]
+  },
+  {
+    id: 'masked-form',
+    label: 'Masked Form',
+    description:
+      'Formulário não-controlado: FormData + validação nativa + validators, injeta error/touched nos campos',
+    templates: [{ dir: 'masked-forms/MaskedForm', to: 'components', subdir: 'MaskedForm' }],
+    requires: ['masked-input', 'masked-buttons'],
+    dependencies: [STYLED]
   },
   {
     id: 'masked-footer',

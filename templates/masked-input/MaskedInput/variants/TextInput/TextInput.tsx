@@ -57,6 +57,7 @@ export function TextInput(props: Props) {
 
       <input
         id={inputId}
+        name={props.name}
         type={props.type ?? 'text'}
         value={current ?? ''}
         onChange={(e) => handleChange(e.target.value)}
