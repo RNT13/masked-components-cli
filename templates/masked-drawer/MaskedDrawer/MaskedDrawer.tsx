@@ -1,17 +1,17 @@
 'use client'
 
-import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
-import { createPortal } from 'react-dom'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { resolveColorTheme } from '@/styles/MaskedThemes/ColorThemes'
 import { readableTextOn } from '@/utils/masked-utils'
+import { useEscapeKey } from '@/hooks/masked-primitives/useEscapeKey'
+import { useFocusTrap } from '@/hooks/masked-primitives/useFocusTrap'
+import { useLockBodyScroll } from '@/hooks/masked-primitives/useLockBodyScroll'
+import { Portal } from '@/hooks/masked-primitives/Portal'
 
 import { DrawerOverlay, DrawerPanel } from './MaskedDrawer.styles'
 import type { MaskedDrawerProps, DrawerSide } from './MaskedDrawer.types'
-
-const FOCUSABLE =
-  'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
 
 const EXIT_MS = 600
 
@@ -40,13 +40,6 @@ export function MaskedDrawer({
   const resolvedZIndex = zIndex ?? theme.zIndex.modal
   const panelRef = useRef<HTMLDivElement>(null)
 
-  /* onClose via ref: trocar a callback não re-executa o efeito de foco */
-  const onCloseRef = useRef(onClose)
-
-  useEffect(() => {
-    onCloseRef.current = onClose
-  }, [onClose])
-
   /*
    * Mantém o painel visível durante a animação de saída.
    * Após EXIT_MS, o painel entra no estado morto, sem transição.
@@ -70,12 +63,6 @@ export function MaskedDrawer({
       window.clearTimeout(timeout)
     }
   }, [isOpen])
-
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true, // client
-    () => false // server
-  )
 
   /*
    * Lado exibido + abertura interna:
@@ -113,67 +100,13 @@ export function MaskedDrawer({
   }, [isOpen, side, shownSide])
 
   // Escape acompanha o estado semântico, sem esperar o rAF de abertura.
-  useEffect(() => {
-    if (!isOpen || !closeOnEscape) return
+  useEscapeKey(isOpen && closeOnEscape, onClose)
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCloseRef.current()
-    }
-
-    document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
-  }, [isOpen, closeOnEscape])
-
-  // Focus inicial + focus trap: o painel precisa estar visível.
-  useEffect(() => {
-    if (!open) return
-
-    const panel = panelRef.current
-    const prevActive = document.activeElement as HTMLElement | null
-
-    panel?.querySelector<HTMLElement>(FOCUSABLE)?.focus()
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || !panel) return
-
-      const items = [...panel.querySelectorAll<HTMLElement>(FOCUSABLE)]
-
-      if (items.length === 0) {
-        e.preventDefault()
-        return
-      }
-
-      const first = items[0]
-      const last = items[items.length - 1]
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault()
-        last.focus()
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault()
-        first.focus()
-      }
-    }
-
-    document.addEventListener('keydown', onKeyDown)
-
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      prevActive?.focus?.()
-    }
-  }, [open])
+  // Focus trap: o painel precisa estar visível.
+  useFocusTrap(panelRef, open)
 
   // Scroll lock
-  useEffect(() => {
-    if (!open || !lockScroll) return
-
-    const prev = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
-    return () => {
-      document.body.style.overflow = prev
-    }
-  }, [open, lockScroll])
+  useLockBodyScroll(open && lockScroll)
 
   const isHorizontal = shownSide === 'left' || shownSide === 'right'
   const size = isHorizontal ? width : height
@@ -201,7 +134,7 @@ export function MaskedDrawer({
           $zIndex={resolvedZIndex}
           style={vars}
           aria-hidden="true"
-          onClick={() => onCloseRef.current()}
+          onClick={onClose}
         />
       )}
 
@@ -227,7 +160,5 @@ export function MaskedDrawer({
     </>
   )
 
-  if (!portal || !mounted) return content
-
-  return createPortal(content, document.body)
+  return <Portal enabled={portal}>{content}</Portal>
 }

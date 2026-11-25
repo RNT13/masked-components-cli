@@ -183,7 +183,7 @@ export const registry: ComponentEntry[] = [
     description:
       'Rodapé com marca, colunas de links, redes e copyright: simple, columns, centered — tokens --mc-footer-*',
     templates: [{ dir: 'masked-page/MaskedFooter', to: 'components', subdir: 'MaskedFooter' }],
-    requires: ['masked-themes', 'masked-config', 'masked-primitives'],
+    requires: ['masked-themes', 'masked-config'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -224,7 +224,7 @@ export const registry: ComponentEntry[] = [
     description:
       'Estrutura de página (header, sidebar, conteúdo, footer): app, site, split, centered — tokens --mc-shell-*',
     templates: [{ dir: 'masked-page/MaskedShell', to: 'components', subdir: 'MaskedShell' }],
-    requires: ['masked-themes', 'masked-config', 'masked-primitives'],
+    requires: ['masked-themes', 'masked-config'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -666,7 +666,7 @@ export const registry: ComponentEntry[] = [
     label: 'Masked Drawer',
     description: 'Painel lateral/superior/inferior com overlay, portal SSR-safe e focus-trap',
     templates: [{ dir: 'masked-drawer', to: 'components' }],
-    requires: ['masked-themes'],
+    requires: ['masked-themes', 'masked-primitives'],
     dependencies: [STYLED]
   },
   {
@@ -676,7 +676,7 @@ export const registry: ComponentEntry[] = [
     templates: [
       { dir: 'masked-popup/MaskedPopup', to: 'components', subdir: 'MaskedPopup' }
     ],
-    requires: ['masked-themes', 'masked-config'],
+    requires: ['masked-themes', 'masked-config', 'masked-primitives'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },

@@ -50,6 +50,7 @@ describe('registry — fundações de layout e estrutura de página', () => {
       'masked-utils',
       'masked-themes',
       'masked-config',
+      'masked-primitives',
       'masked-drawer',
       'masked-header'
     ])
@@ -152,6 +153,7 @@ describe('registry — forms e complementos', () => {
       'masked-utils',
       'masked-themes',
       'masked-config',
+      'masked-primitives',
       'masked-popup',
       'masked-hooks',
       'masked-command-palette'

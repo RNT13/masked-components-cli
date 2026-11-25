@@ -9,6 +9,10 @@ export default defineConfig({
         replacement: path.resolve(__dirname, 'templates/masked-utils')
       },
       {
+        find: /^@\/hooks\/masked-primitives/,
+        replacement: path.resolve(__dirname, 'templates/masked-primitives')
+      },
+      {
         find: /^@\/hooks\//,
         replacement: path.resolve(__dirname, 'templates/masked-hooks') + '/'
       },
@@ -34,11 +38,17 @@ export default defineConfig({
       },
       {
         find: /^@\/components\/ui\/MaskedEmptyState\/MaskedEmptyState$/,
-        replacement: path.resolve(__dirname, 'templates/masked-app/MaskedEmptyState/MaskedEmptyState.tsx')
+        replacement: path.resolve(
+          __dirname,
+          'templates/masked-app/MaskedEmptyState/MaskedEmptyState.tsx'
+        )
       },
       {
         find: /^@\/components\/ui\/MaskedPagination\/MaskedPagination$/,
-        replacement: path.resolve(__dirname, 'templates/masked-app/MaskedPagination/MaskedPagination.tsx')
+        replacement: path.resolve(
+          __dirname,
+          'templates/masked-app/MaskedPagination/MaskedPagination.tsx'
+        )
       },
       {
         find: /^@\/components\/ui\/MaskedAvatar\//,
@@ -46,7 +56,10 @@ export default defineConfig({
       },
       {
         find: /^@\/components\/ui\/MaskedSkeleton\/MaskedSkeleton$/,
-        replacement: path.resolve(__dirname, 'templates/masked-skeleton/MaskedSkeleton/MaskedSkeleton.tsx')
+        replacement: path.resolve(
+          __dirname,
+          'templates/masked-skeleton/MaskedSkeleton/MaskedSkeleton.tsx'
+        )
       },
       {
         find: /^@\/components\/ui\/MaskedShell\//,
