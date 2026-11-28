@@ -425,7 +425,7 @@ export const registry: ComponentEntry[] = [
     templates: [
       { dir: 'masked-app/MaskedDropdownMenu', to: 'components', subdir: 'MaskedDropdownMenu' }
     ],
-    requires: ['masked-themes', 'masked-config'],
+    requires: ['masked-themes', 'masked-config', 'masked-primitives', 'masked-hooks'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -435,7 +435,7 @@ export const registry: ComponentEntry[] = [
     description:
       'Diálogo modal WAI-ARIA (focus trap, scroll lock, Escape/overlay): sm, md, lg, full — tokens --mc-modal-*',
     templates: [{ dir: 'masked-app/MaskedModal', to: 'components', subdir: 'MaskedModal' }],
-    requires: ['masked-themes', 'masked-config'],
+    requires: ['masked-themes', 'masked-config', 'masked-primitives'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -445,7 +445,7 @@ export const registry: ComponentEntry[] = [
     description:
       'Select WAI-ARIA (combobox + listbox): teclado completo, typeahead, placeholder — tokens --mc-select-*',
     templates: [{ dir: 'masked-app/MaskedSelect', to: 'components', subdir: 'MaskedSelect' }],
-    requires: ['masked-themes', 'masked-config', 'masked-utils'],
+    requires: ['masked-themes', 'masked-config', 'masked-utils', 'masked-primitives'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },
@@ -600,7 +600,7 @@ export const registry: ComponentEntry[] = [
     templates: [
       { dir: 'masked-forms/MaskedDatePicker', to: 'components', subdir: 'MaskedDatePicker' }
     ],
-    requires: ['masked-themes', 'masked-config', 'masked-utils', 'masked-hooks'],
+    requires: ['masked-themes', 'masked-config', 'masked-utils', 'masked-primitives', 'masked-hooks'],
     dependencies: [STYLED],
     notes: [CONFIG_PROVIDER_NOTE]
   },

@@ -3,6 +3,8 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
+import { useControllable } from '@/hooks/useControllable'
+import { useClickOutside } from '@/hooks/masked-primitives/useClickOutside'
 import {
   MenuItemButton,
   MenuItemIcon,
@@ -56,8 +58,11 @@ export function MaskedDropdownMenu({
   const triggerRef = useRef<HTMLButtonElement>(null)
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
 
-  const [innerOpen, setInnerOpen] = useState(defaultOpen)
-  const isOpen = open ?? innerOpen
+  const [isOpen, setIsOpen] = useControllable<boolean>({
+    value: open,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange
+  })
   const [highlighted, setHighlighted] = useState(-1)
 
   /* Modelo plano para navegação: separadores contam como posição. */
@@ -67,8 +72,7 @@ export function MaskedDropdownMenu({
   }))
 
   const setOpen = (next: boolean) => {
-    if (open === undefined) setInnerOpen(next)
-    onOpenChange?.(next)
+    setIsOpen(next)
     if (!next) setHighlighted(-1)
   }
 
@@ -80,14 +84,7 @@ export function MaskedDropdownMenu({
   }
 
   /* Clique fora fecha. */
-  useEffect(() => {
-    if (!isOpen) return
-    const onPointerDown = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false)
-    }
-    document.addEventListener('pointerdown', onPointerDown)
-    return () => document.removeEventListener('pointerdown', onPointerDown)
-  }, [isOpen])
+  useClickOutside(rootRef, isOpen, () => setOpen(false))
 
   /* Foco acompanha o item destacado. */
   useEffect(() => {

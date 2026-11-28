@@ -146,6 +146,7 @@ describe('registry — forms e complementos', () => {
       'masked-utils',
       'masked-themes',
       'masked-config',
+      'masked-primitives',
       'masked-hooks',
       'masked-date-picker'
     ])

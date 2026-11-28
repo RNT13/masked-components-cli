@@ -8,15 +8,17 @@ export interface UseFocusTrapOptions {
   initialFocus?: RefObject<HTMLElement | null>
   /** Devolver foco ao elemento anterior ao desativar. Default: true. */
   restoreFocus?: boolean
+  /** Filtro extra de focáveis (ex.: ignorar elementos ocultos). */
+  filter?: (el: HTMLElement) => boolean
 }
 
 /**
  * useFocusTrap — prende Tab/Shift+Tab dentro de `containerRef` enquanto `active`.  
  *
- * Consolida as 3 implementações inline (Popup, Drawer, Modal):  
+ * Consolida as implementações inline de Popup, Drawer e Modal:  
  * - foco inicial no primeiro focável (ou em `initialFocus`);  
  * - Tab no último → primeiro; Shift+Tab no primeiro → último;  
- * - sem focáveis: preventDefault (foco não escapa);  
+ * - sem focáveis: preventDefault + foco no container;  
  * - cleanup devolve o foco ao elemento ativo anterior.  
  */
 export function useFocusTrap(
@@ -24,7 +26,7 @@ export function useFocusTrap(
   active: boolean,
   options: UseFocusTrapOptions = {}
 ): void {
-  const { initialFocus, restoreFocus = true } = options
+  const { initialFocus, restoreFocus = true, filter } = options
 
   useEffect(() => {
     if (!active) return
@@ -32,26 +34,32 @@ export function useFocusTrap(
     const container = containerRef.current
     const previousActive = document.activeElement as HTMLElement | null
 
-    const target =
-      initialFocus?.current ?? container?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+    const focusables = () => {
+      const all = [...(container?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) ?? [])]
+      return filter ? all.filter(filter) : all
+    }
+
+    const target = initialFocus?.current ?? focusables()[0]
     ;(target ?? container)?.focus?.()
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Tab' || !container) return
 
-      const items = [...container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)]
+      const items = focusables()
       if (items.length === 0) {
         event.preventDefault()
+        container.focus?.()
         return
       }
 
       const first = items[0]
       const last = items[items.length - 1]
+      const activeEl = document.activeElement as HTMLElement | null
 
-      if (event.shiftKey && document.activeElement === first) {
+      if (event.shiftKey && (activeEl === first || activeEl === container)) {
         event.preventDefault()
         last.focus()
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!event.shiftKey && activeEl === last) {
         event.preventDefault()
         first.focus()
       }
@@ -62,7 +70,7 @@ export function useFocusTrap(
       document.removeEventListener('keydown', onKeyDown)
       if (restoreFocus) previousActive?.focus?.()
     }
-    // initialFocus/restoreFocus são opções de montagem do trap
+    // initialFocus/restoreFocus/filter são opções de montagem do trap
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef, active])
 }

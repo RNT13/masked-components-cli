@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect, useId, useRef, type KeyboardEvent } from 'react'
+import { useId, useRef, type KeyboardEvent } from 'react'
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
+import { useFocusTrap } from '@/hooks/masked-primitives/useFocusTrap'
+import { useLockBodyScroll } from '@/hooks/masked-primitives/useLockBodyScroll'
 import {
   ModalBody,
   ModalCloseButton,
@@ -21,8 +23,8 @@ const DICT = {
   en: { close: 'Close', dialog: 'Dialog' }
 } as const
 
-const FOCUSABLE =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+/* focáveis visíveis: ignora elementos ocultos (display:none etc.) */
+const visibleOnly = (el: HTMLElement) => el.offsetParent !== null || el === document.activeElement
 
 /**
  * Diálogo modal acessível (padrão WAI-ARIA dialog).  
@@ -57,65 +59,24 @@ export function MaskedModal({
   const dict = DICT[(config.locale ?? 'pt-BR').toLowerCase().startsWith('en') ? 'en' : 'pt']
 
   const panelRef = useRef<HTMLDivElement>(null)
-  const previousFocus = useRef<Element | null>(null)
   const titleId = useId()
   const descId = useId()
 
-  /* foco: entra no painel ao abrir, retorna ao fechar */
-  useEffect(() => {
-    if (!open) return
-    previousFocus.current = document.activeElement
-    const panel = panelRef.current
-    const first = panel?.querySelector<HTMLElement>(FOCUSABLE)
-    ;(first ?? panel)?.focus()
-    return () => {
-      ;(previousFocus.current as HTMLElement | null)?.focus?.()
-    }
-  }, [open])
+  /* foco: entra no painel ao abrir, trap em Tab, retorna ao fechar */
+  useFocusTrap(panelRef, open, { filter: visibleOnly })
 
   /* scroll lock */
-  useEffect(() => {
-    if (!open) return
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = previous
-    }
-  }, [open])
+  useLockBodyScroll(open)
 
   if (!open) return null
 
   const tokenStyle = resolveModalTokens({ colorTheme, tokens }, theme)
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    /* Escape fica no painel: stopPropagation impede overlays pais de fechar junto */
     if (event.key === 'Escape' && closeOnEscape) {
       event.stopPropagation()
       onClose()
-      return
-    }
-    if (event.key !== 'Tab') return
-
-    /* focus trap */
-    const panel = panelRef.current
-    if (!panel) return
-    const focusables = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-      (el) => el.offsetParent !== null || el === document.activeElement
-    )
-    if (focusables.length === 0) {
-      event.preventDefault()
-      panel.focus()
-      return
-    }
-    const first = focusables[0]
-    const last = focusables[focusables.length - 1]
-    const active = document.activeElement as HTMLElement | null
-
-    if (event.shiftKey && (active === first || active === panel)) {
-      event.preventDefault()
-      last.focus()
-    } else if (!event.shiftKey && active === last) {
-      event.preventDefault()
-      first.focus()
     }
   }
 

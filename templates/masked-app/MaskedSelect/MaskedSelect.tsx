@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
+import { useClickOutside } from '@/hooks/masked-primitives/useClickOutside'
 import {
   SelectCheck,
   SelectChevron,
@@ -96,15 +97,8 @@ export function MaskedSelect({
     )
   }
 
-  /* Clique fora fecha */
-  useEffect(() => {
-    if (!open) return
-    const onPointerDown = (e: PointerEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) close(false)
-    }
-    document.addEventListener('pointerdown', onPointerDown)
-    return () => document.removeEventListener('pointerdown', onPointerDown)
-  }, [open])
+  /* Clique fora fecha (sem devolver foco ao trigger) */
+  useClickOutside(rootRef, open, () => close(false))
 
   /* Scroll até a opção destacada */
   useEffect(() => {

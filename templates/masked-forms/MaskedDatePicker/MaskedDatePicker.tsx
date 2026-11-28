@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
 import { useControllable } from '@/hooks/useControllable'
+import { useClickOutside } from '@/hooks/masked-primitives/useClickOutside'
+import { useEscapeKey } from '@/hooks/masked-primitives/useEscapeKey'
 import { useMaskedConfig } from '@/components/ui/MaskedConfigProvider'
 import { useMaskedTheme } from '@/styles/useMaskedTheme'
 import {
@@ -55,23 +57,23 @@ const DICT = {
 } as const
 
 /**
- * Seletor de data acessível (calendário em grade).
+ * Seletor de data acessível (calendário em grade).  
  *
- * A data trafega como "YYYY-MM-DD" (mesmo formato do <input type="date">),
- * sem fuso: nada desloca um dia. Teclado na grade: ←/→ (±1 dia), ↑/↓ (±1
- * semana), Home/End (início/fim da semana), PageUp/PageDown (±1 mês) e
- * Shift+PageUp/PageDown (±1 ano); Enter/Espaço escolhem; Esc fecha e devolve
- * o foco ao botão. Dias bloqueados (`min`, `max`, `isDateDisabled`) continuam
- * focáveis com `aria-disabled` e não podem ser escolhidos. `variant="inline"`
- * mostra o calendário sempre aberto. Nomes de mês/dia vêm do `Intl` no locale
- * do MaskedConfigProvider.
+ * A data trafega como "YYYY-MM-DD" (mesmo formato do <input type="date">),  
+ * sem fuso: nada desloca um dia. Teclado na grade: ←/→ (±1 dia), ↑/↓ (±1  
+ * semana), Home/End (início/fim da semana), PageUp/PageDown (±1 mês) e  
+ * Shift+PageUp/PageDown (±1 ano); Enter/Espaço escolhem; Esc fecha e devolve  
+ * o foco ao botão. Dias bloqueados (`min`, `max`, `isDateDisabled`) continuam  
+ * focáveis com `aria-disabled` e não podem ser escolhidos. `variant="inline"`  
+ * mostra o calendário sempre aberto. Nomes de mês/dia vêm do `Intl` no locale  
+ * do MaskedConfigProvider.  
  *
- * Limitação: o painel não usa portal; dentro de um ancestral com
- * `overflow: hidden` ele pode ser cortado.
+ * Limitação: o painel não usa portal; dentro de um ancestral com  
+ * `overflow: hidden` ele pode ser cortado.  
  *
- * @example
- * <MaskedDatePicker label="Data da consulta" onChange={setData} min="2026-01-01" />
- * <MaskedDatePicker variant="inline" defaultValue="2026-11-20" aria-label="Agenda" />
+ * @example  
+ * <MaskedDatePicker label="Data da consulta" onChange={setData} min="2026-01-01" />  
+ * <MaskedDatePicker variant="inline" defaultValue="2026-11-20" aria-label="Agenda" />  
  */
 export function MaskedDatePicker(props: MaskedDatePickerProps) {
   const theme = useMaskedTheme()
@@ -135,25 +137,12 @@ export function MaskedDatePicker(props: MaskedDatePickerProps) {
     gridRef.current?.querySelector<HTMLButtonElement>(`[data-iso="${focusIso}"]`)?.focus()
   }, [visible, focusIso])
 
-  /* fechar: clique fora, foco saindo do componente e Escape */
-  useEffect(() => {
-    if (!open || inline) return
-    const onPointerDown = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false)
-    }
-    const onKey = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setOpen(false)
-        triggerRef.current?.focus()
-      }
-    }
-    document.addEventListener('pointerdown', onPointerDown)
-    document.addEventListener('keydown', onKey)
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [open, inline])
+  /* fechar: clique fora e Escape (devolve o foco ao trigger) */
+  useClickOutside(rootRef, open && !inline, () => setOpen(false))
+  useEscapeKey(open && !inline, () => {
+    setOpen(false)
+    triggerRef.current?.focus()
+  })
 
   function commit(next: string | null) {
     setValue(next)
